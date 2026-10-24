@@ -463,15 +463,27 @@
       else if(/^(simple interest|interest)\b/i.test(s))mode="simple-interest";
       else if(/^(pythagorean|hypotenuse)\b/i.test(s))mode="pythagorean";
       else if(/^simplify\s+-?\d+\s*\/\s*-?\d+/i.test(s)||/^fraction\b/i.test(s))mode="fraction";
+      else if(/^(mean|average|median|mode|range)\b/i.test(s))mode="statistics";
+      else if(/^(circle|rectangle|square|triangle)\b/i.test(s))mode="geometry";
+      else if(s.includes("=")&&/x\s*\^?\s*2|x²/i.test(s))mode="quadratic";
       else if(/%\s*(of|\*|×)/i.test(s)||/\bpercent(age)?\b/i.test(s))mode="percentage";
       else if(s.includes("=")&&/x/i.test(s))mode="equation";
-      else if(/:\s*-?\d/.test(s))mode="ratio";else mode="arithmetic";
+      else if(/:\s*-?\d/.test(s))mode="ratio";
+      else mode="arithmetic";
     }
+    if(mode==="quadratic")return quadraticMath(s);
+    if(mode==="statistics")return statisticsMath(s);
+    if(mode==="geometry")return geometryMath(s);
     if(mode==="pythagorean")return pythagoreanMath(s.replace(/^(pythagorean|hypotenuse)\s*/i,""));
     if(mode==="simple-interest")return interestMath(s,false);
     if(mode==="compound-interest")return interestMath(s,true);
     if(mode==="fraction")return fractionMath(s);
-    if(mode==="percentage"){const m=s.match(/(-?\d+(?:\.\d+)?)\s*%\s*(?:of|\*|×)\s*(-?\d+(?:\.\d+)?)/i);if(!m)throw new Error("Write a percentage like 15% of 240.");const pct=Number(m[1]),base=Number(m[2]),dec=pct/100,result=dec*base;return {title:"Percentage calculation",answer:fmtMath(result),steps:["Convert "+pct+"% to a decimal: "+pct+" ÷ 100 = "+fmtMath(dec)+".","Multiply by the original amount: "+fmtMath(dec)+" × "+base+".","Answer: "+fmtMath(result)+"."]};}
+    if(mode==="percentage"){
+      const m=s.match(/(-?\d+(?:\.\d+)?)\s*%\s*(?:of|\*|×)\s*(-?\d+(?:\.\d+)?)/i);
+      if(!m)throw new Error("Write a percentage like 15% of 240.");
+      const pct=Number(m[1]),base=Number(m[2]),dec=pct/100,result=dec*base;
+      return {title:"Percentage calculation",answer:fmtMath(result),steps:["Convert "+pct+"% to a decimal: "+pct+" ÷ 100 = "+fmtMath(dec)+".","Multiply by the original amount: "+fmtMath(dec)+" × "+base+".","Answer: "+fmtMath(result)+"."]};
+    }
     if(mode==="equation")return linearMath(s);
     if(mode==="ratio")return ratioMath(s);
     const n=arithmeticMath(s);return {title:"Arithmetic expression",answer:fmtMath(n),steps:["Order of operations: brackets, powers, multiplication/division, addition/subtraction.","Evaluate the expression.","Answer: "+fmtMath(n)+"."]};
