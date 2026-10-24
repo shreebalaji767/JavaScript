@@ -84,6 +84,21 @@
           </div>
 
           <div class="course-method-banner"><div class="course-method-icon">🧠💣</div><div><span class="eyebrow">THE SCRIPTLY METHOD</span><h2>Understand the theory. Then build something gloriously weird.</h2><p>Every lesson connects the real computer-science idea to a chaotic analogy, a common mistake, and a tiny experiment. Then the Project Arena makes you use the idea for real.</p></div><button class="primary-button" data-goto="projects">Enter Project Arena <span>↗</span></button></div>
+          <section class="weird-build panel" aria-labelledby="weirdBuildHeading">
+            <div class="weird-build-copy">
+              <div class="eyebrow">THEORY → EXPERIMENT → BEAUTIFUL NONSENSE</div>
+              <h2 id="weirdBuildHeading">Your next idea is probably wearing a tiny hat.</h2>
+              <p>First understand the real concept. Then poke it with a stick. Then turn it into a gloriously weird little program.</p>
+              <div class="weird-build-actions"><button class="primary-button" id="weirdSurprise" type="button">Surprise me ↻</button><button class="secondary-button weird-build-load" id="weirdBuildNow" type="button">Build this in the lab ↗</button></div>
+            </div>
+            <div class="weird-build-card" aria-live="polite" aria-atomic="true">
+              <div class="weird-build-top"><span id="weirdBuildEmoji" aria-hidden="true">👻</span><span id="weirdBuildConcept">STATE + CONDITIONS</span></div>
+              <h3 id="weirdBuildName">The Haunted Vending Machine</h3>
+              <p id="weirdBuildTheory">State is the machine's memory: what snacks exist and how many remain. A condition decides whether a purchase is allowed.</p>
+              <div class="weird-build-experiment"><strong>THE EXPERIMENT</strong><p id="weirdBuildExperiment">Try to buy the last biscuit twice. The second purchase should fail instead of inventing a biscuit from the ghost dimension.</p></div>
+              <p class="weird-build-starter"><span>STARTER</span> <code id="weirdBuildStarterLabel">inventory + buySnack()</code></p>
+            </div>
+          </section>
           <div class="stats-grid">
             <article class="stat-card"><div class="stat-heading"><span class="stat-icon violet">▤</span><span class="stat-trend">YOUR JOURNEY</span></div><div class="stat-number"><span id="statCompleted">0</span><small>/ 75</small></div><p>Lessons completed</p><div class="mini-progress"><span id="statLessonBar"></span></div></article>
             <article class="stat-card"><div class="stat-heading"><span class="stat-icon mint">◉</span><span class="stat-trend">KEEP GOING</span></div><div class="stat-number"><span id="statMinutes">0</span><small> min</small></div><p>Time spent learning</p><div class="stat-note"><span class="mint-text">↗</span> Every minute counts</div></article>
