@@ -203,3 +203,10 @@ Responsive CSS is designed to prevent horizontal page overflow and overlapping c
 ## Theory-first weird build generator
 
 The homepage includes a responsive mini challenge generator. Each idea presents the core concept, a testable experiment, and a starter program that can be loaded directly into the Practice Lab. It is designed to stack cleanly from desktop to narrow mobile displays and to respect reduced-motion preferences.
+
+
+## Responsive UI session
+
+The **Responsive UI session** is a standalone, theory-first workshop on building layouts that adapt to narrow phones, tablets, desktop screens, and ultrawide displays. It explains fluid sizing, Grid/Flexbox, content-driven breakpoints, overflow prevention, touch and keyboard accessibility, and reduced motion. The interactive Goblin Council preview switches between device-width presets and includes a deliberately chaotic mode to demonstrate how playful visual design still needs stable layout rules.
+
+Open the site and choose **Responsive UI session** in the sidebar, or visit `#responsive`. The workshop is built with the site's existing static HTML, CSS, and JavaScript setup; it does not add a framework or backend.
