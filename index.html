@@ -26,6 +26,7 @@
         <a class="nav-link" href="#practice" data-view="practice"><span class="nav-icon">⌘</span> Practice lab</a>
         <a class="nav-link" href="#roadmap" data-view="roadmap"><span class="nav-icon">⌁</span> Roadmap</a>
         <a class="nav-link" href="#bookmarks" data-view="bookmarks"><span class="nav-icon">♡</span> Bookmarks</a>
+        <a class="nav-link" href="#reference" data-view="reference"><span class="nav-icon">⌘</span> Quick reference</a>
       </nav>
       <div class="side-label course-label">YOUR CURRICULUM</div>
       <div class="curriculum-mini" id="curriculumMini"></div>
@@ -116,6 +117,13 @@ console.log(2 + 3);</textarea><div class="editor-footer"><span>JavaScript · run
         <section class="view" id="view-bookmarks">
           <div class="page-heading"><div class="eyebrow">SAVE FOR LATER</div><h1>Your bookmarks<span class="gradient-text">.</span></h1><p>Keep the lessons you want to revisit close at hand.</p></div>
           <div class="lesson-library" id="bookmarkLibrary"></div>
+        </section>
+
+        <section class="view" id="view-reference">
+          <div class="page-heading"><div class="eyebrow">YOUR EVERYDAY TOOLKIT</div><h1>Quick reference<span class="gradient-text">.</span></h1><p>Plain-English reminders for the JavaScript ideas you use most.</p></div>
+          <label class="reference-search" for="referenceSearch"><span>⌕</span><input id="referenceSearch" type="search" placeholder="Search a concept, e.g. array or function" autocomplete="off"><kbd>LIVE</kbd></label>
+          <div class="reference-filters" id="referenceFilters"><button class="filter-pill active" data-reference-filter="all">All concepts</button><button class="filter-pill" data-reference-filter="Basics">Basics</button><button class="filter-pill" data-reference-filter="Logic">Logic</button><button class="filter-pill" data-reference-filter="Collections">Collections</button><button class="filter-pill" data-reference-filter="Functions">Functions</button><button class="filter-pill" data-reference-filter="Browser">Browser</button></div>
+          <div class="reference-count muted" id="referenceCount">JavaScript concepts</div><div class="reference-grid" id="referenceGrid"></div>
         </section>
 
         <section class="view" id="view-search">
