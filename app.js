@@ -393,9 +393,61 @@
     if(p){const [a,b,c]=p.slice(1).map(Number);if(a===0)throw new Error("The first number cannot be zero in this proportion.");const x=b*c/a;return {title:"Ratio / proportion",answer:"x = "+fmtMath(x),steps:["Write the proportion as a / b = c / x.","Cross-multiply: a × x = b × c.","x = ("+fmtMath(b)+" × "+fmtMath(c)+") / "+fmtMath(a)+".","Therefore x = "+fmtMath(x)+"."]};}
     const m=s.match(/^(-?\d+)\s*:\s*(-?\d+)$/);if(!m)throw new Error("Try a ratio like 12:18, or a proportion like 2:3 = 8:x.");const a=Number(m[1]),b=Number(m[2]),g=gcdMath(a,b);return {title:"Ratio simplification",answer:"Simplified ratio: "+a/g+":"+b/g,steps:["Start with "+a+":"+b+".","Greatest common divisor: "+g+".","Divide both sides by "+g+" to get "+a/g+":"+b/g+"."]};
   }
+  function quadraticMath(src){
+    const s=src.toLowerCase().replace(/\s+/g,"").replace(/²/g,"^2").replace(/−/g,"-");
+    const sides=s.split("=");if(sides.length!==2)throw new Error("Write a quadratic equation like x^2 - 5x + 6 = 0.");
+    function coeff(part,sign){
+      let a=0,b=0,c=0,expr=part.replace(/-/g,"+-");if(expr.startsWith("+"))expr=expr.slice(1);
+      for(let term of expr.split("+").filter(Boolean)){
+        let kind=term.includes("x^2")?2:term.includes("x")?1:0;
+        let z=kind===2?term.replace("x^2",""):kind===1?term.replace("x",""):term;
+        if(z==="")z="1";if(z==="-")z="-1";const n=Number(z);
+        if(!Number.isFinite(n))throw new Error("Use a standard quadratic such as x^2 - 5x + 6 = 0.");
+        if(kind===2)a+=sign*n;else if(kind===1)b+=sign*n;else c+=sign*n;
+      }return {a,b,c};
+    }
+    const l=coeff(sides[0],1),r=coeff(sides[1],-1),a=l.a+r.a,b=l.b+r.b,c=l.c+r.c;
+    if(Math.abs(a)<1e-12)throw new Error("No x² term found. Choose linear equations for a linear equation.");
+    const d=b*b-4*a*c,steps=["Write as ax² + bx + c = 0: a = "+fmtMath(a)+", b = "+fmtMath(b)+", c = "+fmtMath(c)+".","Discriminant D = b² − 4ac = "+fmtMath(b)+"² − 4("+fmtMath(a)+")("+fmtMath(c)+") = "+fmtMath(d)+".","Quadratic formula: x = (−b ± √D) / (2a)."];
+    if(d<0)return {title:"Quadratic equation",answer:"No real roots (two complex roots)",steps:steps.concat(["D is negative, so there are no real-number solutions."])};
+    const x1=(-b+Math.sqrt(d))/(2*a),x2=(-b-Math.sqrt(d))/(2*a);
+    steps.push("Substitute: x = ("+fmtMath(-b)+" ± √"+fmtMath(d)+") / "+fmtMath(2*a)+".","Solutions: x₁ = "+fmtMath(x1)+" and x₂ = "+fmtMath(x2)+".");
+    return {title:"Quadratic equation",answer:Math.abs(x1-x2)<1e-10?"x = "+fmtMath(x1)+" (repeated root)":"x = "+fmtMath(x1)+" or x = "+fmtMath(x2),steps};
+  }
+  function statisticsMath(src){
+    const m=src.match(/^(mean|average|median|mode|range)\s*[: ]?\s*(-?\d+(?:\.\d+)?(?:\s*[,;]\s*-?\d+(?:\.\d+)?)*)$/i);
+    if(!m)throw new Error("Try mean 2, 4, 6 or median: 3, 8, 1, 5. Supported: mean, median, mode, range.");
+    const method=m[1].toLowerCase(),nums=m[2].split(/[,;]/).map(x=>Number(x.trim())),sorted=[...nums].sort((a,b)=>a-b),sum=nums.reduce((a,b)=>a+b,0);
+    let answer,steps=["Data: "+nums.join(", ")+".","Number of values: n = "+nums.length+".","Sorted data: "+sorted.join(", ")+". "];
+    if(method==="mean"||method==="average"){answer=fmtMath(sum/nums.length);steps.push("Add values: "+nums.join(" + ")+" = "+fmtMath(sum)+".","Mean = sum ÷ count = "+fmtMath(sum)+" ÷ "+nums.length+" = "+answer+".");}
+    else if(method==="median"){const i=Math.floor(sorted.length/2);answer=fmtMath(sorted.length%2?sorted[i]:(sorted[i-1]+sorted[i])/2);steps.push(sorted.length%2?"The middle value is "+answer+".":"Average the two middle values: ("+sorted[i-1]+" + "+sorted[i]+") ÷ 2 = "+answer+".");}
+    else if(method==="range"){answer=fmtMath(sorted[sorted.length-1]-sorted[0]);steps.push("Range = largest − smallest = "+sorted[sorted.length-1]+" − "+sorted[0]+" = "+answer+".");}
+    else {const counts=new Map();nums.forEach(n=>counts.set(n,(counts.get(n)||0)+1));const max=Math.max(...counts.values()),modes=[...counts].filter(x=>x[1]===max&&max>1).map(x=>x[0]);answer=modes.length?modes.join(", "):"No mode (all values occur once)";steps.push("Count how often each value appears. Most frequent value(s): "+answer+".");}
+    return {title:"Statistics: "+method,answer,steps};
+  }
+  function geometryMath(src){
+    const m=src.toLowerCase().match(/^(circle|rectangle|square|triangle)\s*[: ]?\s*(-?\d+(?:\.\d+)?)(?:\s*[,x ]\s*(-?\d+(?:\.\d+)?))?$/i);
+    if(!m)throw new Error("Try circle 5 (radius), rectangle 4, 6 (length and width), square 4 (side), or triangle 3, 4 (base and height).");
+    const shape=m[1],a=Number(m[2]),b=m[3]===undefined?undefined:Number(m[3]);if(a<=0||(b!==undefined&&b<=0))throw new Error("Measurements must be greater than zero.");
+    if(shape==="circle"){return {title:"Circle geometry",answer:"Area = "+fmtMath(Math.PI*a*a)+"; circumference = "+fmtMath(2*Math.PI*a),steps:["Radius r = "+a+".","Area A = πr² = π × "+a+"² = "+fmtMath(Math.PI*a*a)+".","Circumference C = 2πr = 2π × "+a+" = "+fmtMath(2*Math.PI*a)+"."]};}
+    if(shape==="square")return {title:"Square geometry",answer:"Area = "+fmtMath(a*a)+"; perimeter = "+fmtMath(4*a),steps:["Side s = "+a+".","Area = s² = "+a+" × "+a+" = "+fmtMath(a*a)+".","Perimeter = 4s = 4 × "+a+" = "+fmtMath(4*a)+"."]};
+    if(b===undefined)throw new Error(shape+" needs two measurements separated by a comma.");
+    if(shape==="rectangle")return {title:"Rectangle geometry",answer:"Area = "+fmtMath(a*b)+"; perimeter = "+fmtMath(2*(a+b)),steps:["Length = "+a+", width = "+b+".","Area = length × width = "+a+" × "+b+" = "+fmtMath(a*b)+".","Perimeter = 2(length + width) = 2("+a+" + "+b+") = "+fmtMath(2*(a+b))+"."]};
+    return {title:"Triangle geometry",answer:"Area = "+fmtMath(a*b/2),steps:["Base = "+a+", perpendicular height = "+b+".","Area = ½ × base × height = ½ × "+a+" × "+b+" = "+fmtMath(a*b/2)+"."]};
+  }
   function solveMathProblem(source,mode){
     const s=source.trim();if(!s)throw new Error("Type a problem first. The maths goblin cannot solve an empty box.");
-    if(mode==="auto"){if(/%\s*(of|\*|×)/i.test(s)||/\bpercent(age)?\b/i.test(s))mode="percentage";else if(s.includes("=")&&/x/i.test(s))mode="equation";else if(/:\s*-?\d/.test(s))mode="ratio";else mode="arithmetic";}
+    if(mode==="auto"){
+      if(/^(mean|average|median|mode|range)\b/i.test(s))mode="statistics";
+      else if(/^(circle|rectangle|square|triangle)\b/i.test(s))mode="geometry";
+      else if(s.includes("=")&&/x\s*\^?\s*2|x²/i.test(s))mode="quadratic";
+      else if(/%\s*(of|\*|×)/i.test(s)||/\bpercent(age)?\b/i.test(s))mode="percentage";
+      else if(s.includes("=")&&/x/i.test(s))mode="equation";
+      else if(/:\s*-?\d/.test(s))mode="ratio";else mode="arithmetic";
+    }
+    if(mode==="quadratic")return quadraticMath(s);
+    if(mode==="statistics")return statisticsMath(s);
+    if(mode==="geometry")return geometryMath(s);
     if(mode==="percentage"){const m=s.match(/(-?\d+(?:\.\d+)?)\s*%\s*(?:of|\*|×)\s*(-?\d+(?:\.\d+)?)/i);if(!m)throw new Error("Write a percentage like 15% of 240.");const pct=Number(m[1]),base=Number(m[2]),dec=pct/100,result=dec*base;return {title:"Percentage calculation",answer:fmtMath(result),steps:["Convert "+pct+"% to a decimal: "+pct+" ÷ 100 = "+fmtMath(dec)+".","Multiply by the original amount: "+fmtMath(dec)+" × "+base+".","Answer: "+fmtMath(result)+"."]};}
     if(mode==="equation")return linearMath(s);
     if(mode==="ratio")return ratioMath(s);
