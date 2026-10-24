@@ -26,11 +26,13 @@ You can open `index.html` directly in a browser. For a more realistic local prev
 
 ## Publish on GitHub Pages
 
-1. Push these files to the repository's default branch.
-2. Open the repository on GitHub and go to **Settings → Pages**.
-3. Under **Build and deployment**, choose **Deploy from a branch**.
-4. Select your default branch and the `/ (root)` folder, then save.
-5. Wait for GitHub Pages to publish the site. The URL will appear on the Pages settings screen.
+1. Open the repository on GitHub and go to **Settings → Pages**.
+2. Under **Build and deployment → Source**, select **GitHub Actions** and save if prompted.
+3. The workflow in `.github/workflows/pages.yml` deploys the static files automatically when changes are pushed to `main`.
+4. Open the **Actions** tab and wait for the **Deploy static site to GitHub Pages** workflow to finish successfully.
+5. Visit **https://shreebalaji767.github.io/JavaScript/**. The first deployment can take a few minutes.
+
+If the site still shows a 404, check that Pages uses **GitHub Actions** and that the workflow succeeds in the Actions tab.
 
 All asset links are relative (`./style.css` and `./app.js`) so they work at the root of a GitHub Pages project site.
 
@@ -58,3 +60,8 @@ The dashboard styling takes inspiration from [Watermelon UI](https://ui.watermel
 - **Try lesson code:** send a lesson's example straight into the practice lab with one click.
 - **More accurate daily streak:** the streak now counts consecutive local calendar days rather than simply counting recent visits.
 - **Responsive details:** the reference cards adapt to smaller screens.
+
+
+## Teaching style: absolute beginner mode
+
+Lessons are designed for learners starting from zero, with everyday language, small numbered steps, a reassuring note that no prior programming experience is expected, and an optional **Explain every line to me** walkthrough for each lesson's code. Each lesson ends with a low-pressure knowledge check. The goal is to explain the idea first, show the code second, and let the learner experiment immediately.
