@@ -74,3 +74,10 @@ The course now adds a **Project arena** with eight guided, free projects, from a
 Every lesson also has a **Chaotic Theory Corner**: a memorable absurd analogy, a more formal explanation behind a disclosure, a common mistake to avoid, and a tiny experiment. The aim is not to replace accurate theory with jokes; the jokes are memory hooks for the real idea.
 
 Suggested loop: **read the theory → predict the output → run code → build a checkpoint → debug → explain it in your own words**. Everything remains free and static, with no backend, database, login, or paid dependency.
+
+
+## Math needed to master JavaScript
+
+A new **Math for JavaScript** learning module adds lessons 19–30, using the same absurd analogy + accurate explanation + mistake to avoid + code experiment format. Topics include arithmetic and precedence, negative numbers, fractions/decimals/percentages, ratios and unit conversions, algebra, functions and graphs, powers and scientific notation, logic and sets, binary/hexadecimal and bitwise operations, statistics/probability, coordinates/geometry/trigonometry, and floating-point precision.
+
+**Important:** advanced mathematics is not a prerequisite for most JavaScript or web development. The most useful foundations are arithmetic, percentages, basic algebra, ratios, logic, and careful handling of decimals. Binary/bitwise maths, statistics, and geometry become useful for particular projects. Calculus and advanced linear algebra are specialised topics for work such as simulations, graphics, scientific computing, and machine learning—not universal requirements for mastering the language. The lessons explain what is essential versus specialised rather than pretending everyone needs every branch of maths.
