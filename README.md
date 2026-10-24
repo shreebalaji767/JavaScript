@@ -96,3 +96,21 @@ The course progresses from programming basics and browser interaction to an adva
 Maths from Zero teaches number sense, arithmetic, factors, fractions, decimals, percentages, ratios, algebra, equations, geometry, and word problems. Maths for JavaScript connects arithmetic, logic, binary numbers, statistics, geometry, trigonometry, and floating-point precision to programming. Advanced Maths introduces exponents and logarithms, sequences, functions and graphs, systems, polynomials, quadratics, inequalities, coordinate geometry, vectors, matrices, counting, conditional probability, statistics, limits, derivatives, integrals, trigonometry, complex numbers, graph theory, numerical methods, and financial maths.
 
 Advanced lessons are guided introductions with worked examples, code experiments, and quizzes—not a replacement for a full university textbook. The site remains plain HTML/CSS/JavaScript and runs on GitHub Pages without a backend.
+
+
+## Progressive Web App (PWA)
+
+Scriptly can be installed as an app on supported browsers and devices. The install button in the top bar uses the browser's native install prompt when it is available; otherwise, it gives a short manual-install hint.
+
+- **One shared logo:** `logo.svg` is the Scriptly brand mark, browser favicon, and install icon. It is a lightweight vector asset that stays sharp at different sizes.
+- **Install metadata:** `manifest.json` defines the app name, standalone display, theme, launch URL, scope, and icon.
+- **Offline shell:** `service-worker.js` caches the core HTML, CSS, JavaScript, manifest, and logo after the first successful online visit. It also uses a network-first strategy for page navigation and cache-first for local static assets.
+- **No build step:** everything remains plain HTML, CSS, and vanilla JavaScript; no framework or npm dependency is required.
+- **HTTPS required:** service workers and installability require a secure context. GitHub Pages supplies HTTPS. Opening the HTML file directly with `file://` does not enable PWA installation or offline caching.
+- **Install on desktop/Android:** use the in-page **Install** button when the browser offers installation, or its menu's **Install app** option.
+- **Install on iPhone/iPad:** in Safari, tap **Share → Add to Home Screen**. iOS does not expose the same `beforeinstallprompt` flow as Chromium browsers.
+- **Offline limitations:** the app shell and bundled lessons are cached; external web fonts may not be available offline. Progress remains in the current browser's local storage and does not sync automatically across devices.
+
+### Responsive and accessibility upgrades
+
+The interface includes dedicated layout adjustments for large monitors, tablets, small phones, and short landscape screens; touch-friendly controls; safe-area padding; visible keyboard focus; and reduced-motion support. Test at several widths and on an actual device before relying on a particular browser's install prompt.
