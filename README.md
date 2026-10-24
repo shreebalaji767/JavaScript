@@ -17,6 +17,10 @@ JavaScript/
 ├── index.html
 ├── style.css
 ├── app.js
+├── style.css
+├── logo.svg
+├── manifest.json
+├── service-worker.js
 └── README.md
 ```
 
@@ -42,7 +46,7 @@ Progress stays in the browser profile on the current device. It is not sent to a
 
 ## Customising the course
 
-Edit the `lessons` array near the top of `app.js`. Each lesson has an ID, unit, title, description, duration, explanation sections, an example, expected output, and a quiz. Keep IDs unique and ensure quiz answer indexes point to an existing option.
+Edit the `lessons` array near the top of `app.js` for lesson explanations, examples, outputs, and quizzes. The `theoryNotes` data powers the mental model, formal explanation, and common-trap cards. The `workshopProjects` map provides a topic-specific practical project for every lesson ID. Keep lesson IDs unique and ensure quiz answer indexes point to an existing option.
 
 ## About the design
 
@@ -114,3 +118,33 @@ Scriptly can be installed as an app on supported browsers and devices. The insta
 ### Responsive and accessibility upgrades
 
 The interface includes dedicated layout adjustments for large monitors, tablets, small phones, and short landscape screens; touch-friendly controls; safe-area padding; visible keyboard focus; and reduced-motion support. Test at several widths and on an actual device before relying on a particular browser's install prompt.
+
+
+## Deep theory + practical-heavy lessons
+
+**All 75 lessons now include a substantial study path and a topic-specific project brief.** A short code example is a starting point—not the entire lesson.
+
+Every lesson includes:
+
+- **Mental model:** a memorable analogy to make the concept easier to picture.
+- **Formal theory:** the computer-science or mathematical idea behind the analogy.
+- **Common failure mode:** a realistic misconception or mistake to watch for.
+- **Expanded topic breakdowns:** open each lesson objective to read the explanation, reason about the rule, and complete a practical check.
+- **Reasoning routine:** identify the goal and inputs, apply rules one step at a time, verify independently, and state limitations.
+- **A project brief matched to the topic:** a concrete build or investigation rather than a generic one-line snippet.
+- **Build milestones:** plan the model, implement the core, test the behaviour, and explain the design.
+- **Hands-on tasks:** modify the example, deliberately debug a safe mistake, transfer the idea to a new scenario, test edge cases, and complete a stretch challenge.
+- **Reflection:** explain what you built, which bug or calculation was difficult, what evidence proved the result, and what you would improve.
+
+### Suggested lesson workflow
+
+1. Read the mental model and formal theory.
+2. Open every topic breakdown and answer the reasoning question in your own words.
+3. Predict what the example will do before running it.
+4. Load the example into the practice lab and modify at least three inputs or rules.
+5. Complete the lesson's project brief in stages.
+6. Test an ordinary case, a boundary case, and an invalid or unusual case.
+7. Debug one deliberate mistake and rerun the earlier tests.
+8. Finish the reflection, then take the knowledge check.
+
+The studio project briefs cover the complete curriculum: JavaScript fundamentals and browser work, programming patterns and asynchronous APIs, maths for JavaScript, maths from zero, advanced JavaScript, and advanced mathematics. They are designed to make learners build, test, and explain—not simply copy and paste.
