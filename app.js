@@ -211,14 +211,15 @@
     $("#referenceCount").textContent = matches.length+" concept"+(matches.length===1?"":"s")+" shown";
   }
   function showView(name) {
-    const valid=["home","learn","lesson","practice","projects","projectdetail","roadmap","bookmarks","reference","search"];
+    const valid=["home","learn","lesson","practice","math","projects","projectdetail","roadmap","bookmarks","reference","search"];
     if(!valid.includes(name)) name="home";
     $$(".view").forEach(view=>view.classList.toggle("active",view.id==="view-"+name));
     $$(".nav-link[data-view]").forEach(link=>link.classList.toggle("active",link.dataset.view===name || (name==="lesson"&&link.dataset.view==="learn")));
-    const names={home:"Overview",learn:"My learning",lesson:"Lesson",practice:"Practice lab",roadmap:"Roadmap",bookmarks:"Bookmarks",reference:"Quick reference",search:"Search results",projects:"Project arena",projectdetail:"Project mission"};
+    const names={home:"Overview",learn:"My learning",lesson:"Lesson",practice:"Practice lab",roadmap:"Roadmap",bookmarks:"Bookmarks",reference:"Quick reference",search:"Search results",projects:"Project arena",projectdetail:"Project mission",math:"Math for JavaScript"};
     $("#breadcrumbCurrent").textContent=names[name]||"Overview";
     $("#sidebar").classList.remove("open");$("#mobileOverlay").classList.remove("show");
     if(name==="learn")renderLibrary("#lessonLibrary",currentFilter);
+    if(name==="math"){renderLibrary("#mathLessonLibrary","all",lessons.filter(l=>l.id>=19&&l.id<=30));$("#mathLessonCount").textContent=lessons.filter(l=>l.id>=19&&l.id<=30).length+" math lessons";}
     if(name==="bookmarks")renderLibrary("#bookmarkLibrary","all",lessons.filter(l=>bookmarked(l.id)));
     if(name==="roadmap")renderRoadmap();
     if(name==="reference")renderReference();
@@ -417,7 +418,7 @@
   renderHome();
   const hash=location.hash;
   if(hash.startsWith("#lesson-"))openLesson(Number(hash.replace("#lesson-","")));
-  else if(hash==="#learn"||hash==="#practice"||hash==="#projects"||hash==="#roadmap"||hash==="#bookmarks"||hash==="#reference")showView(hash.slice(1));
+  else if(hash==="#learn"||hash==="#practice"||hash==="#math"||hash==="#projects"||hash==="#roadmap"||hash==="#bookmarks"||hash==="#reference")showView(hash.slice(1));
   else if(hash.startsWith("#project-"))renderProjectDetail(Number(hash.replace("#project-","")));
   else showView("home");
 })();
