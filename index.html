@@ -31,6 +31,7 @@
         <a class="nav-link" href="#learn" data-view="learn"><span class="nav-icon">▤</span> My learning <span class="nav-count" id="navLessonCount">42</span></a>
         <a class="nav-link" href="#math" data-view="math"><span class="nav-icon">∑</span> Maths classroom <span class="nav-count">24</span></a>
         <a class="nav-link" href="#math-solver" data-view="math-solver"><span class="nav-icon">√</span> Math problem solver</a>
+        <a class="nav-link" href="#responsive" data-view="responsive"><span class="nav-icon">▦</span> Responsive UI session</a>
         <a class="nav-link" href="#history" data-view="history"><span class="nav-icon">⌛</span> History classroom</a>
         <a class="nav-link" href="#practice" data-view="practice"><span class="nav-icon">⌘</span> Practice lab</a>
         <a class="nav-link" href="#projects" data-view="projects"><span class="nav-icon">⚒</span> Project arena <span class="nav-count">8</span></a>
@@ -245,6 +246,59 @@ console.log(2 + 3);</textarea><div class="editor-footer"><span>JavaScript · run
             </div>
           </div>
           <div class="math-roadmap-note"><h3>🧠 The rule of the maths goblin</h3><p>This solves supported problem types and explains the steps. It is not a universal symbolic maths engine, so advanced notation or ambiguous word problems may need rewriting into a supported format.</p></div>
+        </section>
+
+        <section class="view" id="view-responsive">
+          <div class="page-heading responsive-session-heading">
+            <div class="eyebrow"><span class="eyebrow-dot"></span> SESSION · THEORY → EXPERIMENT → BEAUTIFUL NONSENSE</div>
+            <h1>Responsive UI, <span class="gradient-text">you magnificent shapeshifter.</span></h1>
+            <p>Understand the theory. Then build something gloriously weird. A layout should adapt to the space it has—not demand that every screen pretend to be a laptop.</p>
+          </div>
+          <section class="responsive-session-hero panel">
+            <div class="responsive-session-hero-copy">
+              <span class="responsive-session-stamp">FIELD GUIDE 001 / THE FLUID REALM</span>
+              <h2>One interface.<br><span>Many dimensions.</span></h2>
+              <p>A phone is not a tiny desktop. A tablet is not a stretched phone. Build flexible rules, let content breathe, and make controls usable with fingers, keyboards, and assistive technology.</p>
+              <a class="primary-button responsive-jump-link" href="#responsive-playground" data-responsive-jump>Open the shape-shifter lab <span aria-hidden="true">↘</span></a>
+            </div>
+            <div class="responsive-session-art" aria-hidden="true">
+              <div class="responsive-art-orbit orbit-a"></div><div class="responsive-art-orbit orbit-b"></div>
+              <div class="responsive-art-core">↔</div>
+              <span class="responsive-art-label art-phone">320px</span><span class="responsive-art-label art-tablet">768px</span><span class="responsive-art-label art-wide">∞ px</span>
+            </div>
+          </section>
+          <div class="responsive-session-section-title"><div><div class="eyebrow">FIRST, THE THEORY</div><h2>Rules that stop layouts from exploding</h2></div><span class="responsive-session-counter">01 — 04</span></div>
+          <div class="responsive-theory-grid">
+            <article class="responsive-theory-card"><span class="responsive-theory-number">01</span><span class="responsive-theory-icon" aria-hidden="true">↔</span><h3>Fluid, not fixed</h3><p>Prefer flexible widths, <code>max-width</code>, percentages, and <code>clamp()</code>. A rigid 900px card is a sofa trying to fit through a cat flap.</p><div class="responsive-theory-rule"><code>width: min(100%, 72rem);</code></div></article>
+            <article class="responsive-theory-card"><span class="responsive-theory-number">02</span><span class="responsive-theory-icon" aria-hidden="true">▦</span><h3>Grid that negotiates</h3><p>Use Grid and Flexbox to distribute space. <code>minmax(0, 1fr)</code> lets tracks shrink; <code>min-width: 0</code> stops long content from holding the page hostage.</p><div class="responsive-theory-rule"><code>grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));</code></div></article>
+            <article class="responsive-theory-card"><span class="responsive-theory-number">03</span><span class="responsive-theory-icon" aria-hidden="true">Aa</span><h3>Content sets the breakpoint</h3><p>Breakpoints are not sacred device names. Add one when the content becomes cramped, buttons collide, or a line of text becomes a horizontal marathon.</p><div class="responsive-theory-rule"><code>@media (max-width: 42rem) { ... }</code></div></article>
+            <article class="responsive-theory-card"><span class="responsive-theory-number">04</span><span class="responsive-theory-icon" aria-hidden="true">⌁</span><h3>Everyone gets a turn</h3><p>Support keyboard focus, readable contrast, zoom, touch-sized controls, reduced motion, and safe-area insets. Responsive means people and input methods too.</p><div class="responsive-theory-rule"><code>padding: max(1rem, env(safe-area-inset-left));</code></div></article>
+          </div>
+          <section class="responsive-playground panel" id="responsive-playground">
+            <div class="responsive-playground-heading"><div><div class="eyebrow">NOW, BREAK IT ON PURPOSE</div><h2>The Goblin Council dashboard</h2><p>Switch the preview width. Watch the cards reorganise. Then unleash the goblin and see why visual chaos still needs layout rules.</p></div><span class="responsive-live-tag"><span></span> LIVE DEMO</span></div>
+            <div class="responsive-device-controls" role="group" aria-label="Preview width">
+              <button type="button" class="responsive-device-button active" data-preview-device="phone" aria-pressed="true"><span aria-hidden="true">▯</span><span>Phone</span><small>320 px</small></button>
+              <button type="button" class="responsive-device-button" data-preview-device="tablet" aria-pressed="false"><span aria-hidden="true">▭</span><span>Tablet</span><small>768 px</small></button>
+              <button type="button" class="responsive-device-button" data-preview-device="desktop" aria-pressed="false"><span aria-hidden="true">▣</span><span>Desktop</span><small>1280 px</small></button>
+              <button type="button" class="responsive-device-button" data-preview-device="ultrawide" aria-pressed="false"><span aria-hidden="true">▰</span><span>Ultrawide</span><small>1600 px</small></button>
+            </div>
+            <div class="responsive-preview-stage">
+              <div class="responsive-preview-frame" id="responsivePreviewFrame" data-device="phone">
+                <div class="goblin-dashboard-top"><div><span class="goblin-avatar">👹</span><span><strong>Goblin Council</strong><small>Quarterly chaos report</small></span></div><span class="goblin-live">● ALIVE</span></div>
+                <div class="goblin-dashboard-banner"><span>THE BIG QUESTION</span><h3>Who moved the moon cheese?</h3><p>Three goblins deny everything. One has crumbs in its pockets.</p></div>
+                <div class="goblin-dashboard-grid">
+                  <article class="goblin-metric"><span>🧀 CHEESE RESERVES</span><strong>84%</strong><small>+12 suspicious crumbs</small></article>
+                  <article class="goblin-metric"><span>🪄 SPELL UPTIME</span><strong>99.2%</strong><small>One wizard-shaped outage</small></article>
+                  <article class="goblin-metric"><span>🦆 DUCK AUDITS</span><strong>07</strong><small>All wearing fake moustaches</small></article>
+                </div>
+                <div class="goblin-dashboard-footer"><span id="responsivePreviewStatus" aria-live="polite">Phone layout · one column</span><button type="button" id="responsiveChaosButton" aria-pressed="false">Unleash goblin ↯</button></div>
+              </div>
+            </div>
+            <div class="responsive-session-debrief"><span aria-hidden="true">🧠</span><div><strong>The lesson hiding inside the nonsense</strong><p>Notice that the card order stays understandable, text wraps inside its container, and controls remain reachable. Weird content is fun; unpredictable layout is a bug.</p></div></div>
+          </section>
+          <section class="responsive-challenge panel">
+            <div class="responsive-challenge-mark" aria-hidden="true">⚒</div><div><div class="eyebrow">YOUR BUILD CHALLENGE</div><h2>Make a creature that survives every screen</h2><p>In the Practice Lab, build a card for a three-headed houseplant. Give it a name, a water level, and a mood. Then resize the browser and make sure the layout never overflows.</p><ul><li>Use a fluid container and a responsive grid.</li><li>Make long names wrap without breaking the card.</li><li>Keep buttons usable on narrow screens and by keyboard.</li><li>Test a narrow phone, a tablet, a wide desktop, and browser zoom.</li></ul><button type="button" class="primary-button" data-goto="practice">Enter Practice Lab ↗</button></div>
+          </section>
         </section>
 
         <section class="view" id="view-roadmap">
