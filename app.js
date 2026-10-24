@@ -288,7 +288,7 @@
     $("#breadcrumbCurrent").textContent=names[name]||"Overview";
     $("#sidebar").classList.remove("open");$("#mobileOverlay").classList.remove("show");
     if(name==="learn")renderLibrary("#lessonLibrary",currentFilter);
-    if(name==="math"){renderLibrary("#mathLessonLibrary","all",lessons.filter(l=>l.id>=19&&l.id<=42));$("#mathLessonCount").textContent=lessons.filter(l=>l.id>=19&&l.id<=30).length+" math lessons";}
+    if(name==="math"){renderLibrary("#mathLessonLibrary","all",lessons.filter(l=>l.id>=19&&l.id<=42).sort((a,b)=>{const rank=id=>id>=31&&id<=42?id-31:id>=19&&id<=30?id-19+12:999;return rank(a.id)-rank(b.id);}));$("#mathLessonCount").textContent=lessons.filter(l=>l.id>=19&&l.id<=42).length+" math lessons";}
     if(name==="bookmarks")renderLibrary("#bookmarkLibrary","all",lessons.filter(l=>bookmarked(l.id)));
     if(name==="roadmap")renderRoadmap();
     if(name==="reference")renderReference();
