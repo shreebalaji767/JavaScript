@@ -46,7 +46,6 @@
       return {...defaults,...parsed,
         completed:Array.isArray(parsed.completed)?parsed.completed:[],
         projectsCompleted:Array.isArray(parsed.projectsCompleted)?parsed.projectsCompleted:[],
-        projectsCompleted:Array.isArray(parsed.projectsCompleted)?parsed.projectsCompleted:[],
         bookmarks:Array.isArray(parsed.bookmarks)?parsed.bookmarks:[],
         quizPassed:Array.isArray(parsed.quizPassed)?parsed.quizPassed:[],
         visits:Array.isArray(parsed.visits)?parsed.visits:[]
