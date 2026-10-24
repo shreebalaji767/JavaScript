@@ -3,7 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#10101b">
+  <meta name="theme-color" content="#101116">
+  <meta name="color-scheme" content="dark light">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Scriptly">
+  <link rel="icon" href="./logo.svg" type="image/svg+xml">
+  <link rel="manifest" href="./manifest.json">
   <meta name="description" content="A friendly, self-paced JavaScript learning dashboard with lessons, practice, and local progress tracking.">
   <title>Scriptly — JavaScript Learning Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,7 +22,7 @@
   <div class="app-shell">
     <aside class="sidebar" id="sidebar">
       <a class="brand" href="#home" aria-label="Scriptly home">
-        <span class="brand-mark">S<span>;</span></span>
+        <img class="brand-mark" src="./logo.svg" alt="" width="38" height="38">
         <span class="brand-copy"><strong>scriptly</strong><small>LEARNING STUDIO</small></span>
       </a>
       <div class="side-label">WORKSPACE</div>
@@ -52,6 +58,7 @@
         <div class="breadcrumb"><span>Workspace</span><span class="crumb-slash">/</span><strong id="breadcrumbCurrent">Overview</strong></div>
         <div class="topbar-actions">
           <label class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="Search lessons..." aria-label="Search lessons"><kbd>⌘ K</kbd></label>
+          <button class="install-button" id="installApp" type="button" aria-label="Install Scriptly app"><span class="install-icon" aria-hidden="true">↓</span><span class="install-label">Install</span></button>
           <button class="icon-button theme-toggle" id="themeToggle" aria-label="Toggle light and dark theme">☼</button>
         </div>
       </header>
