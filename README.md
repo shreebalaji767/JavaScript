@@ -198,3 +198,8 @@ The historical framing intentionally avoids the “one genius invented everythin
 The interface includes a final responsive safety layer for wide desktops, compact laptops, tablets, phones, narrow 320px screens, and short landscape screens. It uses flexible/minmax grids, bounded content widths, wrapping long text, a collapsible mobile sidebar, stacked editor panels, mobile-sized history tabs, and safe-area spacing. It also reduces motion when the operating system requests it.
 
 Responsive CSS is designed to prevent horizontal page overflow and overlapping controls; verify the live site in actual browsers and devices when possible because browser zoom, font settings, and embedded content can still affect layout.
+
+
+## Theory-first weird build generator
+
+The homepage includes a responsive mini challenge generator. Each idea presents the core concept, a testable experiment, and a starter program that can be loaded directly into the Practice Lab. It is designed to stack cleanly from desktop to narrow mobile displays and to respect reduced-motion preferences.
