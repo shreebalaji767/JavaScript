@@ -132,3 +132,27 @@ body.light .nav-count { background: #f0edf8; color: #65529c; }
 .code-explain-row p{grid-column:2;margin:0!important;font-size:12px;line-height:1.65;color:var(--muted)}
 .quiz-kind{font-size:9px;letter-spacing:1.3px;font-weight:700;color:var(--purple);margin-bottom:10px}
 @media(max-width:600px){.zero-knowledge-note,.teaching-promise{padding:12px}.teaching-step h2{font-size:18px}.code-breakdown{padding-left:8px;padding-right:8px}}
+
+/* Absurd-but-serious theory + project curriculum */
+.project-philosophy,.project-theory,.project-mission,.project-starter,.project-done,.chaos-theory{border:1px solid var(--line);background:var(--surface);border-radius:13px;padding:20px;margin:18px 0}
+.project-philosophy{display:flex;gap:13px;background:linear-gradient(110deg,#ffb86b12,#a78bfa0b)}
+.project-philosophy>span{font-size:25px}.project-philosophy strong{font-size:14px}.project-philosophy p,.project-card p,.project-theory p,.project-starter p,.project-done p{color:var(--muted);line-height:1.8}
+.project-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}
+.project-summary>div{padding:15px;border:1px solid var(--line);background:var(--surface);border-radius:10px;display:flex;flex-direction:column}
+.project-summary strong{font:600 24px 'Space Grotesk';color:var(--mint)}.project-summary span{font-size:11px;color:var(--muted)}
+.project-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.project-card{display:flex;flex-direction:column;border:1px solid var(--line);background:var(--surface);border-radius:13px;padding:19px;min-width:0}
+.project-card-top{display:flex;align-items:center;justify-content:space-between}.project-emoji{font-size:30px;display:grid;place-items:center;width:50px;height:50px;border-radius:13px;background:var(--surface-2)}.project-emoji.large{width:72px;height:72px;font-size:43px;flex-shrink:0}
+.project-level{font-size:9px;text-transform:uppercase;letter-spacing:1.1px;color:var(--purple);font-weight:700}
+.project-card h2{font:600 19px 'Space Grotesk';margin:15px 0 6px}.project-pitch{font-size:12px;min-height:76px}
+.project-meta{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:10px;padding:10px 0;border-top:1px solid var(--line)}
+.project-concepts{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0 16px}.project-concepts span{font-size:9px;padding:5px 7px;border:1px solid var(--line);border-radius:6px;color:var(--muted)}
+.project-open{margin-top:auto;align-self:flex-start}.project-detail-hero{display:flex;gap:18px;align-items:center;margin:22px 0}.project-detail-hero h1{font:600 clamp(26px,4vw,38px)/1.15 'Space Grotesk';margin:8px 0}.project-detail-hero p{color:var(--muted);line-height:1.8}
+.project-detail-grid{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:18px;align-items:start}.project-detail-main h2{font:600 20px 'Space Grotesk';margin:8px 0 12px}.project-theory blockquote{margin:16px 0;padding:14px;border-left:3px solid var(--purple);background:var(--surface-2);border-radius:0 8px 8px 0;line-height:1.8}
+.project-mission ol{list-style:none;padding:0;margin:18px 0 0}.project-mission li{display:flex;gap:12px;padding:15px 0;border-bottom:1px solid var(--line)}.project-mission li:last-child{border-bottom:0}.checkpoint-number{color:var(--purple);font:600 13px 'Space Grotesk'}.project-mission li strong{font-size:13px}.project-mission li p{color:var(--muted);font-size:12px;line-height:1.8;margin:5px 0 0}
+.project-starter pre{overflow:auto;padding:15px;border-radius:8px;background:#101019;color:#a9f3d7;font:12px/1.8 ui-monospace,Consolas,monospace;white-space:pre-wrap}
+.project-hint{margin-top:16px;border:1px solid var(--line);border-radius:8px;padding:12px}.project-hint summary{cursor:pointer;font-weight:700;color:var(--orange)}.project-hint p{line-height:1.8}
+.project-sidebar{position:sticky;top:90px;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:17px}.project-sidebar h3{font:600 14px 'Space Grotesk'}.project-sidebar p,.project-sidebar li{font-size:11px;line-height:1.8;color:var(--muted)}.project-sidebar ul{padding-left:17px}.project-sidebar li{margin:8px 0}
+.chaos-theory{border-color:#8b5cf633;background:linear-gradient(145deg,#8b5cf610,var(--surface) 45%)}.chaos-theory h2{font:600 20px 'Space Grotesk';margin:9px 0}.chaos-theory>p,.chaos-theory details p,.theory-trap p,.theory-exercise p{font-size:13px;line-height:1.85;color:var(--muted)}.chaos-theory details{padding:12px;border:1px solid var(--line);border-radius:8px;margin:14px 0}.chaos-theory summary{cursor:pointer;font-weight:700;font-size:12px}.theory-trap,.theory-exercise{padding:12px 14px;border-radius:8px;margin-top:10px;background:#ffb86b0b}.theory-trap strong,.theory-exercise strong{font-size:12px}.theory-trap p,.theory-exercise p{margin:5px 0 0}
+@media(max-width:950px){.project-detail-grid{grid-template-columns:1fr}.project-sidebar{position:static}.project-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.project-summary{gap:7px}.project-summary>div{padding:10px}.project-summary strong{font-size:20px}.project-detail-hero{align-items:flex-start;flex-direction:column}.project-philosophy,.project-theory,.project-mission,.project-starter,.project-done,.chaos-theory{padding:15px}}
