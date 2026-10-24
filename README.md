@@ -166,3 +166,28 @@ The timeline explains the early World Wide Web, JavaScript's creation at Netscap
 Each timeline includes a practical task that connects the historical problem to a modern coding or maths concept. The classroom also links to further reading from Britannica, MacTutor, ECMA-262, and MDN.
 
 To access it, open **History classroom** in the sidebar. It is part of the static app and works with the existing GitHub Pages deployment; no backend or database is required.
+
+
+## Topic-by-topic history: why ideas were invented
+
+The History classroom now includes a **Topic-by-topic deep dive** alongside the mathematics and JavaScript timelines. It explains the historical problem, the setting where an idea developed, how the method works, how it changed, common historical oversimplifications, present-day relevance, and a practical reconstruction task.
+
+### Mathematics topics
+- Counting and number systems
+- Place value, decimal notation, and zero
+- Fractions, ratios, and proportional reasoning
+- Geometry and measurement
+- Algebra and unknown quantities
+- Algorithms and proof
+- Functions, graphs, and calculus
+- Probability and statistics
+
+### JavaScript topics
+- Variables, values, and types
+- Functions, scope, and closures
+- The DOM and browser events
+- Promises, async/await, and the event loop
+- ECMAScript standardisation and compatibility
+- Node.js, packages, and modules
+
+The historical framing intentionally avoids the “one genius invented everything on one date” myth. Many ideas developed over centuries, independently in different places, and through exchange among cultures. The deep-dive mini-project asks learners to write evidence-backed explanations and connect each topic to a worked maths example or runnable code experiment.
