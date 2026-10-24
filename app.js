@@ -284,6 +284,7 @@
   });
   $("#exportProgress").addEventListener("contextmenu",event=>{event.preventDefault();$("#importFile").click();});
   $("#importFile").addEventListener("change",event=>importProgress(event.target.files[0]));
+  $("#importProgress").addEventListener("click",()=>$("#importFile").click());
   // Shift-click the export action to restore a previously exported JSON backup.
   $("#exportProgress").title="Click to export. Shift-click to import a backup.";
   // Native download action remains available; shift-click is handled as a restore shortcut.
