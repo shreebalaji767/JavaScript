@@ -532,8 +532,8 @@
     const historyTab=event.target.closest("[data-history-tab]");
     if(historyTab){
       const chosen=historyTab.dataset.historyTab;
-      $(".history-tab").forEach(tab=>{const selected=tab===historyTab;tab.classList.toggle("active",selected);tab.setAttribute("aria-selected",String(selected));});
-      $("[data-history-panel]").forEach(panel=>{const selected=panel.dataset.historyPanel===chosen;panel.classList.toggle("active",selected);panel.hidden=!selected;});
+      $$(".history-tab").forEach(tab=>{const selected=tab===historyTab;tab.classList.toggle("active",selected);tab.setAttribute("aria-selected",String(selected));});
+      $$("[data-history-panel]").forEach(panel=>{const selected=panel.dataset.historyPanel===chosen;panel.classList.toggle("active",selected);panel.hidden=!selected;});
       return;
     }
     const nav=event.target.closest("[data-view]");
@@ -606,7 +606,7 @@
     const button=event.target.closest("[data-reference-filter]");
     if(!button)return;
     referenceFilter=button.dataset.referenceFilter;
-    $("#referenceFilters [data-reference-filter]").forEach(item=>item.classList.toggle("active",item===button));
+    $$("#referenceFilters [data-reference-filter]").forEach(item=>item.classList.toggle("active",item===button));
     renderReference();
   });
   $("#searchInput").addEventListener("input",event=>{if(event.target.value.trim().length>=3)searchLessons(event.target.value);});
