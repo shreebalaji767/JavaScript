@@ -83,3 +83,28 @@ body.light .nav-count { background: #f0edf8; color: #65529c; }
   .hero-card { border-radius: 12px; }
   .stat-card, .learning-card, .lesson-card { border-radius: 10px; }
 }
+
+/* Quick reference library and lesson-to-lab workflow */
+.reference-search{display:flex;align-items:center;gap:11px;max-width:620px;height:46px;padding:0 14px;margin:24px 0 15px;background:var(--surface);border:1px solid var(--line);border-radius:10px;color:var(--muted)}
+.reference-search>span{font-size:22px;line-height:1}
+.reference-search input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:var(--text);font:inherit}
+.reference-search kbd{font-size:9px;letter-spacing:1px;border:1px solid var(--line);border-radius:5px;padding:4px 6px}
+.reference-filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.reference-count{font-size:11px;margin:8px 0 12px}
+.reference-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.reference-card{min-width:0;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:17px;transition:border-color .18s,transform .18s}
+.reference-card:hover{border-color:#6b5a8b;transform:translateY(-2px)}
+.reference-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.reference-category{font-size:9px;text-transform:uppercase;letter-spacing:1.2px;color:var(--purple);font-weight:700}
+.reference-copy{border:1px solid var(--line);border-radius:6px;background:transparent;color:var(--muted);padding:5px 8px;font-size:10px}
+.reference-copy:hover{border-color:var(--purple);color:var(--text)}
+.reference-card h2{font:600 17px 'Space Grotesk';margin:13px 0 10px}
+.reference-card pre{white-space:pre-wrap;overflow-wrap:anywhere;margin:0;padding:11px;border:1px solid var(--line);border-radius:7px;background:var(--surface-2);color:var(--mint);font:12px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace}
+.reference-card p{color:var(--muted);font-size:12px;min-height:54px;margin:12px 0}
+.reference-example{display:flex;flex-direction:column;gap:6px;padding-top:10px;border-top:1px solid var(--line)}
+.reference-example span{font-size:8px;letter-spacing:1.4px;color:var(--muted);font-weight:700}
+.reference-example code{font:11px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;color:var(--text)}
+.example-actions{display:flex;justify-content:flex-end;padding:10px 0 0}
+#tryLessonCode{font-size:10px}
+@media(max-width:850px){.reference-grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.reference-card{transition:none}}
