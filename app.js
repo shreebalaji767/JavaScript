@@ -523,6 +523,10 @@
   // Progressive Web App: the browser controls when installation is available.
   const installButton = $("#installApp");
   const isStandalone = () => window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+  if (isStandalone()) {
+    installButton.querySelector(".install-label").textContent = "Installed";
+    installButton.setAttribute("aria-label", "Scriptly is installed");
+  }
   window.addEventListener("beforeinstallprompt", event => {
     event.preventDefault();
     deferredInstallPrompt = event;
