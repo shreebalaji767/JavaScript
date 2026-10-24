@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10101b">
+  <meta name="description" content="A friendly, self-paced JavaScript learning dashboard with lessons, practice, and local progress tracking.">
+  <title>Scriptly — JavaScript Learning Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#home" aria-label="Scriptly home">
+        <span class="brand-mark">S<span>;</span></span>
+        <span class="brand-copy"><strong>scriptly</strong><small>LEARNING STUDIO</small></span>
+      </a>
+      <div class="side-label">WORKSPACE</div>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a class="nav-link active" href="#home" data-view="home"><span class="nav-icon">⌂</span> Overview</a>
+        <a class="nav-link" href="#learn" data-view="learn"><span class="nav-icon">▤</span> My learning <span class="nav-count" id="navLessonCount">18</span></a>
+        <a class="nav-link" href="#practice" data-view="practice"><span class="nav-icon">⌘</span> Practice lab</a>
+        <a class="nav-link" href="#roadmap" data-view="roadmap"><span class="nav-icon">⌁</span> Roadmap</a>
+        <a class="nav-link" href="#bookmarks" data-view="bookmarks"><span class="nav-icon">♡</span> Bookmarks</a>
+      </nav>
+      <div class="side-label course-label">YOUR CURRICULUM</div>
+      <div class="curriculum-mini" id="curriculumMini"></div>
+      <div class="sidebar-bottom">
+        <div class="streak-card">
+          <div class="streak-top"><span class="streak-emoji">✦</span><span class="streak-tag">YOUR MOMENTUM</span></div>
+          <strong><span id="streakDays">0</span> day streak</strong>
+          <p>Small steps make strong developers.</p>
+          <div class="streak-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
+        <button class="nav-link settings-link" id="exportProgress"><span class="nav-icon">⇩</span> Export my progress</button>
+        <div class="profile-row"><div class="avatar">JS</div><div><strong>JavaScript learner</strong><small>Learning at your pace</small></div><span class="online-dot"></span></div>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button class="icon-button menu-toggle" id="menuToggle" aria-label="Open menu">☰</button>
+        <div class="breadcrumb"><span>Workspace</span><span class="crumb-slash">/</span><strong id="breadcrumbCurrent">Overview</strong></div>
+        <div class="topbar-actions">
+          <label class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="Search lessons..." aria-label="Search lessons"><kbd>⌘ K</kbd></label>
+          <button class="icon-button theme-toggle" id="themeToggle" aria-label="Toggle light and dark theme">☼</button>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <section class="view active" id="view-home">
+          <div class="welcome-row">
+            <div><div class="eyebrow"><span class="eyebrow-dot"></span> YOUR CODING JOURNEY STARTS HERE</div><h1>Make something <span class="gradient-text">click.</span></h1><p class="hero-subtitle">Learn JavaScript one small win at a time. No experience needed.</p></div>
+            <div class="date-pill"><span class="date-spark">✳</span><span id="todayLabel">YOUR LEARNING SPACE</span></div>
+          </div>
+
+          <div class="hero-card">
+            <div class="hero-grid"></div>
+            <div class="hero-content">
+              <div class="hero-chip"><span class="pulse-dot"></span> YOUR NEXT CHAPTER</div>
+              <h2 id="continueTitle">JavaScript, from zero</h2>
+              <p id="continueDescription">Start with the basics and build confidence as you go.</p>
+              <div class="hero-meta"><span>◷ <b id="continueDuration">8 min</b></span><span>▤ Beginner friendly</span></div>
+              <button class="primary-button" id="continueButton">Continue learning <span>↗</span></button>
+            </div>
+            <div class="hero-art" aria-hidden="true"><div class="orb orb-one"></div><div class="orb orb-two"></div><div class="code-window"><div class="window-dots"><i></i><i></i><i></i><span>hello-world.js</span></div><div class="code-lines"><p><span class="line-no">01</span> <span class="code-purple">const</span> <span class="code-blue">futureYou</span> = <span class="code-yellow">"developer"</span>;</p><p><span class="line-no">02</span></p><p><span class="line-no">03</span> <span class="code-green">console</span>.log(<span class="code-blue">futureYou</span>);</p><p><span class="line-no">04</span> <span class="code-comment">// look at you go ✨</span></p></div><div class="code-cursor"></div></div><div class="floating-badge badge-top">✦ &nbsp; learn by doing</div><div class="floating-badge badge-bottom"><span>✓</span> progress saved</div></div>
+          </div>
+
+          <div class="stats-grid">
+            <article class="stat-card"><div class="stat-heading"><span class="stat-icon violet">▤</span><span class="stat-trend">YOUR JOURNEY</span></div><div class="stat-number"><span id="statCompleted">0</span><small>/ 18</small></div><p>Lessons completed</p><div class="mini-progress"><span id="statLessonBar"></span></div></article>
+            <article class="stat-card"><div class="stat-heading"><span class="stat-icon mint">◉</span><span class="stat-trend">KEEP GOING</span></div><div class="stat-number"><span id="statMinutes">0</span><small> min</small></div><p>Time spent learning</p><div class="stat-note"><span class="mint-text">↗</span> Every minute counts</div></article>
+            <article class="stat-card"><div class="stat-heading"><span class="stat-icon orange">✧</span><span class="stat-trend">PRACTICE TIME</span></div><div class="stat-number"><span id="statQuizzes">0</span><small> / 6</small></div><p>Quick checks passed</p><div class="stat-note">Test what you've learned</div></article>
+            <article class="stat-card"><div class="stat-heading"><span class="stat-icon blue">⌁</span><span class="stat-trend">YOUR MILESTONE</span></div><div class="stat-number"><span id="statPercent">0</span><small>%</small></div><p>Course progress</p><div class="mini-progress blue-progress"><span id="statCourseBar"></span></div></article>
+          </div>
+
+          <div class="section-heading"><div><div class="eyebrow">PICK UP WHERE YOU LEFT OFF</div><h2>Keep your momentum</h2></div><button class="text-button" data-goto="learn">View all lessons <span>→</span></button></div>
+          <div class="learning-grid" id="continueGrid"></div>
+
+          <div class="section-heading roadmap-heading"><div><div class="eyebrow">THE BIG PICTURE</div><h2>Your learning path</h2></div><button class="text-button" data-goto="roadmap">Explore roadmap <span>→</span></button></div>
+          <div class="roadmap-strip" id="roadmapStrip"></div>
+          <footer class="site-footer"><span>Made for curious minds. <b>Keep experimenting.</b></span><span>100% static · Your progress stays on this device</span></footer>
+        </section>
+
+        <section class="view" id="view-learn">
+          <div class="page-heading"><div class="eyebrow">THE COURSE LIBRARY</div><h1>My learning<span class="gradient-text">.</span></h1><p>Clear explanations, tiny examples, and practice that builds on itself.</p></div>
+          <div class="filter-row"><div class="filter-pills" id="lessonFilters"><button class="filter-pill active" data-filter="all">All lessons</button><button class="filter-pill" data-filter="incomplete">To do</button><button class="filter-pill" data-filter="completed">Completed</button></div><span class="muted" id="lessonResultsCount">18 lessons</span></div>
+          <div class="lesson-library" id="lessonLibrary"></div>
+        </section>
+
+        <section class="view" id="view-lesson">
+          <button class="back-link" data-goto="learn">← Back to all lessons</button>
+          <div id="lessonDetail"></div>
+        </section>
+
+        <section class="view" id="view-practice">
+          <div class="page-heading"><div class="eyebrow">EXPERIMENT WITHOUT FEAR</div><h1>Practice lab<span class="gradient-text">.</span></h1><p>Write JavaScript, run it safely, and see what happens. Break things. Learn things.</p></div>
+          <div class="lab-layout">
+            <div class="lab-editor panel"><div class="panel-top"><div><span class="live-dot"></span><strong>playground.js</strong></div><button class="small-ghost" id="resetCode">Reset example ↺</button></div><label for="codeEditor" class="sr-only">JavaScript code editor</label><textarea id="codeEditor" spellcheck="false" autocapitalize="off" autocomplete="off">const name = "future developer";
+console.log("Hello, " + name + "!");
+console.log(2 + 3);</textarea><div class="editor-footer"><span>JavaScript · runs in a sandbox</span><button class="run-button" id="runCode">▶ Run code</button></div></div>
+            <div class="lab-output panel"><div class="panel-top"><strong>Console output</strong><button class="small-ghost" id="clearOutput">Clear</button></div><div class="output-body" id="codeOutput"><div class="output-placeholder"><span>⌁</span><strong>Your output appears here</strong><p>Press Run code to see what your JavaScript does.</p></div></div><div class="tip-card"><span>✦</span><div><strong>Experiment tip</strong><p>Try changing the text or numbers, then run the code again.</p></div></div></div>
+          </div>
+          <div class="practice-callout"><span class="callout-icon">☻</span><div><strong>Just getting started?</strong><p>That's exactly where you should be. The best way to learn is to try one small change at a time.</p></div><button class="text-button" data-goto="learn">Start a lesson →</button></div>
+        </section>
+
+        <section class="view" id="view-roadmap">
+          <div class="page-heading"><div class="eyebrow">ONE STEP AT A TIME</div><h1>The roadmap<span class="gradient-text">.</span></h1><p>A practical route from your first line of code to building useful projects.</p></div>
+          <div class="roadmap-full" id="roadmapFull"></div>
+        </section>
+
+        <section class="view" id="view-bookmarks">
+          <div class="page-heading"><div class="eyebrow">SAVE FOR LATER</div><h1>Your bookmarks<span class="gradient-text">.</span></h1><p>Keep the lessons you want to revisit close at hand.</p></div>
+          <div class="lesson-library" id="bookmarkLibrary"></div>
+        </section>
+
+        <section class="view" id="view-search">
+          <div class="page-heading"><div class="eyebrow">FIND YOUR NEXT ANSWER</div><h1>Search results<span class="gradient-text">.</span></h1><p id="searchHeading">Matching lessons from your curriculum.</p></div>
+          <div class="lesson-library" id="searchResults"></div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <input type="file" id="importFile" accept="application/json,.json" hidden>
+</body>
+</html>
