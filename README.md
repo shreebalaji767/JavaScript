@@ -50,3 +50,11 @@ The dashboard styling takes inspiration from [Watermelon UI](https://ui.watermel
 - No Tailwind build step or npm dependencies
 - No backend, API, or database
 - Works as a static GitHub Pages site
+
+
+## Latest upgrade
+
+- **Quick reference library:** searchable JavaScript concept cards with categories, plain-English explanations, and copyable examples.
+- **Try lesson code:** send a lesson's example straight into the practice lab with one click.
+- **More accurate daily streak:** the streak now counts consecutive local calendar days rather than simply counting recent visits.
+- **Responsive details:** the reference cards adapt to smaller screens.
