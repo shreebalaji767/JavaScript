@@ -4,3 +4,82 @@
 @media(max-width:850px){.sidebar{transform:translateX(-100%);transition:transform .25s;box-shadow:var(--shadow)}.sidebar.open{transform:translateX(0)}.main-area{margin-left:0}.menu-toggle{display:block}.topbar{padding:0 20px;gap:15px}.breadcrumb{margin-right:auto}.mobile-overlay.show{display:block;position:fixed;z-index:15;inset:0;background:#05040b99;backdrop-filter:blur(2px)}.page-content{padding:25px 20px 18px}.hero-content{max-width:64%;padding:25px}.hero-art{width:39%;opacity:.8}.floating-badge{display:none}.lesson-content-grid{grid-template-columns:minmax(0,1fr) 200px}.lab-layout{grid-template-columns:1fr}.output-body{height:200px}}
 @media(max-width:600px){.topbar{height:62px;padding:0 14px}.page-content{padding:21px 14px}.search-box{width:36px;padding:0;justify-content:center;border:0;background:transparent}.search-box>span{font-size:22px}.search-box input,.search-box kbd{display:none}.topbar-actions{gap:6px}.welcome-row{align-items:flex-start}.welcome-row h1,.page-heading h1{font-size:30px}.date-pill{display:none}.hero-card{min-height:300px;align-items:flex-start}.hero-content{max-width:100%;padding:22px 20px;z-index:2}.hero-content h2{font-size:25px;max-width:250px}.hero-content>p{max-width:250px}.hero-art{width:65%;height:150px;bottom:-2px;right:-5%;opacity:.4;align-items:flex-end}.code-window{transform:rotate(-4deg) scale(.8);transform-origin:bottom right}.hero-meta{gap:11px}.stats-grid{gap:9px;margin:13px 0 27px}.stat-card{padding:12px}.stat-number{font-size:24px}.stat-trend{font-size:6px;letter-spacing:.6px}.stat-icon{height:25px;width:25px}.learning-grid,.lesson-library{grid-template-columns:1fr}.learning-card{padding:14px}.roadmap-strip{grid-template-columns:1fr 1fr;gap:8px}.roadmap-step{padding:10px;gap:7px}.step-icon{width:28px;height:28px;flex-basis:28px}.section-heading h2{font-size:18px}.section-heading{align-items:flex-end}.site-footer{flex-direction:column;gap:5px}.lesson-content-grid{grid-template-columns:1fr}.lesson-aside{order:-1}.lesson-detail-header{padding:19px}.lesson-detail-header h1{font-size:25px}.lesson-body{padding:17px}.roadmap-module{grid-template-columns:38px 1fr;gap:10px;padding:12px}.roadmap-module .module-icon{width:35px;height:35px}.module-lessons{grid-column:2;text-align:left}.practice-callout{align-items:flex-start;flex-wrap:wrap}.practice-callout .text-button{margin-left:47px}.filter-row{align-items:flex-start;flex-direction:column}.page-heading{margin-bottom:20px}.brand{padding-bottom:25px}.course-label{margin-top:22px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* Watermelon UI-inspired static layer: refined surfaces, clearer hierarchy, accessible states.
+   Re-created in plain CSS; no React, Tailwind runtime, or external component dependency. */
+:root {
+  --bg: #0d0e12;
+  --sidebar: #101116;
+  --surface: #15171d;
+  --surface-2: #1a1c23;
+  --line: #292c35;
+  --text: #f2f3f7;
+  --muted: #969ba8;
+  --purple: #b8a0ff;
+  --purple-2: #9475f5;
+  --mint: #9ee6bd;
+  --orange: #f6c27a;
+  --blue: #8ebdff;
+  --shadow: 0 18px 48px #00000024;
+}
+body { background-image: radial-gradient(ellipse at 80% -18%, #26213a38, transparent 45%); }
+.sidebar { background: color-mix(in srgb, var(--sidebar) 96%, transparent); }
+.brand-mark { border-radius: 11px; box-shadow: none; }
+.nav-link { border-radius: 8px; }
+.nav-link.active { background: #b8a0ff12; box-shadow: inset 2px 0 #b8a0ff; color: #dcd1ff; }
+.nav-count { background: #24232d; color: #c9c1e5; }
+.topbar { border-bottom-color: var(--line); }
+.search-box { transition: border-color .18s, background .18s, box-shadow .18s; }
+.search-box:focus-within { border-color: #8f7ac5; box-shadow: 0 0 0 3px #a78bfa14; }
+.icon-button, .small-ghost, .secondary-button, .bookmark-button, .complete-button {
+  transition: border-color .18s, background .18s, color .18s, transform .18s;
+}
+.icon-button:hover, .small-ghost:hover, .secondary-button:hover, .bookmark-button:hover, .complete-button:hover {
+  border-color: #71628f;
+}
+.hero-card { border-color: #393344; background: radial-gradient(ellipse at 84% 40%, #332b4b 0, transparent 39%), linear-gradient(115deg,#1b1b24,#15161d 65%,#1c1a25); }
+.hero-grid { opacity: .7; }
+.hero-chip { border-color: #a78bfa2c; background: #a78bfa0d; }
+.primary-button, .run-button { background: #c0adff; color: #1a1725; box-shadow: none; }
+.primary-button:hover, .run-button:hover { background: #d0c2ff; }
+.stat-card, .learning-card, .lesson-card, .roadmap-module, .panel, .lesson-aside, .quiz-box {
+  box-shadow: 0 1px 0 #ffffff03 inset;
+}
+.learning-card:hover, .lesson-card:hover {
+  border-color: #6b5a8b;
+  background: color-mix(in srgb, var(--surface) 92%, #b8a0ff 8%);
+  transform: translateY(-2px);
+}
+.stat-card { border-radius: 10px; }
+.lesson-symbol { border-radius: 9px; }
+.module-bar { background: #292b34; }
+.module-bar span { background: linear-gradient(90deg,#b8a0ff,#9ee6bd); }
+button:focus-visible, a:focus-visible, [role="button"]:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 2px solid #b8a0ff;
+  outline-offset: 3px;
+}
+::selection { background: #b8a0ff44; color: var(--text); }
+body.light {
+  --bg: #f6f6f8;
+  --sidebar: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f3f2f7;
+  --line: #e4e4eb;
+  --text: #20212a;
+  --muted: #737887;
+  --purple: #7358c8;
+  --purple-2: #8067d9;
+  --mint: #25835f;
+  --shadow: 0 14px 36px #24243b0b;
+  background-image: radial-gradient(ellipse at 80% -18%, #d9d1f52e, transparent 45%);
+}
+body.light .nav-link.active { color: #58459a; background: #8067d912; box-shadow: inset 2px 0 #8067d9; }
+body.light .hero-card { background: radial-gradient(ellipse at 84% 40%, #e3dcfa 0, transparent 39%), linear-gradient(115deg,#f0edfa,#ffffff 65%,#f2effa); border-color: #ded7f1; }
+body.light .hero-chip { color: #59468f; border-color: #8067d92b; background: #8067d90b; }
+body.light .primary-button, body.light .run-button { background: #755bc7; color: #fff; }
+body.light .primary-button:hover, body.light .run-button:hover { background: #6249b0; }
+body.light .nav-count { background: #f0edf8; color: #65529c; }
+@media (max-width: 600px) {
+  .hero-card { border-radius: 12px; }
+  .stat-card, .learning-card, .lesson-card { border-radius: 10px; }
+}
