@@ -24,6 +24,7 @@
         <a class="nav-link active" href="#home" data-view="home"><span class="nav-icon">⌂</span> Overview</a>
         <a class="nav-link" href="#learn" data-view="learn"><span class="nav-icon">▤</span> My learning <span class="nav-count" id="navLessonCount">18</span></a>
         <a class="nav-link" href="#practice" data-view="practice"><span class="nav-icon">⌘</span> Practice lab</a>
+        <a class="nav-link" href="#projects" data-view="projects"><span class="nav-icon">⚒</span> Project arena <span class="nav-count">8</span></a>
         <a class="nav-link" href="#roadmap" data-view="roadmap"><span class="nav-icon">⌁</span> Roadmap</a>
         <a class="nav-link" href="#bookmarks" data-view="bookmarks"><span class="nav-icon">♡</span> Bookmarks</a>
         <a class="nav-link" href="#reference" data-view="reference"><span class="nav-icon">⌘</span> Quick reference</a>
@@ -107,6 +108,14 @@ console.log(2 + 3);</textarea><div class="editor-footer"><span>JavaScript · run
             <div class="lab-output panel"><div class="panel-top"><strong>Console output</strong><button class="small-ghost" id="clearOutput">Clear</button></div><div class="output-body" id="codeOutput"><div class="output-placeholder"><span>⌁</span><strong>Your output appears here</strong><p>Press Run code to see what your JavaScript does.</p></div></div><div class="tip-card"><span>✦</span><div><strong>Experiment tip</strong><p>Try changing the text or numbers, then run the code again.</p></div></div></div>
           </div>
           <div class="practice-callout"><span class="callout-icon">☻</span><div><strong>Just getting started?</strong><p>That's exactly where you should be. The best way to learn is to try one small change at a time.</p></div><button class="text-button" data-goto="learn">Start a lesson →</button></div>
+        </section>
+
+        <section class="view" id="view-projectdetail"><div id="projectDetailBody"></div></section>
+        <section class="view" id="view-projects">
+          <div class="page-heading"><div class="eyebrow">BUILD WEIRD THINGS. LEARN REAL SKILLS.</div><h1>Project arena<span class="gradient-text">.</span></h1><p>Eight free projects, from tiny chaos to portfolio-worthy builds. Each one has a mission, checkpoints, concepts, and optional hints.</p></div>
+          <div class="project-philosophy"><span>🧠💥</span><div><strong>The rule: struggle usefully, not mysteriously.</strong><p>Read the mission. Build one checkpoint. Test it. Break it. Fix it. Copying a solution before trying is like watching someone else eat your pizza and claiming you are full.</p></div></div>
+          <div class="project-summary"><div><strong>8</strong><span>guided projects</span></div><div><strong>4</strong><span>difficulty levels</span></div><div><strong>0₹</strong><span>tools or subscriptions</span></div></div>
+          <div class="project-grid" id="projectGrid"></div>
         </section>
 
         <section class="view" id="view-roadmap">
