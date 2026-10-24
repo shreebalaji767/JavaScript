@@ -280,3 +280,24 @@ input,textarea,select{max-width:100%}
 .history-sources a{color:var(--mint,#56d8bf);text-underline-offset:3px;overflow-wrap:anywhere}
 @media(max-width:760px){.history-event{grid-template-columns:1fr;gap:7px;padding:16px}.history-date{padding-left:4px;color:var(--mint,#56d8bf)}.history-method-grid{grid-template-columns:1fr}.history-tab-row{width:100%}.history-tab{flex:1 1 220px;text-align:center}.history-principle{padding:15px}}
 @media(max-width:420px){.history-tab{flex-basis:100%}.history-event-body h3{font-size:16px}.history-study-method,.history-sources{padding:16px}}
+
+
+/* Topic-by-topic historical explanations: intentionally text-rich for deep study. */
+.history-deep-note{display:grid;gap:8px;margin:20px 0 28px;padding:18px 20px;border:1px solid var(--line);border-radius:16px;background:var(--surface-2,var(--bg));font-size:13px;line-height:1.85;color:var(--muted)}
+.history-deep-note strong{font-size:14px;color:var(--text)}
+.history-topic-group{margin:30px 0 38px}
+.history-topic-group-heading{margin:0 0 18px;padding:0 0 16px;border-bottom:1px solid var(--line)}
+.history-topic-group-heading>span,.history-topic-number{font-size:10px;font-weight:900;letter-spacing:1.5px;color:var(--mint,#56d8bf)}
+.history-topic-group-heading h2{font-size:clamp(22px,3vw,30px);letter-spacing:-.7px;margin:7px 0}
+.history-topic-group-heading p{font-size:13px;line-height:1.85;color:var(--muted);max-width:850px;margin:0}
+.history-topic-card{margin:16px 0;padding:clamp(18px,3vw,27px);border:1px solid var(--line);border-radius:19px;background:var(--surface);min-width:0}
+.history-topic-card h3{font-size:clamp(18px,2.3vw,23px);line-height:1.35;letter-spacing:-.45px;margin:8px 0}
+.history-topic-lead{font-size:14px;line-height:1.8;color:var(--muted);margin:0 0 20px}
+.history-topic-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.history-topic-facts>div{min-width:0;padding:15px;border:1px solid var(--line);border-radius:13px;background:var(--surface-2,var(--bg))}
+.history-topic-facts strong,.history-topic-now strong,.history-topic-rebuild strong{display:block;font-size:11px;letter-spacing:.35px;text-transform:uppercase;color:var(--text);margin-bottom:6px}
+.history-topic-facts p{font-size:13px;line-height:1.9;color:var(--muted);margin:0}
+.history-topic-now,.history-topic-rebuild{margin-top:13px;padding:14px 16px;border-radius:12px;font-size:13px;line-height:1.85;color:var(--muted)}
+.history-topic-now{background:rgba(45,212,191,.08);border-left:3px solid var(--mint,#56d8bf)}
+.history-topic-rebuild{background:var(--surface-2,var(--bg));border-left:3px solid var(--purple,#9b8afb)}
+@media(max-width:680px){.history-topic-facts{grid-template-columns:1fr}.history-topic-card{padding:17px}.history-topic-facts>div{padding:13px}}
