@@ -210,12 +210,67 @@
     ).join("") : '<div class="empty-state"><strong>No matching concepts</strong><p>Try a shorter search or choose another category.</p></div>';
     $("#referenceCount").textContent = matches.length+" concept"+(matches.length===1?"":"s")+" shown";
   }
+  function fmtMath(n){if(!Number.isFinite(n))throw new Error("The answer is not a finite real number.");if(Math.abs(n)<1e-12)n=0;return Number(n.toPrecision(12)).toString();}
+  function arithmeticMath(src){
+    const tokens=src.match(/(?:\d+(?:\.\d*)?|\.\d+)|(?:[a-zA-Z]+)|[()+\-*/%^,]/g)||[], compact=src.replace(/\s+/g,"");
+    if(tokens.join("")!==compact)throw new Error("Unknown character. Use numbers, + - * / % ^, brackets, pi, e, or a supported function.");
+    let i=0;const peek=()=>tokens[i],take=()=>tokens[i++];
+    const expr=()=>{let v=term();while(peek()==="+"||peek()==="-"){const op=take(),r=term();v=op==="+"?v+r:v-r;}return v;};
+    const term=()=>{let v=unary();while(["*","/","%"].includes(peek())){const op=take(),r=unary();if((op==="/"||op==="%")&&r===0)throw new Error("Division by zero is not allowed.");v=op==="*"?v*r:op==="/"?v/r:v%r;}return v;};
+    const unary=()=>{if(peek()==="+"){take();return unary();}if(peek()==="-"){take();return -unary();}return power();};
+    const power=()=>{let v=primary();if(peek()==="^"){take();v=Math.pow(v,unary());}return v;};
+    const primary=()=>{const t=take();if(t===undefined)throw new Error("The expression is incomplete.");if(t==="("){const v=expr();if(take()!==")")throw new Error("A closing ) is missing.");return v;}if(/^(?:\d|\.)/.test(t))return Number(t);if(/^[a-z]+$/i.test(t)){const name=t.toLowerCase();if(name==="pi")return Math.PI;if(name==="e")return Math.E;if(peek()==="("){take();const x=expr();let y;if(peek()===","){take();y=expr();}if(take()!==")")throw new Error("A function call needs a closing ).");const f={sqrt:x=>Math.sqrt(x),abs:x=>Math.abs(x),sin:x=>Math.sin(x),cos:x=>Math.cos(x),tan:x=>Math.tan(x),log:x=>Math.log10(x),ln:x=>Math.log(x),floor:x=>Math.floor(x),ceil:x=>Math.ceil(x),round:x=>Math.round(x),min:(x,y)=>Math.min(x,y),max:(x,y)=>Math.max(x,y)};if(!f[name])throw new Error("Unknown function "+name+". Try sqrt, abs, sin, cos, tan, log, ln, floor, ceil, round, min, or max.");if(["min","max"].includes(name)&&y===undefined)throw new Error(name+" needs two values, e.g. "+name+"(3, 7).");return f[name](x,y);}throw new Error("Unknown name "+t+". Use pi, e, or a supported function.");}throw new Error("Expected a number or an opening bracket.");};
+    const value=expr();if(i<tokens.length)throw new Error("I could not use everything after "+tokens[i]+". Check the operators.");return value;
+  }
+  function linearMath(src){
+    const sides=src.split("=");if(sides.length!==2)throw new Error("Write one equation with one equals sign, e.g. 2x + 3 = 11.");
+    function parse(s){
+      s=s.toLowerCase().replace(/\s+/g,"").replace(/(\d|x|\))(?=x|\()/g,"$1*").replace(/x(?=\d|\()/g,"x*");
+      const t=s.match(/(?:\d+(?:\.\d*)?|\.\d+)|x|[()+\-*/]/g)||[];if(t.join("")!==s)throw new Error("Use numbers, x, +, -, *, / and brackets in equations.");let i=0;const peek=()=>t[i],take=()=>t[i++];
+      const add=(u,v)=>({a:u.a+v.a,b:u.b+v.b}),sub=(u,v)=>({a:u.a-v.a,b:u.b-v.b});
+      const mul=(u,v)=>{if(u.a&&v.a)throw new Error("This solver handles linear equations only, not x multiplied by x.");return {a:u.a*v.b+v.a*u.b,b:u.b*v.b};};
+      const div=(u,v)=>{if(v.a)throw new Error("The divisor cannot contain x in this linear solver.");if(!v.b)throw new Error("Division by zero is not allowed.");return {a:u.a/v.b,b:u.b/v.b};};
+      function atom(){const z=take();if(z==="x")return {a:1,b:0};if(z==="+")return atom();if(z==="-"){const v=atom();return {a:-v.a,b:-v.b};}if(z==="("){const v=expr();if(take()!==")")throw new Error("A closing ) is missing.");return v;}if(z!==undefined&&/^(?:\d|\.)/.test(z))return {a:0,b:Number(z)};throw new Error("Could not read part of the equation.");}
+      function product(){let v=atom();while(peek()==="*"||peek()==="/"){const op=take(),r=atom();v=op==="*"?mul(v,r):div(v,r);}return v;}
+      function expr(){let v=product();while(peek()==="+"||peek()==="-"){const op=take(),r=product();v=op==="+"?add(v,r):sub(v,r);}return v;}
+      const v=expr();if(i<t.length)throw new Error("Could not read the whole equation.");return v;
+    }
+    const l=parse(sides[0]),r=parse(sides[1]),coef=l.a-r.a,constant=r.b-l.b;
+    if(Math.abs(coef)<1e-12)throw new Error(Math.abs(constant)<1e-12?"Both sides match for every x; there are infinitely many solutions.":"There is no solution because the x terms cancel but the constants do not.");
+    const x=constant/coef;return {title:"Linear equation",answer:"x = "+fmtMath(x),steps:["Left side: "+fmtMath(l.a)+"x + "+fmtMath(l.b)+". Right side: "+fmtMath(r.a)+"x + "+fmtMath(r.b)+".","Move x terms to the left and constants to the right.","So "+fmtMath(coef)+"x = "+fmtMath(constant)+".","Divide both sides by "+fmtMath(coef)+": x = "+fmtMath(x)+"."]};
+  }
+  function gcdMath(a,b){a=Math.abs(Math.round(a));b=Math.abs(Math.round(b));while(b){const r=a%b;a=b;b=r;}return a||1;}
+  function ratioMath(src){
+    const s=src.toLowerCase().replace(/simplify|ratio|solve|please|what is/g,"").trim(),p=s.match(/^(-?\d+(?:\.\d+)?)\s*:\s*(-?\d+(?:\.\d+)?)\s*=\s*(-?\d+(?:\.\d+)?)\s*:\s*x$/);
+    if(p){const [a,b,c]=p.slice(1).map(Number);if(a===0)throw new Error("The first number cannot be zero in this proportion.");const x=b*c/a;return {title:"Ratio / proportion",answer:"x = "+fmtMath(x),steps:["Write the proportion as a / b = c / x.","Cross-multiply: a × x = b × c.","x = ("+fmtMath(b)+" × "+fmtMath(c)+") / "+fmtMath(a)+".","Therefore x = "+fmtMath(x)+"."]};}
+    const m=s.match(/^(-?\d+)\s*:\s*(-?\d+)$/);if(!m)throw new Error("Try a ratio like 12:18, or a proportion like 2:3 = 8:x.");const a=Number(m[1]),b=Number(m[2]),g=gcdMath(a,b);return {title:"Ratio simplification",answer:"Simplified ratio: "+a/g+":"+b/g,steps:["Start with "+a+":"+b+".","Greatest common divisor: "+g+".","Divide both sides by "+g+" to get "+a/g+":"+b/g+"."]};
+  }
+  function solveMathProblem(source,mode){
+    const s=source.trim();if(!s)throw new Error("Type a problem first. The maths goblin cannot solve an empty box.");
+    if(mode==="auto"){if(/%\s*(of|\*|×)/i.test(s)||/\bpercent(age)?\b/i.test(s))mode="percentage";else if(s.includes("=")&&/x/i.test(s))mode="equation";else if(/:\s*-?\d/.test(s))mode="ratio";else mode="arithmetic";}
+    if(mode==="percentage"){const m=s.match(/(-?\d+(?:\.\d+)?)\s*%\s*(?:of|\*|×)\s*(-?\d+(?:\.\d+)?)/i);if(!m)throw new Error("Write a percentage like 15% of 240.");const pct=Number(m[1]),base=Number(m[2]),dec=pct/100,result=dec*base;return {title:"Percentage calculation",answer:fmtMath(result),steps:["Convert "+pct+"% to a decimal: "+pct+" ÷ 100 = "+fmtMath(dec)+".","Multiply by the original amount: "+fmtMath(dec)+" × "+base+".","Answer: "+fmtMath(result)+"."]};}
+    if(mode==="equation")return linearMath(s);
+    if(mode==="ratio")return ratioMath(s);
+    const n=arithmeticMath(s);return {title:"Arithmetic expression",answer:fmtMath(n),steps:["Order of operations: brackets, powers, multiplication/division, addition/subtraction.","Evaluate the expression.","Answer: "+fmtMath(n)+"."]};
+  }
+  function renderMathSolution(solution){
+    const out=$("#mathSolverOutput");out.replaceChildren();const title=document.createElement("div");title.className="solver-answer-label";title.textContent=solution.title||"Solution";out.appendChild(title);
+    const answer=document.createElement("div");answer.className="solver-answer";answer.textContent=solution.answer;out.appendChild(answer);
+    const heading=document.createElement("h3");heading.textContent="Step by step";out.appendChild(heading);
+    const list=document.createElement("ol");list.className="solver-steps";solution.steps.forEach(step=>{const li=document.createElement("li");li.textContent=step;list.appendChild(li);});out.appendChild(list);
+    $("#mathSolverStatus").textContent="SOLVED";$("#mathSolverStatus").classList.add("solved");
+  }
+  function runMathSolver(){
+    const out=$("#mathSolverOutput");try{renderMathSolution(solveMathProblem($("#mathProblem").value,$("#mathMode").value));}
+    catch(error){out.replaceChildren();const box=document.createElement("div");box.className="solver-error";const title=document.createElement("strong");title.textContent="Not solved yet — no panic.";box.appendChild(title);const message=document.createElement("p");message.textContent=error.message||"Check the format and try again.";box.appendChild(message);const hint=document.createElement("p");hint.textContent="Try: (12 + 8) * 3, 15% of 240, 2x + 3 = 11, or simplify 12:18.";box.appendChild(hint);out.appendChild(box);$("#mathSolverStatus").textContent="CHECK THE FORMAT";$("#mathSolverStatus").classList.remove("solved");}
+  }
+
   function showView(name) {
-    const valid=["home","learn","lesson","practice","math","projects","projectdetail","roadmap","bookmarks","reference","search"];
+    const valid=["home","learn","lesson","practice","math","math-solver","projects","projectdetail","roadmap","bookmarks","reference","search"];
     if(!valid.includes(name)) name="home";
     $$(".view").forEach(view=>view.classList.toggle("active",view.id==="view-"+name));
     $$(".nav-link[data-view]").forEach(link=>link.classList.toggle("active",link.dataset.view===name || (name==="lesson"&&link.dataset.view==="learn")));
-    const names={home:"Overview",learn:"My learning",lesson:"Lesson",practice:"Practice lab",roadmap:"Roadmap",bookmarks:"Bookmarks",reference:"Quick reference",search:"Search results",projects:"Project arena",projectdetail:"Project mission",math:"Math for JavaScript"};
+    const names={home:"Overview",learn:"My learning",lesson:"Lesson",practice:"Practice lab",roadmap:"Roadmap",bookmarks:"Bookmarks",reference:"Quick reference",search:"Search results",projects:"Project arena",projectdetail:"Project mission",math:"Math for JavaScript","math-solver":"Math problem solver"};
     $("#breadcrumbCurrent").textContent=names[name]||"Overview";
     $("#sidebar").classList.remove("open");$("#mobileOverlay").classList.remove("show");
     if(name==="learn")renderLibrary("#lessonLibrary",currentFilter);
@@ -372,6 +427,8 @@
       }
       return;
     }
+    if(event.target.closest("#solveMath")){runMathSolver();return;}
+    const mathExample=event.target.closest("[data-math-example]");if(mathExample){$("#mathProblem").value=mathExample.dataset.mathExample;$("#mathMode").value="auto";runMathSolver();return;}
     if(event.target.closest("#runCode")){runCode();return;}
     if(event.target.closest("#resetCode")){$("#codeEditor").value='const name = "future developer";\nconsole.log("Hello, " + name + "!");\nconsole.log(2 + 3);';renderOutput([]);return;}
     if(event.target.closest("#clearOutput")){renderOutput([]);return;}
@@ -388,6 +445,7 @@
   });
   $("#searchInput").addEventListener("keydown",event=>{if(event.key==="Enter"){searchLessons(event.target.value);event.target.blur();}});
   $("#referenceSearch").addEventListener("input",renderReference);
+  $("#mathProblem").addEventListener("keydown",event=>{if((event.ctrlKey||event.metaKey)&&event.key==="Enter")runMathSolver();});
   $("#referenceFilters").addEventListener("click",event=>{
     const button=event.target.closest("[data-reference-filter]");
     if(!button)return;
@@ -418,7 +476,7 @@
   renderHome();
   const hash=location.hash;
   if(hash.startsWith("#lesson-"))openLesson(Number(hash.replace("#lesson-","")));
-  else if(hash==="#learn"||hash==="#practice"||hash==="#math"||hash==="#projects"||hash==="#roadmap"||hash==="#bookmarks"||hash==="#reference")showView(hash.slice(1));
+  else if(hash==="#learn"||hash==="#practice"||hash==="#math"||hash==="#math-solver"||hash==="#projects"||hash==="#roadmap"||hash==="#bookmarks"||hash==="#reference")showView(hash.slice(1));
   else if(hash.startsWith("#project-"))renderProjectDetail(Number(hash.replace("#project-","")));
   else showView("home");
 })();
