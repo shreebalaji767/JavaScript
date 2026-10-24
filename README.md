@@ -85,3 +85,14 @@ A new **Math for JavaScript** learning module adds lessons 19–30, using the sa
 
 ## Maths classroom
 The Maths classroom teaches mathematics from the ground up, separate from programming-specific number quirks. It starts with place value and arithmetic, then factors, fractions, decimals, percentages, ratios, algebra, equations, geometry, and word-problem strategy. Lessons use plain-language theory, chaotic analogies, worked examples, JavaScript experiments, common mistakes, and quizzes. The Math Problem Solver is a separate tool for supported calculations and step-by-step working; it is not a substitute for learning the concepts.
+
+
+## Full curriculum: zero to advanced
+
+### JavaScript
+The course progresses from programming basics and browser interaction to an advanced track covering higher-order functions, recursion, prototypes, classes, iterators and generators, modules, regular expressions, Map/Set, the event loop, Fetch/HTTP, browser storage, web security, testing, Node.js/npm, and performance.
+
+### Maths
+Maths from Zero teaches number sense, arithmetic, factors, fractions, decimals, percentages, ratios, algebra, equations, geometry, and word problems. Maths for JavaScript connects arithmetic, logic, binary numbers, statistics, geometry, trigonometry, and floating-point precision to programming. Advanced Maths introduces exponents and logarithms, sequences, functions and graphs, systems, polynomials, quadratics, inequalities, coordinate geometry, vectors, matrices, counting, conditional probability, statistics, limits, derivatives, integrals, trigonometry, complex numbers, graph theory, numerical methods, and financial maths.
+
+Advanced lessons are guided introductions with worked examples, code experiments, and quizzes—not a replacement for a full university textbook. The site remains plain HTML/CSS/JavaScript and runs on GitHub Pages without a backend.
