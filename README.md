@@ -17,7 +17,6 @@ JavaScript/
 ├── index.html
 ├── style.css
 ├── app.js
-├── style.css
 ├── logo.svg
 ├── manifest.json
 ├── service-worker.js
