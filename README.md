@@ -191,3 +191,10 @@ The History classroom now includes a **Topic-by-topic deep dive** alongside the 
 - Node.js, packages, and modules
 
 The historical framing intentionally avoids the “one genius invented everything on one date” myth. Many ideas developed over centuries, independently in different places, and through exchange among cultures. The deep-dive mini-project asks learners to write evidence-backed explanations and connect each topic to a worked maths example or runnable code experiment.
+
+
+## Responsive layout and display-size support
+
+The interface includes a final responsive safety layer for wide desktops, compact laptops, tablets, phones, narrow 320px screens, and short landscape screens. It uses flexible/minmax grids, bounded content widths, wrapping long text, a collapsible mobile sidebar, stacked editor panels, mobile-sized history tabs, and safe-area spacing. It also reduces motion when the operating system requests it.
+
+Responsive CSS is designed to prevent horizontal page overflow and overlapping controls; verify the live site in actual browsers and devices when possible because browser zoom, font settings, and embedded content can still affect layout.
