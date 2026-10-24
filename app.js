@@ -661,7 +661,7 @@
       return;
     }
     const nav=event.target.closest("[data-view]");
-    if(nav){event.preventDefault();showView(nav.dataset.view);if(nav.dataset.view==="home")location.hash="home";return;}
+    if(nav){event.preventDefault();showView(nav.dataset.view);location.hash=nav.dataset.view;return;}
     const goto=event.target.closest("[data-goto]");
     if(goto){showView(goto.dataset.goto);location.hash=goto.dataset.goto;return;}
     const lessonEl=event.target.closest("[data-lesson]");
