@@ -29,6 +29,7 @@
     {title:"Make something real",range:[18,18],icon:"⚒",desc:"Use what you know to create small projects of your own."}
   ];
   const STORE_KEY = "scriptly-static-v1";
+  const referenceItems = [{"title":"Variables","category":"Basics","syntax":"const name = \"Mina\";\\nlet score = 0;","plain":"A named box that holds a value. Use const when you will not reassign it; use let when the value needs to change.","example":"const city = \"Delhi\";"},{"title":"Data types","category":"Basics","syntax":"\"hello\" · 42 · true · null","plain":"Values come in different kinds: strings (text), numbers, booleans (true/false), and special values such as null and undefined.","example":"console.log(typeof 42); // \"number\""},{"title":"console.log()","category":"Basics","syntax":"console.log(value);","plain":"Prints a value to the console so you can see what your program is doing.","example":"console.log(\"Hello!\");"},{"title":"Operators","category":"Logic","syntax":"+  -  *  /  ===  !==  >","plain":"Symbols that calculate or compare values. Prefer === for strict equality checks.","example":"console.log(5 === 5); // true"},{"title":"if / else","category":"Logic","syntax":"if (condition) { } else { }","plain":"Lets your code choose what to do. The first block runs when the condition is true; else handles the other path.","example":"if (score > 0) console.log(\"Go!\");"},{"title":"Loops","category":"Logic","syntax":"for (let i = 0; i < 3; i++) { }","plain":"Repeats a block of code. Check the stopping condition so the loop does not run forever.","example":"for (let i = 1; i <= 3; i++) console.log(i);"},{"title":"Functions","category":"Functions","syntax":"function greet(name) { return \"Hi \" + name; }","plain":"A reusable set of instructions. Parameters are input names; return sends a result back.","example":"console.log(greet(\"Sam\"));"},{"title":"Arrow functions","category":"Functions","syntax":"const double = n => n * 2;","plain":"A shorter way to write many functions. Great for small operations and array callbacks.","example":"const double = n => n * 2;"},{"title":"Arrays","category":"Collections","syntax":"const fruits = [\"apple\", \"pear\"];","plain":"An ordered list. Positions start at index 0, so the first item is array[0].","example":"console.log(fruits[0]);"},{"title":"Array methods","category":"Collections","syntax":".map() · .filter() · .find()","plain":"Methods that help work with lists. map transforms items; filter keeps matching items; find returns the first match.","example":"[1, 2, 3].map(n => n * 2);"},{"title":"Objects","category":"Collections","syntax":"const user = { name: \"Mina\" };","plain":"A collection of named properties. Read a property with dot notation or square brackets.","example":"console.log(user.name);"},{"title":"Strings","category":"Basics","syntax":"text.length · text.toUpperCase()","plain":"Strings hold text. Useful tools include length, includes(), slice(), and template literals.","example":"console.log(\"hello\".toUpperCase());"},{"title":"Template literals","category":"Basics","syntax":"`Hello, ${name}`","plain":"Backticks let you insert values inside text using ${...}, often easier to read than joining strings.","example":"const message = \"Score: \" + score;"},{"title":"Scope","category":"Functions","syntax":"{ const localValue = 1; }","plain":"Scope describes where a variable can be used. Variables declared inside a function or block stay local to that area.","example":"function demo() { const secret = 7; }"},{"title":"DOM selection","category":"Browser","syntax":"document.querySelector(\".card\")","plain":"The DOM is the browser's object representation of the page. querySelector finds the first matching element.","example":"const heading = document.querySelector(\"h1\");"},{"title":"Events","category":"Browser","syntax":"button.addEventListener(\"click\", handler)","plain":"Events let your page respond to actions such as clicks, typing, and form submission.","example":"button.addEventListener(\"click\", () => console.log(\"Clicked!\"));"},{"title":"Promises","category":"Functions","syntax":"fetch(url).then(result => ...)","plain":"A Promise represents a result that may arrive later. It can be pending, fulfilled, or rejected.","example":"Promise.resolve(\"done\").then(console.log);"},{"title":"async / await","category":"Functions","syntax":"async function load() { await task(); }","plain":"A readable way to work with Promises. Use try/catch when you need to handle errors from awaited work.","example":"async function start() { const value = await getValue(); }"}];
   const defaults = {completed:[],bookmarks:[],quizPassed:[],minutes:0,theme:"dark",lastLesson:1,visits:[]};
   let state = loadState();
   let currentFilter = "all";
@@ -82,7 +83,7 @@
     $("#statLessonBar").style.width = (count / lessons.length * 100) + "%";
     $("#statCourseBar").style.width = progress() + "%";
     $("#navLessonCount").textContent = lessons.length - count;
-    $("#streakDays").textContent = state.visits.length ? Math.min(state.visits.length,7) : 0;
+    $("#streakDays").textContent = calculateStreak();
     renderMiniCurriculum();
   }
   function renderMiniCurriculum() {
@@ -132,24 +133,38 @@
     activeLesson=lesson.id; state.lastLesson=lesson.id;
     const done=completed(lesson.id), saved=bookmarked(lesson.id);
     const code = lesson.code;
-    const sections=lesson.sections.map((section,i)=>'<h2>'+escapeHTML(section[0])+'</h2><p>'+escapeHTML(section[1])+'</p>'+(i===0?'<div class="example-box"><div class="example-top"><span>EXAMPLE.JS</span><span>JavaScript</span></div><pre><code>'+escapeHTML(code)+'</code></pre><div class="expected-output">▶ Expected output: '+escapeHTML(lesson.output)+'</div></div>':'')).join("");
+    const sections=lesson.sections.map((section,i)=>'<h2>'+escapeHTML(section[0])+'</h2><p>'+escapeHTML(section[1])+'</p>'+(i===0?'<div class="example-box"><div class="example-top"><span>EXAMPLE.JS</span><span>JavaScript</span></div><pre><code>'+escapeHTML(code)+'</code></pre><div class="expected-output">▶ Expected output: '+escapeHTML(lesson.output)+'</div><div class="example-actions"><button type="button" class="small-ghost" id="tryLessonCode">Try this in the practice lab ↗</button></div></div>':'')).join("");
     const quiz=lesson.quiz;
     const already=state.quizPassed.includes(lesson.id);
     $("#lessonDetail").innerHTML = '<div class="lesson-detail-header"><div class="eyebrow">LESSON '+String(lesson.id).padStart(2,"0")+' / '+String(lessons.length).padStart(2,"0")+' · '+escapeHTML(lesson.unit.toUpperCase())+'</div><h1>'+escapeHTML(lesson.title)+'</h1><p>'+escapeHTML(lesson.intro)+'</p><div class="hero-meta"><span>◷ <b>'+lesson.duration+' minutes</b></span><span>▤ '+escapeHTML(lesson.level)+'</span></div></div><div class="lesson-content-grid"><article class="lesson-body"><h2>Let’s make it simple</h2><p>'+escapeHTML(lesson.intro)+'</p>'+sections+'<div class="quiz-box"><h3>Quick check <span style="color:var(--muted);font-weight:400;font-size:10px">· one question</span></h3><p style="color:var(--text)">'+escapeHTML(quiz.q)+'</p><div class="quiz-options">'+quiz.options.map((option,i)=>'<button class="quiz-option" data-answer="'+i+'">'+escapeHTML(option)+'</button>').join("")+'</div><div class="quiz-feedback" id="quizFeedback">'+(already?'✓ You passed this quick check before. Try it again for practice.':'Choose an answer to check your understanding.')+'</div></div><div class="lesson-nav"><button id="prevLesson" '+(lesson.id===1?'disabled':'')+'>← Previous</button><button id="nextLesson" '+(lesson.id===lessons.length?'disabled':'')+'>Next lesson →</button></div></article><aside class="lesson-aside"><h3>Your lesson progress</h3><div class="aside-progress"><span style="width:'+(done?100:0)+'%"></span></div><p>'+(done?'Lesson completed. Nice work!':'Read the lesson and try the quick check.')+'</p><button class="complete-button" id="markComplete">'+(done?'✓ Completed — mark again':'Mark lesson complete')+'</button><button class="bookmark-button '+(saved?'saved':'')+'" id="bookmarkLesson">'+(saved?'♥ Saved to bookmarks':'♡ Save this lesson')+'</button><hr style="border:0;border-top:1px solid var(--line);margin:18px 0"><h3>Learning tip</h3><p>Type the example yourself, then change one small part. Predict what will happen before you run it.</p><button class="secondary-button" data-goto="practice">Open practice lab ↗</button></aside></div>';
     saveState();
     location.hash="lesson-"+lesson.id;
   }
+  let referenceFilter = "all";
+  function renderReference() {
+    const query = ($("#referenceSearch")?.value || "").trim().toLowerCase();
+    const matches = referenceItems.filter(item => {
+      const categoryMatch = referenceFilter === "all" || item.category === referenceFilter;
+      const queryMatch = !query || (item.title+" "+item.category+" "+item.syntax+" "+item.plain+" "+item.example).toLowerCase().includes(query);
+      return categoryMatch && queryMatch;
+    });
+    $("#referenceGrid").innerHTML = matches.length ? matches.map(item =>
+      '<article class="reference-card"><div class="reference-card-top"><span class="reference-category">'+escapeHTML(item.category)+'</span><button class="reference-copy" type="button" data-copy-example="'+escapeHTML(item.title)+'" aria-label="Copy '+escapeHTML(item.title)+' example">Copy example</button></div><h2>'+escapeHTML(item.title)+'</h2><pre><code>'+escapeHTML(item.syntax)+'</code></pre><p>'+escapeHTML(item.plain)+'</p><div class="reference-example"><span>EXAMPLE</span><code>'+escapeHTML(item.example)+'</code></div></article>'
+    ).join("") : '<div class="empty-state"><strong>No matching concepts</strong><p>Try a shorter search or choose another category.</p></div>';
+    $("#referenceCount").textContent = matches.length+" concept"+(matches.length===1?"":"s")+" shown";
+  }
   function showView(name) {
-    const valid=["home","learn","lesson","practice","roadmap","bookmarks","search"];
+    const valid=["home","learn","lesson","practice","roadmap","bookmarks","reference","search"];
     if(!valid.includes(name)) name="home";
     $$(".view").forEach(view=>view.classList.toggle("active",view.id==="view-"+name));
     $$(".nav-link[data-view]").forEach(link=>link.classList.toggle("active",link.dataset.view===name || (name==="lesson"&&link.dataset.view==="learn")));
-    const names={home:"Overview",learn:"My learning",lesson:"Lesson",practice:"Practice lab",roadmap:"Roadmap",bookmarks:"Bookmarks",search:"Search results"};
+    const names={home:"Overview",learn:"My learning",lesson:"Lesson",practice:"Practice lab",roadmap:"Roadmap",bookmarks:"Bookmarks",reference:"Quick reference",search:"Search results"};
     $("#breadcrumbCurrent").textContent=names[name]||"Overview";
     $("#sidebar").classList.remove("open");$("#mobileOverlay").classList.remove("show");
     if(name==="learn")renderLibrary("#lessonLibrary",currentFilter);
     if(name==="bookmarks")renderLibrary("#bookmarkLibrary","all",lessons.filter(l=>bookmarked(l.id)));
     if(name==="roadmap")renderRoadmap();
+    if(name==="reference")renderReference();
     if(name==="home")renderHome();
     window.scrollTo({top:0,behavior:"smooth"});
   }
@@ -232,10 +247,22 @@
     };
     reader.readAsText(file);
   }
+  function localDateKey(date=new Date()) {
+    return date.getFullYear()+"-"+String(date.getMonth()+1).padStart(2,"0")+"-"+String(date.getDate()).padStart(2,"0");
+  }
+  function calculateStreak() {
+    const visited = new Set(state.visits);
+    let cursor = new Date(), count = 0;
+    if (!visited.has(localDateKey(cursor))) cursor.setDate(cursor.getDate()-1);
+    while (visited.has(localDateKey(cursor)) && count < 366) {
+      count++; cursor.setDate(cursor.getDate()-1);
+    }
+    return count;
+  }
   function recordVisit() {
-    const today=new Date().toISOString().slice(0,10);
+    const today=localDateKey();
     if(!state.visits.includes(today))state.visits.push(today);
-    state.visits=state.visits.slice(-7);
+    state.visits=state.visits.slice(-366);
     $("#todayLabel").textContent=new Date().toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"}).toUpperCase();
     saveState();
   }
@@ -260,6 +287,29 @@
     if(event.target.closest("#bookmarkLesson")){toggleBookmark(activeLesson);return;}
     if(event.target.closest("#prevLesson")){if(activeLesson>1)openLesson(activeLesson-1);return;}
     if(event.target.closest("#nextLesson")){if(activeLesson<lessons.length)openLesson(activeLesson+1);return;}
+    if(event.target.closest("#tryLessonCode")) {
+      const lesson = lessonById(activeLesson);
+      if (lesson) $("#codeEditor").value = lesson.code;
+      showView("practice"); location.hash = "practice";
+      showToast("Lesson example loaded into the practice lab."); return;
+    }
+    const copyExample = event.target.closest("[data-copy-example]");
+    if (copyExample) {
+      const item = referenceItems.find(entry => entry.title === copyExample.dataset.copyExample);
+      if (item) {
+        const textToCopy = item.example;
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(textToCopy).then(() => showToast("Example copied.")).catch(() => showToast("Copy unavailable. Select the example text instead."));
+        } else {
+          const helper = document.createElement("textarea");
+          helper.value = textToCopy; helper.setAttribute("readonly",""); helper.style.position="fixed"; helper.style.opacity="0";
+          document.body.appendChild(helper); helper.select();
+          const copied = document.execCommand("copy"); helper.remove();
+          showToast(copied ? "Example copied." : "Copy unavailable. Select the example text instead.");
+        }
+      }
+      return;
+    }
     if(event.target.closest("#runCode")){runCode();return;}
     if(event.target.closest("#resetCode")){$("#codeEditor").value='const name = "future developer";\nconsole.log("Hello, " + name + "!");\nconsole.log(2 + 3);';renderOutput([]);return;}
     if(event.target.closest("#clearOutput")){renderOutput([]);return;}
@@ -275,6 +325,14 @@
     if(event.key==="Enter"&&event.target.matches("[data-lesson],[data-goto],[data-module]"))event.target.click();
   });
   $("#searchInput").addEventListener("keydown",event=>{if(event.key==="Enter"){searchLessons(event.target.value);event.target.blur();}});
+  $("#referenceSearch").addEventListener("input",renderReference);
+  $("#referenceFilters").addEventListener("click",event=>{
+    const button=event.target.closest("[data-reference-filter]");
+    if(!button)return;
+    referenceFilter=button.dataset.referenceFilter;
+    $("#referenceFilters [data-reference-filter]").forEach(item=>item.classList.toggle("active",item===button));
+    renderReference();
+  });
   $("#searchInput").addEventListener("input",event=>{if(event.target.value.trim().length>=3)searchLessons(event.target.value);});
   $("#lessonFilters").addEventListener("click",event=>{
     const button=event.target.closest("[data-filter]");if(!button)return;
@@ -298,6 +356,6 @@
   renderHome();
   const hash=location.hash;
   if(hash.startsWith("#lesson-"))openLesson(Number(hash.replace("#lesson-","")));
-  else if(hash==="#learn"||hash==="#practice"||hash==="#roadmap"||hash==="#bookmarks")showView(hash.slice(1));
+  else if(hash==="#learn"||hash==="#practice"||hash==="#roadmap"||hash==="#bookmarks"||hash==="#reference")showView(hash.slice(1));
   else showView("home");
 })();
