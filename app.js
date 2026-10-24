@@ -435,19 +435,42 @@
     if(shape==="rectangle")return {title:"Rectangle geometry",answer:"Area = "+fmtMath(a*b)+"; perimeter = "+fmtMath(2*(a+b)),steps:["Length = "+a+", width = "+b+".","Area = length × width = "+a+" × "+b+" = "+fmtMath(a*b)+".","Perimeter = 2(length + width) = 2("+a+" + "+b+") = "+fmtMath(2*(a+b))+"."]};
     return {title:"Triangle geometry",answer:"Area = "+fmtMath(a*b/2),steps:["Base = "+a+", perpendicular height = "+b+".","Area = ½ × base × height = ½ × "+a+" × "+b+" = "+fmtMath(a*b/2)+"."]};
   }
+  function pythagoreanMath(src){
+    const m=src.match(/(-?\d+(?:\.\d+)?)\s*[,; ]\s*(-?\d+(?:\.\d+)?)/);
+    if(!m)throw new Error("Enter the two perpendicular sides, e.g. 3, 4.");
+    const a=Number(m[1]),b=Number(m[2]);if(a<=0||b<=0)throw new Error("Side lengths must be positive.");
+    const sum=a*a+b*b,c=Math.sqrt(sum);
+    return {title:"Pythagorean theorem",answer:"Hypotenuse c = "+fmtMath(c),steps:["Perpendicular sides: a = "+a+", b = "+b+".","Pythagorean theorem: a² + b² = c².","Substitute: "+a+"² + "+b+"² = c².","Calculate: "+fmtMath(a*a)+" + "+fmtMath(b*b)+" = "+fmtMath(sum)+".","Take the positive square root: c = √"+fmtMath(sum)+" = "+fmtMath(c)+"."]};
+  }
+  function interestMath(src,compound){
+    const nums=src.match(/-?\d+(?:\.\d+)?/g)||[];if(nums.length<3)throw new Error("Enter principal, annual rate (%), and time in years, e.g. 1000, 5, 2.");
+    const p=Number(nums[0]),r=Number(nums[1]),t=Number(nums[2]);if(p<0||r<0||t<0)throw new Error("Values must be zero or greater.");
+    const amount=compound?p*Math.pow(1+r/100,t):p*(1+r*t/100),interest=amount-p;
+    const steps=compound?["P = "+p+", annual rate = "+r+"%, time = "+t+" years.","Compound amount formula: A = P(1 + r/100)^t.","A = "+p+"(1 + "+r+"/100)^"+t+" = "+fmtMath(amount)+".","Interest = amount − principal = "+fmtMath(interest)+"."]:["P = "+p+", annual rate = "+r+"%, time = "+t+" years.","Simple interest formula: I = Prt/100.","I = "+p+" × "+r+" × "+t+" ÷ 100 = "+fmtMath(interest)+".","Total amount A = P + I = "+fmtMath(amount)+"."];
+    return {title:compound?"Compound interest":"Simple interest",answer:"Interest = "+fmtMath(interest)+"; total amount = "+fmtMath(amount),steps};
+  }
+  function fractionMath(src){
+    const m=src.toLowerCase().replace(/simplify|reduce|fraction/g,"").match(/(-?\d+)\s*\/\s*(-?\d+)/);
+    if(!m)throw new Error("Enter a fraction to simplify, e.g. 18/24.");
+    let n=Number(m[1]),d=Number(m[2]);if(!d)throw new Error("The denominator cannot be zero.");
+    const original=n+"/"+d,g=gcdMath(n,d);n/=g;d/=g;if(d<0){n=-n;d=-d;}
+    return {title:"Fraction simplification",answer:n+"/"+d+(d===1?" = "+n:""),steps:["Start with "+original+".","Greatest common divisor = "+g+".","Divide numerator and denominator by "+g+".","Simplified fraction = "+n+"/"+d+"."]};
+  }
   function solveMathProblem(source,mode){
     const s=source.trim();if(!s)throw new Error("Type a problem first. The maths goblin cannot solve an empty box.");
     if(mode==="auto"){
-      if(/^(mean|average|median|mode|range)\b/i.test(s))mode="statistics";
-      else if(/^(circle|rectangle|square|triangle)\b/i.test(s))mode="geometry";
-      else if(s.includes("=")&&/x\s*\^?\s*2|x²/i.test(s))mode="quadratic";
+      if(/^compound interest\b/i.test(s))mode="compound-interest";
+      else if(/^(simple interest|interest)\b/i.test(s))mode="simple-interest";
+      else if(/^(pythagorean|hypotenuse)\b/i.test(s))mode="pythagorean";
+      else if(/^simplify\s+-?\d+\s*\/\s*-?\d+/i.test(s)||/^fraction\b/i.test(s))mode="fraction";
       else if(/%\s*(of|\*|×)/i.test(s)||/\bpercent(age)?\b/i.test(s))mode="percentage";
       else if(s.includes("=")&&/x/i.test(s))mode="equation";
       else if(/:\s*-?\d/.test(s))mode="ratio";else mode="arithmetic";
     }
-    if(mode==="quadratic")return quadraticMath(s);
-    if(mode==="statistics")return statisticsMath(s);
-    if(mode==="geometry")return geometryMath(s);
+    if(mode==="pythagorean")return pythagoreanMath(s.replace(/^(pythagorean|hypotenuse)\s*/i,""));
+    if(mode==="simple-interest")return interestMath(s,false);
+    if(mode==="compound-interest")return interestMath(s,true);
+    if(mode==="fraction")return fractionMath(s);
     if(mode==="percentage"){const m=s.match(/(-?\d+(?:\.\d+)?)\s*%\s*(?:of|\*|×)\s*(-?\d+(?:\.\d+)?)/i);if(!m)throw new Error("Write a percentage like 15% of 240.");const pct=Number(m[1]),base=Number(m[2]),dec=pct/100,result=dec*base;return {title:"Percentage calculation",answer:fmtMath(result),steps:["Convert "+pct+"% to a decimal: "+pct+" ÷ 100 = "+fmtMath(dec)+".","Multiply by the original amount: "+fmtMath(dec)+" × "+base+".","Answer: "+fmtMath(result)+"."]};}
     if(mode==="equation")return linearMath(s);
     if(mode==="ratio")return ratioMath(s);
