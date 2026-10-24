@@ -65,3 +65,12 @@ The dashboard styling takes inspiration from [Watermelon UI](https://ui.watermel
 ## Teaching style: absolute beginner mode
 
 Lessons are designed for learners starting from zero, with everyday language, small numbered steps, a reassuring note that no prior programming experience is expected, and an optional **Explain every line to me** walkthrough for each lesson's code. Each lesson ends with a low-pressure knowledge check. The goal is to explain the idea first, show the code second, and let the learner experiment immediately.
+
+
+## New course philosophy: absurd theory + serious building
+
+The course now adds a **Project arena** with eight guided, free projects, from a tip calculator to a mini portfolio. Each project includes a chaotic everyday analogy, concepts to learn, checkpoints, starter code, a hint, and a definition of done. Project completion is saved locally in your browser.
+
+Every lesson also has a **Chaotic Theory Corner**: a memorable absurd analogy, a more formal explanation behind a disclosure, a common mistake to avoid, and a tiny experiment. The aim is not to replace accurate theory with jokes; the jokes are memory hooks for the real idea.
+
+Suggested loop: **read the theory → predict the output → run code → build a checkpoint → debug → explain it in your own words**. Everything remains free and static, with no backend, database, login, or paid dependency.
