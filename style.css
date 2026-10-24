@@ -434,3 +434,30 @@ input,select,textarea{min-width:0}
   .search-box{width:clamp(72px,25vw,90px);flex-basis:clamp(72px,25vw,90px)}
   .search-box input{font-size:10px}
 }
+
+
+/* Theory-first weird-build feature: fluid cards, safe text wrapping, no fixed-width traps. */
+.weird-build{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(16px,2.5vw,28px);align-items:stretch;margin:0 0 30px;padding:clamp(16px,2.2vw,25px);border-color:#8b5cf633;background:radial-gradient(ellipse at 8% 10%,#8b5cf614,transparent 45%),var(--surface)}
+.weird-build-copy{min-width:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center}
+.weird-build-copy h2{font:600 clamp(20px,2.2vw,27px)/1.2 'Space Grotesk',sans-serif;letter-spacing:-.7px;margin:10px 0}
+.weird-build-copy>p{max-width:48ch;font-size:13px;line-height:1.8;color:var(--muted);margin:0}
+.weird-build-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
+.weird-build-actions .secondary-button{width:auto;margin-top:0;padding:10px 13px}
+.weird-build-card{min-width:0;padding:clamp(15px,2vw,22px);border:1px solid var(--line);border-radius:13px;background:var(--surface-2);display:flex;flex-direction:column}
+.weird-build-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.weird-build-top>span:first-child{font-size:26px;line-height:1.2}
+.weird-build-top>span:last-child{font-size:9px;font-weight:800;letter-spacing:1.1px;color:var(--mint)}
+.weird-build-card h3{font:600 clamp(17px,1.8vw,22px)/1.3 'Space Grotesk',sans-serif;letter-spacing:-.4px;margin:14px 0 7px}
+.weird-build-card>p{font-size:12px;line-height:1.85;color:var(--muted);margin:0}
+.weird-build-experiment{margin-top:15px;padding:12px 13px;border-left:3px solid var(--purple);border-radius:0 9px 9px 0;background:#8b5cf60b}
+.weird-build-experiment strong,.weird-build-starter>span{font-size:9px;letter-spacing:1px;color:var(--text);font-weight:800}
+.weird-build-experiment p{font-size:11px;line-height:1.8;color:var(--muted);margin:5px 0 0}
+.weird-build-starter{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:auto!important;padding-top:15px}
+.weird-build-starter code{font:10px/1.5 Consolas,monospace;color:#c4b5fd;background:#8b5cf617;border:1px solid #8b5cf626;border-radius:5px;padding:4px 7px;overflow-wrap:anywhere}
+body.light .weird-build{background:radial-gradient(ellipse at 8% 10%,#8b5cf610,transparent 45%),var(--surface)}
+body.light .weird-build-starter code{color:#6045a1}
+@media(max-width:1000px){.weird-build{grid-template-columns:minmax(0,1fr)}.weird-build-copy>p{max-width:70ch}.weird-build-card{min-height:0}}
+@media(max-width:600px){.weird-build{padding:15px;gap:15px;margin-bottom:24px}.weird-build-copy h2{font-size:22px}.weird-build-actions{width:100%;display:grid;grid-template-columns:minmax(0,1fr)}.weird-build-actions button{width:100%;white-space:normal}.weird-build-card{padding:14px}.weird-build-card h3{font-size:19px}}
+@media(max-width:360px){.weird-build{padding:11px}.weird-build-copy .eyebrow{font-size:8px;letter-spacing:1px}.weird-build-actions{gap:7px}.weird-build-card{padding:11px}}
+@media(min-width:1800px){.weird-build{gap:32px;padding:30px}.weird-build-card{padding:28px}}
+@media(prefers-reduced-motion:reduce){.weird-build *{scroll-behavior:auto}}
