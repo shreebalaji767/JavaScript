@@ -301,3 +301,123 @@ input,textarea,select{max-width:100%}
 .history-topic-now{background:rgba(45,212,191,.08);border-left:3px solid var(--mint,#56d8bf)}
 .history-topic-rebuild{background:var(--surface-2,var(--bg));border-left:3px solid var(--purple,#9b8afb)}
 @media(max-width:680px){.history-topic-facts{grid-template-columns:1fr}.history-topic-card{padding:17px}.history-topic-facts>div{padding:13px}}
+
+
+/* =========================================================
+   RESPONSIVE SAFETY LAYER
+   Keep layouts inside the available viewport at every size.
+   These rules intentionally come last to correct older rules.
+   ========================================================= */
+*,*::before,*::after{box-sizing:border-box}
+html{width:100%;max-width:100%;overflow-x:clip;scroll-padding-top:76px}
+body{width:100%;max-width:100%;min-width:0;margin:0;overflow-x:clip}
+.app-shell,.main-area,.page-content,.view,.panel,.lesson-detail,.lesson-studio,.deep-study{min-width:0;max-width:100%}
+img,svg,video,canvas,iframe{max-width:100%}
+img,video,canvas{height:auto}
+button,input,select,textarea{max-width:100%;font:inherit}
+button,a,input,select,textarea{touch-action:manipulation}
+button,a{overflow-wrap:anywhere}
+p,li,h1,h2,h3,h4,small,strong,span,label,code,pre{overflow-wrap:anywhere}
+pre,code{white-space:pre-wrap;word-break:break-word}
+table{display:block;width:100%;max-width:100%;overflow-x:auto;border-collapse:collapse}
+input,select,textarea{min-width:0}
+.page-content>*{min-width:0}
+.topbar>*{min-width:0}
+.topbar-actions{min-width:0}
+.search-box{min-width:0}
+.search-box input{min-width:0}
+.hero-content,.hero-art,.hero-card,.course-method-banner,.welcome-row,.section-heading,.filter-row,.filter-pills,.lab-layout,.lesson-content-grid,.lesson-detail-header,.lesson-studio,.deep-study,.history-panel,.history-topic-card,.history-topic-facts>div{min-width:0}
+.lesson-library,.learning-grid,.project-grid,.stats-grid,.roadmap-strip,.math-grid,.solver-layout,.deep-theory-grid,.studio-task-grid,.history-method-grid,.history-topic-facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+.lesson-card,.learning-card,.project-card,.stat-card,.roadmap-step{min-width:0}
+.history-tab-row{width:100%;max-width:100%}
+.history-tab{min-width:0;white-space:normal;overflow-wrap:anywhere}
+.history-event{grid-template-columns:minmax(0,190px) minmax(0,1fr)}
+.history-event-body,.history-event-body>*{min-width:0}
+.history-topic-facts p,.history-topic-lead,.history-topic-group-heading p{overflow-wrap:anywhere}
+.lab-layout>*{min-width:0}
+#codeEditor{display:block;width:100%;max-width:100%;min-width:0;resize:vertical;white-space:pre;overflow:auto;tab-size:2}
+.output-body{min-width:0;overflow-wrap:anywhere;overflow-x:auto}
+.page-heading p,.hero-subtitle{max-width:75ch}
+:focus-visible{scroll-margin-block:90px}
+@media(min-width:1600px){
+  .page-content{width:100%;max-width:1600px;padding-left:clamp(36px,3vw,64px);padding-right:clamp(36px,3vw,64px)}
+}
+@media(max-width:1100px){
+  .topbar{gap:12px;padding-left:18px;padding-right:18px}
+  .search-box{width:clamp(120px,19vw,210px)}
+  .lesson-library,.learning-grid,.project-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .history-event{grid-template-columns:minmax(0,150px) minmax(0,1fr)}
+}
+@media(max-width:850px){
+  .sidebar{width:min(320px,88vw);max-width:100vw}
+  .main-area{margin-left:0;width:100%;max-width:100%}
+  .topbar{width:100%;padding-left:clamp(10px,2.5vw,20px);padding-right:clamp(10px,2.5vw,20px)}
+  .menu-toggle{display:inline-flex;align-items:center;justify-content:center;flex:0 0 38px}
+  .page-content{width:100%;padding-left:clamp(14px,3vw,24px);padding-right:clamp(14px,3vw,24px)}
+  .lesson-content-grid{grid-template-columns:minmax(0,1fr)}
+  .lesson-aside{order:0}
+  .lab-layout{grid-template-columns:minmax(0,1fr)}
+  .hero-card{gap:0}
+  .history-event{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:600px){
+  .topbar{height:auto;min-height:60px;padding-top:8px;padding-bottom:8px;gap:7px}
+  .breadcrumb{flex:1 1 auto;min-width:0}
+  .topbar-actions{flex:0 1 auto;gap:4px}
+  .search-box{flex:0 0 34px;width:34px}
+  .search-box input,.search-box kbd{display:none}
+  .install-button{flex:0 0 auto;min-width:0}
+  .page-content{padding-top:18px;padding-bottom:max(22px,env(safe-area-inset-bottom))}
+  .welcome-row{flex-direction:column;align-items:flex-start}
+  .welcome-row>div:first-child{width:100%;min-width:0}
+  .hero-card{min-height:0;display:block}
+  .hero-content{width:100%;max-width:none;padding:22px 18px 145px}
+  .hero-content h2,.hero-content>p{max-width:100%}
+  .hero-art{width:72%;height:140px;right:-5%;bottom:-2px;opacity:.28}
+  .code-window{max-width:100%;transform:scale(.78);transform-origin:bottom right}
+  .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .lesson-library,.learning-grid,.project-grid,.solver-layout,.deep-theory-grid,.studio-task-grid,.history-method-grid,.history-topic-facts{grid-template-columns:minmax(0,1fr)}
+  .roadmap-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .filter-row{align-items:stretch}
+  .filter-pills{width:100%;flex-wrap:wrap}
+  .filter-pill{flex:1 1 auto;min-width:0}
+  .course-method-banner{flex-wrap:wrap;align-items:flex-start}
+  .course-method-banner>div{flex:1 1 180px;min-width:0}
+  .course-method-banner>.primary-button{width:100%}
+  .section-heading{gap:10px;flex-wrap:wrap}
+  .section-heading>*{min-width:0}
+  .history-tab-row{display:grid;grid-template-columns:minmax(0,1fr);padding:5px}
+  .history-tab{width:100%;min-height:42px;text-align:left}
+  .history-principle{align-items:flex-start}
+  .history-topic-card{padding:16px}
+  .history-topic-facts{grid-template-columns:minmax(0,1fr)}
+  .history-topic-now,.history-topic-rebuild{padding:12px}
+  .project-summary{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .lesson-detail-header,.lesson-body{padding:clamp(13px,4vw,20px)}
+  .panel-top{gap:8px}
+  .editor-footer{gap:8px;flex-wrap:wrap}
+  .site-footer{flex-wrap:wrap}
+}
+@media(max-width:380px){
+  .topbar{gap:4px;padding-left:7px;padding-right:7px}
+  .menu-toggle,.icon-button{width:32px;height:36px;flex-basis:32px}
+  .install-button{padding-left:6px;padding-right:6px}
+  .install-label{font-size:9px}
+  .page-content{padding-left:10px;padding-right:10px}
+  .stats-grid,.roadmap-strip{grid-template-columns:minmax(0,1fr)}
+  .stat-card{padding:12px}
+  .hero-content{padding-left:14px;padding-right:14px}
+  .project-summary{grid-template-columns:minmax(0,1fr)}
+  .project-summary>div{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .history-principle{display:block}
+  .history-principle-icon{margin-bottom:8px}
+}
+@media(orientation:landscape) and (max-height:520px) and (max-width:850px){
+  .sidebar{padding-top:12px;overflow-y:auto}
+  .topbar{position:sticky}
+  .page-content{padding-top:14px}
+  .hero-card{min-height:250px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
