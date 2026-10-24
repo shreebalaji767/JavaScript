@@ -238,3 +238,45 @@ input,textarea,select{max-width:100%}
 .studio-reflection ol{padding-left:22px;color:var(--muted);font-size:13px;line-height:1.8}
 @media(max-width:850px){.deep-theory-grid,.studio-task-grid{grid-template-columns:1fr}.deep-study,.lesson-studio{padding:17px;border-radius:17px}.deep-theory-grid article,.studio-task-grid article{padding:14px}.studio-actions{align-items:flex-start;flex-direction:column}.studio-actions .primary-button{width:100%}}
 @media(prefers-reduced-motion:reduce){.deep-topic summary{scroll-behavior:auto}}
+
+
+/* History classroom: explain the human story behind maths and JavaScript */
+.history-heading{max-width:950px}
+.history-principle{display:flex;align-items:flex-start;gap:15px;margin:22px 0 25px;padding:19px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(135deg,rgba(139,92,246,.09),rgba(45,212,191,.05))}
+.history-principle-icon{display:grid;place-items:center;flex:0 0 42px;height:42px;border-radius:13px;background:var(--surface);font-size:22px}
+.history-principle strong{font-size:15px}
+.history-principle p{margin:5px 0 0;font-size:13px;line-height:1.8;color:var(--muted)}
+.history-tab-row{display:flex;gap:9px;flex-wrap:wrap;margin:22px 0 25px;padding:6px;border:1px solid var(--line);border-radius:16px;background:var(--surface);width:fit-content;max-width:100%}
+.history-tab{border:1px solid transparent;border-radius:11px;padding:12px 16px;background:transparent;color:var(--muted);font:inherit;font-size:13px;font-weight:750;cursor:pointer}
+.history-tab.active{background:var(--surface-2,var(--bg));border-color:var(--line);color:var(--text);box-shadow:0 3px 12px rgba(0,0,0,.08)}
+.history-tab:focus-visible,.history-project button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
+.history-panel[hidden]{display:none!important}
+.history-intro{max-width:900px;margin:10px 0 25px}
+.history-kicker{font-size:10px;letter-spacing:1.5px;font-weight:850;color:var(--muted)}
+.history-intro h2{font-size:clamp(24px,3.2vw,34px);line-height:1.2;letter-spacing:-.8px;margin:8px 0 10px}
+.history-intro>p{font-size:14px;line-height:1.85;color:var(--muted);max-width:820px}
+.history-timeline{position:relative;display:grid;gap:16px;margin:22px 0 30px}
+.history-event{position:relative;display:grid;grid-template-columns:minmax(145px,190px) minmax(0,1fr);gap:18px;padding:19px;border:1px solid var(--line);border-radius:18px;background:var(--surface);min-width:0}
+.history-event:before{content:"";position:absolute;left:-1px;top:20px;bottom:20px;width:3px;border-radius:4px;background:linear-gradient(var(--purple,#9b8afb),var(--mint,#56d8bf))}
+.history-date{font-size:12px;font-weight:850;line-height:1.55;color:var(--text);padding:2px 0 0 4px}
+.history-event-body{min-width:0}
+.history-event-body h3{font-size:17px;line-height:1.4;letter-spacing:-.3px;margin:0 0 9px}
+.history-event-body>p{font-size:13px;line-height:1.85;color:var(--muted);margin:0 0 14px}
+.history-why{padding:12px 14px;border-radius:12px;background:var(--surface-2,var(--bg));font-size:12px;line-height:1.8;color:var(--muted);margin:12px 0}
+.history-why strong,.history-try strong{display:block;font-size:11px;color:var(--text);margin-bottom:3px;letter-spacing:.2px}
+.history-try{font-size:12px;line-height:1.8;padding-left:13px;border-left:2px solid var(--mint,#56d8bf);color:var(--muted)}
+.history-project{margin:26px 0;padding:clamp(20px,3vw,30px);border:1px solid var(--line);border-radius:20px;background:linear-gradient(135deg,rgba(45,212,191,.08),rgba(139,92,246,.07))}
+.history-project h3{font-size:22px;margin:8px 0}
+.history-project p{font-size:13px;line-height:1.85;color:var(--muted);max-width:850px;margin:0 0 18px}
+.history-study-method,.history-sources{margin:32px 0;padding:22px;border:1px solid var(--line);border-radius:18px;background:var(--surface)}
+.history-study-method h2,.history-sources h2{font-size:20px;letter-spacing:-.4px;margin:0 0 16px}
+.history-method-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.history-method-grid article{padding:15px;border:1px solid var(--line);border-radius:13px;background:var(--surface-2,var(--bg))}
+.history-method-grid strong{font-size:13px}
+.history-method-grid p{font-size:12px;line-height:1.8;color:var(--muted);margin:6px 0 0}
+.history-sources p{font-size:12px;line-height:1.8;color:var(--muted)}
+.history-sources ul{display:grid;gap:9px;padding-left:20px;margin-bottom:0}
+.history-sources li{font-size:13px;line-height:1.6}
+.history-sources a{color:var(--mint,#56d8bf);text-underline-offset:3px;overflow-wrap:anywhere}
+@media(max-width:760px){.history-event{grid-template-columns:1fr;gap:7px;padding:16px}.history-date{padding-left:4px;color:var(--mint,#56d8bf)}.history-method-grid{grid-template-columns:1fr}.history-tab-row{width:100%}.history-tab{flex:1 1 220px;text-align:center}.history-principle{padding:15px}}
+@media(max-width:420px){.history-tab{flex-basis:100%}.history-event-body h3{font-size:16px}.history-study-method,.history-sources{padding:16px}}
