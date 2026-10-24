@@ -1,0 +1,23 @@
+{
+  "id": "./",
+  "name": "Scriptly — JavaScript Learning Studio",
+  "short_name": "Scriptly",
+  "description": "Learn JavaScript and maths from zero to advanced, with guided lessons, practice, projects, and local progress.",
+  "lang": "en",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#101116",
+  "theme_color": "#101116",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "./logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
