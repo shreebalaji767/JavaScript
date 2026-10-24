@@ -22,7 +22,8 @@
       <div class="side-label">WORKSPACE</div>
       <nav class="main-nav" aria-label="Main navigation">
         <a class="nav-link active" href="#home" data-view="home"><span class="nav-icon">⌂</span> Overview</a>
-        <a class="nav-link" href="#learn" data-view="learn"><span class="nav-icon">▤</span> My learning <span class="nav-count" id="navLessonCount">18</span></a>
+        <a class="nav-link" href="#learn" data-view="learn"><span class="nav-icon">▤</span> My learning <span class="nav-count" id="navLessonCount">30</span></a>
+        <a class="nav-link" href="#math" data-view="math"><span class="nav-icon">∑</span> Math for JavaScript <span class="nav-count">12</span></a>
         <a class="nav-link" href="#practice" data-view="practice"><span class="nav-icon">⌘</span> Practice lab</a>
         <a class="nav-link" href="#projects" data-view="projects"><span class="nav-icon">⚒</span> Project arena <span class="nav-count">8</span></a>
         <a class="nav-link" href="#roadmap" data-view="roadmap"><span class="nav-icon">⌁</span> Roadmap</a>
@@ -57,7 +58,7 @@
       <div class="page-content">
         <section class="view active" id="view-home">
           <div class="welcome-row">
-            <div><div class="eyebrow"><span class="eyebrow-dot"></span> YOUR CODING JOURNEY STARTS HERE</div><h1>Make something <span class="gradient-text">click.</span></h1><p class="hero-subtitle">Deep theory. Absurd analogies. Hands-on projects. Zero assumed knowledge.</p></div>
+            <div><div class="eyebrow"><span class="eyebrow-dot"></span> YOUR CODING JOURNEY STARTS HERE</div><h1>Make something <span class="gradient-text">click.</span></h1><p class="hero-subtitle">Deep theory. Absurd analogies. Hands-on projects. Maths included, zero assumed knowledge.</p></div>
             <div class="date-pill"><span class="date-spark">✳</span><span id="todayLabel">YOUR LEARNING SPACE</span></div>
           </div>
 
@@ -117,6 +118,13 @@ console.log(2 + 3);</textarea><div class="editor-footer"><span>JavaScript · run
           <div class="project-philosophy"><span>🧠💥</span><div><strong>The rule: struggle usefully, not mysteriously.</strong><p>Read the mission. Build one checkpoint. Test it. Break it. Fix it. Copying a solution before trying is like watching someone else eat your pizza and claiming you are full.</p></div></div>
           <div class="project-summary"><div><strong>8</strong><span>guided projects</span></div><div><strong>4</strong><span>difficulty levels</span></div><div><strong>0₹</strong><span>tools or subscriptions</span></div></div>
           <div class="project-grid" id="projectGrid"></div>
+        </section>
+
+        <section class="view" id="view-math">
+          <div class="page-heading"><div class="eyebrow">MATH WITHOUT THE MYSTERY</div><h1>Math for JavaScript<span class="gradient-text">.</span></h1><p>You do not need to be a maths genius. Learn the maths that helps you write better code, with ridiculous analogies, accurate theory, examples, and quick checks.</p></div>
+          <div class="math-roadmap-note"><h3>🧠 What maths do you actually need?</h3><p><strong>Start here:</strong> arithmetic, percentages, ratios, basic algebra, functions, and logic. <strong>Learn when relevant:</strong> binary/bitwise operations, statistics, geometry, and trigonometry. <strong>Specialist paths:</strong> calculus and advanced linear algebra are not required for most web development. Pick the topics that match what you want to build.</p></div>
+          <div class="library-toolbar"><span id="mathLessonCount">12 math lessons</span><span class="math-label">THEORY + ANALOGIES + PRACTICE</span></div>
+          <div class="lesson-library" id="mathLessonLibrary"></div>
         </section>
 
         <section class="view" id="view-roadmap">
