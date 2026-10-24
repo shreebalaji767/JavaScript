@@ -24,6 +24,7 @@
         <a class="nav-link active" href="#home" data-view="home"><span class="nav-icon">⌂</span> Overview</a>
         <a class="nav-link" href="#learn" data-view="learn"><span class="nav-icon">▤</span> My learning <span class="nav-count" id="navLessonCount">30</span></a>
         <a class="nav-link" href="#math" data-view="math"><span class="nav-icon">∑</span> Math for JavaScript <span class="nav-count">12</span></a>
+        <a class="nav-link" href="#math-solver" data-view="math-solver"><span class="nav-icon">√</span> Math problem solver</a>
         <a class="nav-link" href="#practice" data-view="practice"><span class="nav-icon">⌘</span> Practice lab</a>
         <a class="nav-link" href="#projects" data-view="projects"><span class="nav-icon">⚒</span> Project arena <span class="nav-count">8</span></a>
         <a class="nav-link" href="#roadmap" data-view="roadmap"><span class="nav-icon">⌁</span> Roadmap</a>
@@ -125,6 +126,25 @@ console.log(2 + 3);</textarea><div class="editor-footer"><span>JavaScript · run
           <div class="math-roadmap-note"><h3>🧠 What maths do you actually need?</h3><p><strong>Start here:</strong> arithmetic, percentages, ratios, basic algebra, functions, and logic. <strong>Learn when relevant:</strong> binary/bitwise operations, statistics, geometry, and trigonometry. <strong>Specialist paths:</strong> calculus and advanced linear algebra are not required for most web development. Pick the topics that match what you want to build.</p></div>
           <div class="library-toolbar"><span id="mathLessonCount">12 math lessons</span><span class="math-label">THEORY + ANALOGIES + PRACTICE</span></div>
           <div class="lesson-library" id="mathLessonLibrary"></div>
+        </section>
+
+        <section class="view" id="view-math-solver">
+          <div class="page-heading"><div class="eyebrow">SHOW YOUR WORK · NOT JUST THE ANSWER</div><h1>Math problem solver<span class="gradient-text">.</span></h1><p>Type a maths problem, get the answer, and see the steps. No magic calculator goblin hiding the working.</p></div>
+          <div class="solver-layout">
+            <div class="solver-card panel">
+              <div class="panel-top"><div><span class="live-dot"></span><strong>Problem input</strong></div><span class="math-label">FREE · IN YOUR BROWSER</span></div>
+              <label for="mathProblem" class="solver-label">What problem are we solving?</label>
+              <textarea id="mathProblem" rows="3" placeholder="Try: (12 + 8) * 3&#10;or: 15% of 240&#10;or: 2x + 3 = 11"></textarea>
+              <div class="solver-examples"><span>TRY ONE:</span><button type="button" data-math-example="(12 + 8) * 3">(12 + 8) × 3</button><button type="button" data-math-example="15% of 240">15% of 240</button><button type="button" data-math-example="2x + 3 = 11">2x + 3 = 11</button><button type="button" data-math-example="simplify 12:18">Simplify 12:18</button></div>
+              <div class="solver-controls"><label for="mathMode">Problem type</label><select id="mathMode"><option value="auto">Auto-detect</option><option value="arithmetic">Arithmetic / expressions</option><option value="percentage">Percentages</option><option value="equation">Linear equations (one x)</option><option value="ratio">Ratios and proportions</option></select><button class="primary-button" id="solveMath">Solve it →</button></div>
+              <p class="solver-hint">Supports arithmetic, brackets, powers, common functions, percentages, linear equations in x, and ratio simplification/proportions. Use * for multiplication if needed.</p>
+            </div>
+            <div class="solver-result panel" aria-live="polite" aria-atomic="true">
+              <div class="panel-top"><strong>Working out</strong><span class="solver-status" id="mathSolverStatus">WAITING FOR A PROBLEM</span></div>
+              <div id="mathSolverOutput" class="solver-output"><div class="output-placeholder"><span>∑</span><strong>Your solution will appear here</strong><p>Choose an example or type a problem, then press Solve it.</p></div></div>
+            </div>
+          </div>
+          <div class="math-roadmap-note"><h3>🧠 The rule of the maths goblin</h3><p>This solves supported problem types and explains the steps. It is not a universal symbolic maths engine, so advanced notation or ambiguous word problems may need rewriting into a supported format.</p></div>
         </section>
 
         <section class="view" id="view-roadmap">
