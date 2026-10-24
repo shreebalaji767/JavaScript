@@ -414,11 +414,11 @@
   }
 
   function showView(name) {
-    const valid=["home","learn","lesson","practice","math","math-solver","projects","projectdetail","roadmap","bookmarks","reference","search"];
+    const valid=["home","learn","lesson","practice","math","math-solver","history","projects","projectdetail","roadmap","bookmarks","reference","search"];
     if(!valid.includes(name)) name="home";
     $$(".view").forEach(view=>view.classList.toggle("active",view.id==="view-"+name));
     $$(".nav-link[data-view]").forEach(link=>link.classList.toggle("active",link.dataset.view===name || (name==="lesson"&&link.dataset.view==="learn")));
-    const names={home:"Overview",learn:"My learning",lesson:"Lesson",practice:"Practice lab",roadmap:"Roadmap",bookmarks:"Bookmarks",reference:"Quick reference",search:"Search results",projects:"Project arena",projectdetail:"Project mission",math:"Math for JavaScript","math-solver":"Math problem solver"};
+    const names={home:"Overview",learn:"My learning",lesson:"Lesson",practice:"Practice lab",roadmap:"Roadmap",bookmarks:"Bookmarks",reference:"Quick reference",search:"Search results",projects:"Project arena",projectdetail:"Project mission",math:"Math for JavaScript","math-solver":"Math problem solver",history:"History classroom"};
     $("#breadcrumbCurrent").textContent=names[name]||"Overview";
     $("#sidebar").classList.remove("open");$("#mobileOverlay").classList.remove("show");
     if(name==="learn")renderLibrary("#lessonLibrary",currentFilter);
@@ -529,6 +529,13 @@
     saveState();
   }
   document.addEventListener("click",event=>{
+    const historyTab=event.target.closest("[data-history-tab]");
+    if(historyTab){
+      const chosen=historyTab.dataset.historyTab;
+      $(".history-tab").forEach(tab=>{const selected=tab===historyTab;tab.classList.toggle("active",selected);tab.setAttribute("aria-selected",String(selected));});
+      $("[data-history-panel]").forEach(panel=>{const selected=panel.dataset.historyPanel===chosen;panel.classList.toggle("active",selected);panel.hidden=!selected;});
+      return;
+    }
     const nav=event.target.closest("[data-view]");
     if(nav){event.preventDefault();showView(nav.dataset.view);if(nav.dataset.view==="home")location.hash="home";return;}
     const goto=event.target.closest("[data-goto]");
@@ -673,7 +680,7 @@
   renderHome();
   const hash=location.hash;
   if(hash.startsWith("#lesson-"))openLesson(Number(hash.replace("#lesson-","")));
-  else if(hash==="#learn"||hash==="#practice"||hash==="#math"||hash==="#math-solver"||hash==="#projects"||hash==="#roadmap"||hash==="#bookmarks"||hash==="#reference")showView(hash.slice(1));
+  else if(hash==="#learn"||hash==="#practice"||hash==="#math"||hash==="#math-solver"||hash==="#history"||hash==="#projects"||hash==="#roadmap"||hash==="#bookmarks"||hash==="#reference")showView(hash.slice(1));
   else if(hash.startsWith("#project-"))renderProjectDetail(Number(hash.replace("#project-","")));
   else showView("home");
 })();
