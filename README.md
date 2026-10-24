@@ -147,3 +147,22 @@ Every lesson includes:
 8. Finish the reflection, then take the knowledge check.
 
 The studio project briefs cover the complete curriculum: JavaScript fundamentals and browser work, programming patterns and asynchronous APIs, maths for JavaScript, maths from zero, advanced JavaScript, and advanced mathematics. They are designed to make learners build, test, and explain—not simply copy and paste.
+
+
+## History classroom: maths and JavaScript origins
+
+The **History classroom** is part of the main navigation. It teaches the stories behind both subject areas using a timeline, accessible explanations, a “why it matters now” connection, and a practical task for every milestone.
+
+### History of mathematics
+
+The timeline follows the development of counting and place value; Mesopotamian and Egyptian calculation; Greek proof traditions; Indian contributions to decimal place value, zero, algebra, and astronomy; the work of Aryabhata and Brahmagupta; mathematical exchange and scholarship in the Islamic world; the spread of Hindu-Arabic numerals in Europe; the development of algebra, analytic geometry, calculus, probability, statistics, logic, and computation.
+
+It emphasises that mathematical knowledge developed across many cultures and centuries. Dates may be approximate, and complex developments are not attributed to one person when that would misrepresent the history.
+
+### History of JavaScript
+
+The timeline explains the early World Wide Web, JavaScript's creation at Netscape in 1995, the Mocha/LiveScript/JavaScript naming sequence, ECMAScript standardisation in 1997, dynamic web applications and AJAX, Node.js in 2009, ECMAScript 2015 (ES6), async/await in ECMAScript 2017, and the modern modules, tools, and runtimes ecosystem. It also distinguishes the JavaScript language from browser APIs and from Java.
+
+Each timeline includes a practical task that connects the historical problem to a modern coding or maths concept. The classroom also links to further reading from Britannica, MacTutor, ECMA-262, and MDN.
+
+To access it, open **History classroom** in the sidebar. It is part of the static app and works with the existing GitHub Pages deployment; no backend or database is required.
