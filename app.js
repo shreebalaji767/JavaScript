@@ -636,6 +636,23 @@
     saveState();
   }
   document.addEventListener("click",event=>{
+    const previewDevice=event.target.closest("[data-preview-device]");
+    if(previewDevice){
+      const frame=$("#responsivePreviewFrame");
+      const devices={phone:"Phone layout · one column",tablet:"Tablet layout · two columns",desktop:"Desktop layout · three columns",ultrawide:"Ultrawide layout · three flexible columns"};
+      frame.dataset.device=previewDevice.dataset.previewDevice;
+      $(".responsive-device-button").forEach(button=>{const selected=button===previewDevice;button.classList.toggle("active",selected);button.setAttribute("aria-pressed",String(selected));});
+      $("#responsivePreviewStatus").textContent=devices[frame.dataset.device]||"Responsive layout";
+      return;
+    }
+    const chaosButton=event.target.closest("#responsiveChaosButton");
+    if(chaosButton){
+      const frame=$("#responsivePreviewFrame"),chaotic=frame.classList.toggle("is-chaotic");
+      chaosButton.setAttribute("aria-pressed",String(chaotic));
+      chaosButton.textContent=chaotic?"Contain the goblin ↺":"Unleash goblin ↯";
+      showToast(chaotic?"Goblin unleashed. Layout rules still apply.":"Goblin contained. Order restored-ish.");
+      return;
+    }
     const historyTab=event.target.closest("[data-history-tab]");
     if(historyTab){
       const chosen=historyTab.dataset.historyTab;
@@ -789,7 +806,7 @@
   renderHome();
   const hash=location.hash;
   if(hash.startsWith("#lesson-"))openLesson(Number(hash.replace("#lesson-","")));
-  else if(hash==="#learn"||hash==="#practice"||hash==="#math"||hash==="#math-solver"||hash==="#history"||hash==="#projects"||hash==="#roadmap"||hash==="#bookmarks"||hash==="#reference")showView(hash.slice(1));
+  else if(hash==="#learn"||hash==="#practice"||hash==="#math"||hash==="#math-solver"||hash==="#responsive"||hash==="#history"||hash==="#projects"||hash==="#roadmap"||hash==="#bookmarks"||hash==="#reference")showView(hash.slice(1));
   else if(hash.startsWith("#project-"))renderProjectDetail(Number(hash.replace("#project-","")));
   else showView("home");
 })();
