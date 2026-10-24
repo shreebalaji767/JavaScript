@@ -108,3 +108,27 @@ body.light .nav-count { background: #f0edf8; color: #65529c; }
 #tryLessonCode{font-size:10px}
 @media(max-width:850px){.reference-grid{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.reference-card{transition:none}}
+
+/* Beginner-first lesson treatment */
+.zero-knowledge-note,.teaching-promise{display:flex;align-items:flex-start;gap:12px;border:1px solid #8b7cf633;background:linear-gradient(110deg,#8b7cf611,transparent);border-radius:12px;padding:14px 16px;margin:18px 0}
+.zero-note-icon,.teaching-promise>span{font-size:22px;line-height:1.2;flex-shrink:0}
+.zero-knowledge-note strong,.teaching-promise strong{display:block;font-size:13px;font-weight:700}
+.zero-knowledge-note p,.teaching-promise p{margin:4px 0 0!important;color:var(--muted);font-size:12px;line-height:1.65}
+.teaching-promise{background:var(--surface-2);margin:0 0 24px}
+.lesson-section-title{margin-top:0!important}
+.lesson-first-explanation{font-size:14px;line-height:1.85;color:var(--text)}
+.teaching-step{margin:26px 0}
+.teaching-step .step-label{font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--purple);margin-bottom:5px}
+.teaching-step h2{margin:0 0 8px;font-size:20px;letter-spacing:-.3px}
+.teaching-step>p{line-height:1.9;font-size:14px;color:var(--muted)}
+.code-detective{margin-top:12px;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.code-detective summary{padding:12px 14px;cursor:pointer;font-size:12px;font-weight:700;background:var(--surface-2);list-style-position:inside}
+.code-detective summary::marker{color:var(--purple)}
+.code-breakdown{padding:4px 12px 12px}
+.code-explain-row{display:grid;grid-template-columns:24px minmax(0,1fr);gap:7px;padding:11px 0;border-bottom:1px solid var(--line)}
+.code-explain-row:last-child{border-bottom:0}
+.code-line-number{font-size:10px;color:var(--muted);padding-top:2px;text-align:center}
+.code-explain-row code{font:12px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--mint);white-space:pre-wrap;overflow-wrap:anywhere;grid-column:2}
+.code-explain-row p{grid-column:2;margin:0!important;font-size:12px;line-height:1.65;color:var(--muted)}
+.quiz-kind{font-size:9px;letter-spacing:1.3px;font-weight:700;color:var(--purple);margin-bottom:10px}
+@media(max-width:600px){.zero-knowledge-note,.teaching-promise{padding:12px}.teaching-step h2{font-size:18px}.code-breakdown{padding-left:8px;padding-right:8px}}
