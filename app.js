@@ -100,6 +100,7 @@
   let currentFilter = "all";
   let activeLesson = 1;
   let toastTimer;
+  let deferredInstallPrompt = null;
 
   function loadState() {
     try {
@@ -519,6 +520,50 @@
   document.addEventListener("click",event=>{
     const mini=event.target.closest(".mini-course");if(mini){showView("roadmap");return;}
   });
+  // Progressive Web App: the browser controls when installation is available.
+  const installButton = $("#installApp");
+  const isStandalone = () => window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+  window.addEventListener("beforeinstallprompt", event => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+    installButton.classList.add("install-ready");
+    installButton.querySelector(".install-label").textContent = "Install app";
+    installButton.setAttribute("aria-label", "Install Scriptly app");
+  });
+  window.addEventListener("appinstalled", () => {
+    deferredInstallPrompt = null;
+    installButton.classList.remove("install-ready");
+    installButton.querySelector(".install-label").textContent = "Installed";
+    installButton.setAttribute("aria-label", "Scriptly is installed");
+    showToast("Scriptly is installed — happy learning!");
+  });
+  installButton.addEventListener("click", async () => {
+    if (isStandalone()) {
+      showToast("Scriptly is already running as an installed app.");
+      return;
+    }
+    if (!deferredInstallPrompt) {
+      showToast(/iPhone|iPad|iPod/i.test(navigator.userAgent)
+        ? "To install on iPhone/iPad: tap Share, then Add to Home Screen."
+        : "If install is available, open your browser menu and choose Install app or Add to Home Screen.");
+      return;
+    }
+    const promptEvent = deferredInstallPrompt;
+    deferredInstallPrompt = null;
+    await promptEvent.prompt();
+    const choice = await promptEvent.userChoice;
+    if (choice && choice.outcome === "accepted") showToast("Installing Scriptly…");
+    else showToast("No problem — you can install Scriptly later.");
+    installButton.classList.remove("install-ready");
+    installButton.querySelector(".install-label").textContent = "Install";
+  });
+  if ("serviceWorker" in navigator && location.protocol !== "file:") {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./service-worker.js").catch(() => {
+        // The course remains usable if the browser or host blocks service workers.
+      });
+    });
+  }
   const originalSetTheme=state.theme;
   setTheme(originalSetTheme);
   recordVisit();
