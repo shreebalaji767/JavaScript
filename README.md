@@ -44,4 +44,9 @@ Edit the `lessons` array near the top of `app.js`. Each lesson has an ID, unit, 
 
 ## About the design
 
-The interface uses an original dark, purple-accented dashboard inspired by modern learning/admin dashboards. It is not a direct copy of the shadcn React component registry; it is a framework-free implementation suitable for static hosting.
+The dashboard styling takes inspiration from [Watermelon UI](https://ui.watermelon.sh), especially its dashboard layouts, restrained surfaces, clear visual hierarchy, status indicators, and responsive app-shell patterns. Watermelon UI's published components are built for React and Tailwind CSS v4, so this project adapts the design ideas into hand-written HTML, CSS, and vanilla JavaScript rather than installing React components.
+
+- No React or Next.js
+- No Tailwind build step or npm dependencies
+- No backend, API, or database
+- Works as a static GitHub Pages site
