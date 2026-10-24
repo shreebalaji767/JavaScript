@@ -266,7 +266,7 @@
     if(event.target.closest("#themeToggle")){setTheme(state.theme==="light"?"dark":"light");return;}
     if(event.target.closest("#menuToggle")){$("#sidebar").classList.toggle("open");$("#mobileOverlay").classList.toggle("show");return;}
     if(event.target.closest("#mobileOverlay")){$("#sidebar").classList.remove("open");$("#mobileOverlay").classList.remove("show");return;}
-    if(event.target.closest("#exportProgress")){exportProgress();return;}
+    if(event.target.closest("#exportProgress")){if(event.shiftKey)$("#importFile").click();else exportProgress();return;}
     const moduleEl=event.target.closest("[data-module]");
     if(moduleEl){showView("roadmap");return;}
   });
@@ -286,10 +286,8 @@
   $("#importFile").addEventListener("change",event=>importProgress(event.target.files[0]));
   // Shift-click the export action to restore a previously exported JSON backup.
   $("#exportProgress").title="Click to export. Shift-click to import a backup.";
-  $("#exportProgress").addEventListener("click",event=>{if(event.shiftKey){event.preventDefault();$("#importFile").click();}});
   // Native download action remains available; shift-click is handled as a restore shortcut.
   const originalExport=exportProgress;
-  $("#exportProgress").addEventListener("keydown",event=>{if(event.key==="Enter"&&event.shiftKey){event.preventDefault();$("#importFile").click();}});
   document.addEventListener("click",event=>{
     const mini=event.target.closest(".mini-course");if(mini){showView("roadmap");return;}
   });
