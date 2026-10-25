@@ -649,3 +649,26 @@ body.light .responsive-session-stamp{color:#6d4cc4}
 /* Keyboard users can bypass repeated navigation and jump to the main workspace. */
 .skip-link{position:fixed;top:10px;left:10px;z-index:9999;transform:translateY(-160%);padding:10px 14px;border:2px solid var(--text);border-radius:9px;background:var(--mint);color:#101019;font-weight:700;text-decoration:none}
 .skip-link:focus{transform:translateY(0);outline:3px solid var(--purple);outline-offset:3px}
+
+
+/* Scientific calculator: responsive, high-contrast keys with comfortable touch targets. */
+.scientific-calculator{margin:18px 0 20px;padding:16px;border:1px solid var(--border);border-radius:18px;background:var(--surface-soft,var(--panel))}
+.scientific-calculator-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.scientific-calculator-top>div:first-child{display:grid;gap:4px}
+.scientific-calculator-top .eyebrow{font-size:.66rem;letter-spacing:.12em;color:var(--muted)}
+.scientific-calculator-top strong{font-size:1rem}
+.calculator-settings{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:.76rem}
+.calculator-mode-button{min-width:54px;min-height:38px;padding:6px 10px;border:1px solid var(--border);border-radius:10px;background:var(--panel);color:var(--text);font-weight:800;cursor:pointer}
+.calculator-mode-button.active{border-color:var(--purple);background:var(--purple);color:white}
+.calculator-keypad{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.calc-key{min-width:0;min-height:48px;border:1px solid var(--border);border-radius:12px;background:var(--panel);color:var(--text);font:inherit;font-size:1rem;font-weight:700;cursor:pointer;transition:transform .12s ease,border-color .12s ease,background .12s ease}
+.calc-key:hover{border-color:var(--purple);transform:translateY(-1px)}
+.calc-key:active{transform:scale(.97)}
+.calc-key.calc-function{background:var(--surface,var(--panel));color:var(--muted);font-size:.88rem}
+.calc-key.calc-operator{background:rgba(139,92,246,.12);border-color:rgba(139,92,246,.28);color:var(--purple)}
+.calc-key.calc-danger{background:rgba(244,114,182,.12);color:var(--orange);border-color:rgba(244,114,182,.3)}
+.calc-key.calc-equals{background:var(--mint);border-color:var(--mint);color:#11131a;font-size:1.35rem}
+.calc-key:focus-visible,.calculator-mode-button:focus-visible{outline:3px solid var(--mint);outline-offset:2px}
+.calculator-footnote{margin:12px 0 0;color:var(--muted);font-size:.78rem;line-height:1.55}
+@media(max-width:520px){.scientific-calculator{padding:12px;margin:14px 0}.scientific-calculator-top{align-items:flex-start;flex-direction:column}.calculator-settings{justify-content:flex-start}.calculator-keypad{gap:6px}.calc-key{min-height:46px;border-radius:10px;font-size:.95rem}.calc-key.calc-function{font-size:.8rem}}
+@media(prefers-reduced-motion:reduce){.calc-key{transition:none}.calc-key:hover,.calc-key:active{transform:none}}
