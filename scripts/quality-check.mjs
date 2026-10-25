@@ -143,7 +143,10 @@ assert.ok(arithmeticMath("2^3 + sqrt(16)").steps.some((step) => step.includes("s
 assert.throws(() => arithmeticMath("1 / 0"), /Division by zero/);
 
 
- // The theorem assistant should explain supported named results with worked examples.
+ 
+assert.ok(html.includes('data-math-example="explain the Pythagorean theorem"'), "The solver should expose a one-click theorem example");
+assert.ok(html.includes('data-math-example="explain the fundamental theorem of calculus"'), "The solver should expose a calculus theorem example");
+// The theorem assistant should explain supported named results with worked examples.
 const theoremSource = js.slice(js.indexOf("  function theoremMath("), js.indexOf("  function solveMathProblem("));
 const theoremMath = new Function(theoremSource + "; return theoremMath;")();
 const pythagoreanTheorem = theoremMath("explain the Pythagorean theorem");
