@@ -210,3 +210,11 @@ The homepage includes a responsive mini challenge generator. Each idea presents 
 The **Responsive UI session** is a standalone, theory-first workshop on building layouts that adapt to narrow phones, tablets, desktop screens, and ultrawide displays. It explains fluid sizing, Grid/Flexbox, content-driven breakpoints, overflow prevention, touch and keyboard accessibility, and reduced motion. The interactive Goblin Council preview switches between device-width presets and includes a deliberately chaotic mode to demonstrate how playful visual design still needs stable layout rules.
 
 Open the site and choose **Responsive UI session** in the sidebar, or visit `#responsive`. The workshop is built with the site's existing static HTML, CSS, and JavaScript setup; it does not add a framework or backend.
+
+## Quality checks and calculator history
+
+- The maths solver keeps the eight most recent successful calculations locally in the browser. Select one to restore its question and working, or copy the complete solution and steps.
+- Calculator history is stored separately from course progress and is not uploaded to a server.
+- The practice lab and responsive-device controls include regression checks for common selector/output mistakes.
+- GitHub Actions validates JavaScript syntax, unique HTML IDs, button types, local asset references, the service-worker app shell, CSS brace balance, and key interaction regressions before publishing the site.
+- The solver's advanced symbolic operations still rely on third-party CDN libraries and an internet connection; the quality check validates the local app shell, not every possible mathematical input or live CDN availability.
