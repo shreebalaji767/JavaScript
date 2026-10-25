@@ -73,6 +73,9 @@ assert.ok(js.includes("function handleCalculatorAction("), "Calculator memory an
 assert.ok(js.includes("function solveMathProblem("), "Main math solver must exist");
 assert.ok(js.includes("function renderMathSolution("), "Worked solution renderer must exist");
 assert.ok(js.includes("function updateCalculatorPreview()"), "Scientific calculator must provide a live numeric preview");
+assert.ok(js.includes("function evaluateCalculatorExpression("), "Calculator must have an offline-safe numeric expression evaluator");
+assert.ok(js.includes("function evaluateCalculatorValue("), "Calculator must use a shared numeric evaluation path");
+assert.ok(!js.includes("Numeric preview needs the maths library"), "Numeric preview must not fail solely because the optional CDN library is unavailable");
 assert.ok(js.includes("function copyCalculatorResult()"), "Calculator result must be copyable");
 assert.ok(js.includes("function renderMathHistory()"), "Math history renderer must exist");
 assert.ok(js.includes('$("#mathProblem").addEventListener("keydown"'), "Math input keyboard shortcut must exist");
