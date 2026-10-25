@@ -550,6 +550,7 @@
       const operation=/^factor/i.test(m[1])? "factor":/^expand/i.test(m[1])?"expand":/^partial/i.test(m[1])?"partfrac":"simplify";
       const expr=cleanExpression(raw.replace(m[0],"").replace(/[?]/g,""));
       if(!expr)throw new Error("Add an expression, e.g. factor x^4 - 1.");
+      if(expr.includes(":"))return null;
       const result=nerdamer(operation+"("+expr+")").toString();
       return make(operation==="factor"?"Factorisation":operation==="expand"?"Expansion":operation==="partfrac"?"Partial fractions":"Simplification",[result].join(""),["Original expression: "+expr+".","Apply symbolic "+operation+" rules while preserving the mathematical value.","Result: "+result+"."]);
     }
