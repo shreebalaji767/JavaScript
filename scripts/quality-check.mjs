@@ -142,6 +142,19 @@ assert.ok(arithmeticMath("2^3 + sqrt(16)").steps.some((step) => step.includes("2
 assert.ok(arithmeticMath("2^3 + sqrt(16)").steps.some((step) => step.includes("sqrt(16) = 4")), "Functions must show their computed value");
 assert.throws(() => arithmeticMath("1 / 0"), /Division by zero/);
 
+
+ // The theorem assistant should explain supported named results with worked examples.
+const theoremSource = js.slice(js.indexOf("  function theoremMath("), js.indexOf("  function solveMathProblem("));
+const theoremMath = new Function(theoremSource + "; return theoremMath;")();
+const pythagoreanTheorem = theoremMath("explain the Pythagorean theorem");
+assert.equal(pythagoreanTheorem.title, "Theorem & formula assistant: Pythagorean theorem");
+assert.ok(pythagoreanTheorem.steps.some((step) => step.includes("3² + 4² = 5²")), "Pythagorean explanation should include a checkable example");
+assert.match(theoremMath("what is the quadratic formula").answer, /−b.*√/);
+assert.ok(theoremMath("explain the triangle angle sum theorem").steps.length >= 3);
+assert.ok(theoremMath("explain the power rule of differentiation").answer.includes("n xⁿ⁻¹"));
+assert.equal(theoremMath("circle 5"), null, "Ordinary geometry calculations must not be captured as theorem explanations");
+assert.equal(theoremMath("explain an unsupported theorem"), null, "Unknown theorem names must not receive fabricated explanations");
+
 // Explicit geometry prompts must bypass symbolic expression evaluation.
 const geometrySource = js.slice(js.indexOf("  function geometryMath("), js.indexOf("  function pythagoreanMath("));
 const geometryMath = new Function("fmtMath", geometrySource + "; return geometryMath;")(formatMath);
