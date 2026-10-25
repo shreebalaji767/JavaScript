@@ -221,5 +221,12 @@ assert.equal(financeMath.gstMath("gst 1000, 18").answer, "GST amount = 180; tota
 assert.throws(() => financeMath.discountMath("discount 100, 120"), /0% to 100%/);
 assert.throws(() => financeMath.gstMath("gst -100, 18"), /non-negative/);
 
+const solverHintStart = html.indexOf('class="solver-hint"');
+const solverHintEnd = html.indexOf("</p>", solverHintStart);
+const solverHint = html.slice(solverHintStart, solverHintEnd);
+assert.ok(solverHint.includes("require an internet connection"), "Solver hint should explain the internet requirement");
+assert.equal((solverHint.match(/Arbitrary word problems/g) || []).length, 1, "Solver limitations should not be duplicated");
+assert.equal((solverHint.match(/internet connection/g) || []).length, 1, "Internet requirement should appear only once");
+
 console.log("Scriptly quality checks passed.");
 console.log("Checked " + ids.length + " HTML IDs, " + buttons.length + " buttons, " + localReferences.length + " local asset references, PWA shell assets, CSS balance, math-solver controls, and critical interaction regressions.");
