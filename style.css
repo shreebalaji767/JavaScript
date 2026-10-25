@@ -743,4 +743,8 @@ body.light .responsive-session-stamp{color:#6d4cc4}
 @media(prefers-reduced-motion:reduce){
  #view-math-solver *{scroll-behavior:auto}
 }
-\n/* Saved practice snippets */\n#savedSnippets{max-width:100px;min-width:68px}\n#saveSnippet{color:var(--mint);border-color:#70e1c144}\n@media(max-width:620px){.lab-toolbar{flex-wrap:wrap;justify-content:flex-end}.lab-toolbar select{max-width:100px}#savedSnippets{max-width:84px}}\n
+
+/* Saved practice snippets */
+#savedSnippets{max-width:100px;min-width:68px}
+#saveSnippet{color:var(--mint);border-color:#70e1c144}
+@media(max-width:620px){.lab-toolbar{flex-wrap:wrap;justify-content:flex-end}.lab-toolbar select{max-width:100px}#savedSnippets{max-width:84px}}\
