@@ -150,6 +150,11 @@ assert.ok(html.includes('data-math-example="explain the fundamental theorem of c
 const systemsSource = js.slice(js.indexOf("  function parseLinearEquation2("), js.indexOf("  function theoremMath("));
 const systems = new Function(systemsSource + "; return { systemMath, matrixMath, inequalityMath };")();
 assert.equal(systems.systemMath("system: 2x + y = 5; x - y = 1").answer, "x = 2; y = 1");
+assert.equal(systems.systemMath("system: x+y+z=6; 2x-y+z=3; x+2y-z=2").answer, "x = 1; y = 2; z = 3");
+assert.equal(systems.systemMath("system: x+y+z+w=10; x-y=0; z-w=2; x+2z=7").title, "4-variable linear system");
+assert.throws(() => systems.systemMath("system: x+y=2; 2x+2y=4"), /unique solution/i);
+assert.throws(() => systems.systemMath("system: x+y+z=6; 2x-y+z=3"), /same number of equations/i);
+
 assert.equal(systems.matrixMath("determinant 1,2;3,4").answer, "det(A) = -2");
 assert.equal(systems.inequalityMath("2x < 10").answer, "x < 5");
 assert.equal(systems.inequalityMath("-2x < 10").answer, "x > -5");
