@@ -101,7 +101,6 @@
   let currentFilter = "all";
   let activeLesson = 1;
   let toastTimer;
-  let deferredInstallPrompt = null;
   let lastMathSolution = null;
   let mathHistory = loadMathHistory();
   let calculatorAngleMode = "DEG";
@@ -547,7 +546,6 @@
   function solveAdvancedMath(original,mode,normalized){
     const raw=String(original||"").trim();
     const hasNerdamer=typeof window.nerdamer==="function";
-    const hasMath=typeof window.math!=="undefined"&&typeof window.math.evaluate==="function";
     const make=(title,answer,steps)=>({title,answer,steps});
     const cleanExpression=x=>String(x||"").trim().replace(/^[:= ]+|[?？]+$/g,"").trim();
     const variableMatch=raw.match(/\b(?:with respect to|respect to|w\.r\.t\.?|with respect|in terms of)\s+([a-zA-Z]\w*)\b/i);
@@ -622,21 +620,41 @@
       }
       return make("Equation solution",result||"No solution found by the symbolic solver.",["Equation/expression: "+equation+".","Unknown variable: "+variableToSolve+".","Use symbolic algebra and the solver's supported root-finding methods.","Solution: "+(result||"No solution found.")+"."]);
     }
-    if(hasMath){
+    if(hasNerdamer){
       let expr=normalized||raw;
       expr=expr.replace(/\bwhat is\b|\bcalculate\b|\bevaluate\b|\bcompute\b|\bplease\b/ig,"").replace(/[?]/g,"").trim();
       expr=expr.replace(/(\d)\s*([a-zA-Z])\b/g,"$1*$2").replace(/\)\s*\(/g,")*(");
-      if(expr&&/[+\-*/^()\d]/.test(expr)){
-        try{
-          expr=expr.replace(/\bAns\b/gi,String(calculatorAns));
-          const angleFactor=calculatorAngleMode==="DEG"?Math.PI/180:1;
-          const scope={sin:value=>Math.sin(Number(value)*angleFactor),cos:value=>Math.cos(Number(value)*angleFactor),tan:value=>Math.tan(Number(value)*angleFactor),asin:value=>Math.asin(Number(value))/angleFactor,acos:value=>Math.acos(Number(value))/angleFactor,atan:value=>Math.atan(Number(value))/angleFactor};
-          const result=math.evaluate(expr,scope);
-          const answer=typeof result?.toString==="function"?result.toString():String(result);
-          return make("Mathematical expression",answer,["Expression entered: "+expr+".","Evaluate using the numeric math engine, which supports standard functions, constants, complex numbers, matrices, fractions, and units where the syntax is valid.","Result: "+answer+"."]);
-        }catch(error){
-          // Preserve the established solver's clearer, domain-specific error when it can handle the input.
+      expr=expr.replace(/\bAns\b/gi,String(calculatorAns));
+      // Convert trig input/output angles when DEG is selected. Parse nested calls
+      // by matching parentheses instead of a fragile single regular expression.
+      const convertDegreeAngles=expression=>{
+        if(calculatorAngleMode!=="DEG")return expression;
+        let output="",i=0;
+        while(i<expression.length){
+          const match=expression.slice(i).match(/^(asin|acos|atan|sin|cos|tan)\s*\(/i);
+          if(!match){output+=expression[i];i++;continue;}
+          const fn=match[1].toLowerCase(),open=i+match[0].lastIndexOf("(");
+          let depth=1,close=open+1;
+          for(;close<expression.length&&depth>0;close++){
+            if(expression[close]==="(")depth++;
+            else if(expression[close]===")")depth--;
+          }
+          if(depth!==0){output+=expression[i];i++;continue;}
+          const argument=convertDegreeAngles(expression.slice(open+1,close-1));
+          output+=["asin","acos","atan"].includes(fn)
+            ? "(("+fn+"("+argument+"))*180/pi)"
+            : fn+"(("+argument+")*pi/180)";
+          i=close;
         }
+        return output;
+      };
+      try{
+        expr=convertDegreeAngles(expr);
+        const evaluated=nerdamer(expr).evaluate();
+        const answer=typeof evaluated.text==="function"?evaluated.text():evaluated.toString();
+        return make("Mathematical expression",answer,["Expression entered: "+(normalized||raw)+".","Evaluate using the locally bundled symbolic math engine; common arithmetic, powers, constants, and functions are supported.","Angle mode: "+calculatorAngleMode+".","Result: "+answer+"."]);
+      }catch(error){
+        // Let the existing school-maths solver provide its more specific error.
       }
     }
     return null;
@@ -1126,39 +1144,27 @@
     installButton.querySelector(".install-label").textContent = "Installed";
     installButton.setAttribute("aria-label", "Scriptly is installed");
   }
-  window.addEventListener("beforeinstallprompt", event => {
-    event.preventDefault();
-    deferredInstallPrompt = event;
+  // Let the browser show its native install UI. Preventing this event would
+  // suppress the native banner and produce a noisy console warning.
+  window.addEventListener("beforeinstallprompt", () => {
     installButton.classList.add("install-ready");
     installButton.querySelector(".install-label").textContent = "Install app";
     installButton.setAttribute("aria-label", "Install Scriptly app");
   });
   window.addEventListener("appinstalled", () => {
-    deferredInstallPrompt = null;
     installButton.classList.remove("install-ready");
     installButton.querySelector(".install-label").textContent = "Installed";
     installButton.setAttribute("aria-label", "Scriptly is installed");
     showToast("Scriptly is installed — happy learning!");
   });
-  installButton.addEventListener("click", async () => {
+  installButton.addEventListener("click", () => {
     if (isStandalone()) {
       showToast("Scriptly is already running as an installed app.");
       return;
     }
-    if (!deferredInstallPrompt) {
-      showToast(/iPhone|iPad|iPod/i.test(navigator.userAgent)
-        ? "To install on iPhone/iPad: tap Share, then Add to Home Screen."
-        : "If install is available, open your browser menu and choose Install app or Add to Home Screen.");
-      return;
-    }
-    const promptEvent = deferredInstallPrompt;
-    deferredInstallPrompt = null;
-    await promptEvent.prompt();
-    const choice = await promptEvent.userChoice;
-    if (choice && choice.outcome === "accepted") showToast("Installing Scriptly…");
-    else showToast("No problem — you can install Scriptly later.");
-    installButton.classList.remove("install-ready");
-    installButton.querySelector(".install-label").textContent = "Install";
+    showToast(/iPhone|iPad|iPod/i.test(navigator.userAgent)
+      ? "To install on iPhone/iPad: tap Share, then Add to Home Screen."
+      : "Use your browser's Install app or Add to Home Screen option to install Scriptly.");
   });
   if ("serviceWorker" in navigator && location.protocol !== "file:") {
     window.addEventListener("load", () => {
