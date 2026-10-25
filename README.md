@@ -232,3 +232,10 @@ Examples to try:
 - Calculus: \`differentiate x^3 + sin(x)\`, \`integrate 3x^2 + 2x\`, \`limit (sin(x)/x) as x -> 0\`
 
 Write the expression clearly and name the variable when it is not \`x\` (for example, “differentiate t^3 with respect to t”). The solver displays an answer and a working outline; the symbolic engine does not always expose a fully detailed derivation for every operation. Advanced symbolic features require the third-party libraries to load, which currently means an internet connection. If they are unavailable, supported school-level calculations should still use the built-in solver. No general-purpose calculator can guarantee a correct solution for every ambiguous word problem, unsupported syntax, or mathematically unsolved problem, so check assumptions, domains, units, and results.
+
+
+### Browser privacy and offline maths
+
+The maths libraries are stored in \`vendor/nerdamer/\` and served from the same GitHub Pages origin, rather than loaded from third-party CDNs. This avoids third-party CDN storage/tracking-prevention warnings and allows the service worker to cache the maths engine for offline use after the first successful load. Nerdamer's MIT license is included alongside the vendored files.
+
+Scriptly now lets the browser display its native install prompt when supported, rather than suppressing that prompt in a custom \`beforeinstallprompt\` handler. The install button still gives device-specific installation guidance.
