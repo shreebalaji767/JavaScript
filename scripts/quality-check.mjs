@@ -274,3 +274,5 @@ assert.ok(css.includes(".error-coach"), "Practice Lab error explanations should 
 assert.ok(html.includes('src="./upgrades.js" defer'), "Scriptly upgrades module must load after app.js");
 assert.ok(worker.includes('"./upgrades.js"'), "Upgrade module must be included in offline app shell");
 assert.ok(css.includes(".challenge-layout") && css.includes(".learning-dashboard"), "Challenge and dashboard UI styles must exist");
+
+assert.ok(js.includes("function exportCombinedBackup()") && js.includes("function importCombinedBackup(file)"), "Full learning backups must include export and import");
