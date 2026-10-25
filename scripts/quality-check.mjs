@@ -89,7 +89,7 @@ const scriptTags = [...html.matchAll(/<script\b[^>]*>/gi)].map((match) => match[
 assert.ok(scriptTags.length >= 2, "Application scripts must be present");
 assert.ok(scriptTags.every((tag) => /\bdefer\b/.test(tag)), "All application scripts must defer execution");
 const scriptSources = [...html.matchAll(/<script\b[^>]*\bsrc=["']([^"']+)["'][^>]*>/gi)].map((match) => match[1]);
-assert.ok(scriptSources.indexOf("./app.js") > scriptSources.indexOf("https://cdn.jsdelivr.net/npm/nerdamer@1.1.13/Extra.js"), "Math libraries must load before app.js");
+assert.ok(scriptSources.indexOf("./app.js") > scriptSources.indexOf("./vendor/nerdamer/Extra.js"), "Locally bundled math libraries must load before app.js");
 assert.ok(html.includes('href="#mainContent">Skip to main content</a>'), "Keyboard users must have a skip link");
 assert.ok(manifest.name && manifest.start_url && manifest.display, "PWA manifest must include app metadata");
 assert.ok(!html.includes("cdnjs.cloudflare.com/ajax/libs/mathjs"), "Maths libraries must not depend on a third-party CDN");
