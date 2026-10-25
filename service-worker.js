@@ -1,4 +1,4 @@
-const CACHE_NAME = "scriptly-shell-v27";
+const CACHE_NAME = "scriptly-shell-v28";
 const APP_SHELL = [
   "./",
   "./index.html",
