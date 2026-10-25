@@ -259,3 +259,8 @@ assert.ok(js.includes('function deleteSavedSnippet()'), "Saved snippets should b
 assert.ok(js.includes('function exportCurrentCode()'), "Current editor code should be exportable");
 assert.ok(js.includes('async function importCodeFile(file)'), "JavaScript files should be importable");
 assert.ok(js.includes('if(file.size>1024*1024)'), "Imported code files should have a size limit");
+
+assert.ok(html.includes('id="renameSnippet"'), "Practice Lab should expose a saved-snippet rename control");
+assert.ok(js.includes('function renameSavedSnippet()'), "Saved snippets should be renameable");
+assert.ok(js.includes('if(event.target.closest("#renameSnippet")){renameSavedSnippet();return;}'), "Rename control should be wired to its handler");
+assert.ok(js.includes('updatedAt:new Date().toISOString()'), "Renaming a snippet should refresh its update timestamp");
