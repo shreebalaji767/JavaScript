@@ -92,6 +92,12 @@ const scriptSources = [...html.matchAll(/<script\b[^>]*\bsrc=["']([^"']+)["'][^>
 assert.ok(scriptSources.indexOf("./app.js") > scriptSources.indexOf("https://cdn.jsdelivr.net/npm/nerdamer@1.1.13/Extra.js"), "Math libraries must load before app.js");
 assert.ok(html.includes('href="#mainContent">Skip to main content</a>'), "Keyboard users must have a skip link");
 assert.ok(manifest.name && manifest.start_url && manifest.display, "PWA manifest must include app metadata");
+assert.ok(!html.includes("cdnjs.cloudflare.com/ajax/libs/mathjs"), "Maths libraries must not depend on a third-party CDN");
+assert.ok(!html.includes("cdn.jsdelivr.net/npm/nerdamer"), "Nerdamer must be self-hosted to avoid browser tracking-prevention warnings");
+for (const path of ["vendor/nerdamer/nerdamer.core.js", "vendor/nerdamer/Algebra.js", "vendor/nerdamer/Calculus.js", "vendor/nerdamer/Solve.js", "vendor/nerdamer/Extra.js", "vendor/nerdamer/LICENSE.txt"]) {
+  assert.ok(existsSync(resolve(root, path)), "Vendored maths dependency is missing: " + path);
+}
+assert.ok(!js.includes("event.preventDefault();\n    deferredInstallPrompt = event;"), "Install UI should not suppress the browser's native install prompt");
 
 console.log("Scriptly quality checks passed.");
 console.log("Checked " + ids.length + " HTML IDs, " + buttons.length + " buttons, " + localReferences.length + " local asset references, PWA shell assets, CSS balance, math-solver controls, and critical interaction regressions.");
