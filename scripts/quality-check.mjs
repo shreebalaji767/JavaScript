@@ -158,6 +158,16 @@ assert.ok(theoremMath("explain the power rule of differentiation").answer.includ
 assert.equal(theoremMath("circle 5"), null, "Ordinary geometry calculations must not be captured as theorem explanations");
 assert.equal(theoremMath("explain an unsupported theorem"), null, "Unknown theorem names must not receive fabricated explanations");
 
+assert.ok(theoremMath("explain the binomial theorem").answer.includes("C(n,k)"));
+assert.ok(theoremMath("explain the slope formula").steps.some((step) => step.includes("undefined slope")));
+assert.ok(theoremMath("explain the distance formula").answer.includes("√"));
+assert.ok(theoremMath("explain arithmetic progression").answer.includes("aₙ"));
+assert.ok(theoremMath("explain geometric progression").answer.includes("r ≠ 1"));
+assert.ok(theoremMath("explain the chain rule").answer.includes("f′(g(x))"));
+assert.ok(theoremMath("explain the product rule").answer.includes("u′(x)v(x)"));
+assert.ok(theoremMath("explain integration by parts").steps.some((step) => step.includes("eˣ(x − 1)")));
+
+
 // Explicit geometry prompts must bypass symbolic expression evaluation.
 const geometrySource = js.slice(js.indexOf("  function geometryMath("), js.indexOf("  function pythagoreanMath("));
 const geometryMath = new Function("fmtMath", geometrySource + "; return geometryMath;")(formatMath);
