@@ -493,6 +493,17 @@
     s=s.replace(/\bof\b/g," of ");
     s=s.replace(/\bpi\b/g,"pi");
     s=s.replace(/\s+/g," ").trim();
+    // Translate common school-style word questions into the solver's explicit formats.
+    let m=s.match(/(?:area of )?a?\s*circle(?: with)?\s*(?:radius|r)\s*(?:of|=|:)?\s*(-?\d+(?:\.\d+)?)/);
+    if(m)return "circle "+m[1];
+    m=s.match(/(?:area of )?a?\s*(?:rectangle|rectangular shape)(?: with)?\s*(?:length|l)\s*(?:of|=|:)?\s*(-?\d+(?:\.\d+)?)\s*(?:and|,|by|×|x)\s*(?:width|breadth|w)?\s*(?:of|=|:)?\s*(-?\d+(?:\.\d+)?)/);
+    if(m)return "rectangle "+m[1]+", "+m[2];
+    m=s.match(/(?:hypotenuse|pythagorean)(?: of a triangle)?(?: with sides)?\s*(-?\d+(?:\.\d+)?)\s*(?:and|,|by)\s*(-?\d+(?:\.\d+)?)/);
+    if(m)return "pythagorean "+m[1]+", "+m[2];
+    m=s.match(/(?:mean|average|median|mode|range)\s+(?:of\s+)?(.+)/);
+    if(m)return s.match(/^(mean|average|median|mode|range)\b/) ? s : s.replace(/^(?:find|calculate|what is|the)\s+/,"");
+    m=s.match(/(?:simple interest|compound interest)\s+(?:on\s+)?(.+)/);
+    if(m)return s.replace(/\b(on|at|for|years?|annual rate|principal|is)\b/g," ").replace(/\s+/g," ").trim();
     // Common word-problem forms become explicit arithmetic before parsing.
     const percentOf=s.match(/^([+-]?\d+(?:\.\d+)?)\s*%\s*of\s*([+-]?\d+(?:\.\d+)?)$/);
     if(percentOf)return percentOf[1]+"% of "+percentOf[2];
