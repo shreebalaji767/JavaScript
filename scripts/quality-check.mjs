@@ -61,10 +61,15 @@ for (const character of cssWithoutComments) {
 assert.equal(braceBalance, 0, "CSS braces must be balanced");
 
 // Core interaction and math-solver regressions.
-for (const id of ["mainContent", "mathProblem", "solveMath", "copyMathSolution", "clearMathProblem", "mathHistory", "lessonFilters", "referenceFilters", "codeEditor", "runCode"]) {
+for (const id of ["mainContent", "mathProblem", "solveMath", "copyMathSolution", "clearMathProblem", "mathHistory", "lessonFilters", "referenceFilters", "codeEditor", "runCode", "calculatorAngleMode", "calculatorMemoryStatus"]) {
   assert.ok(ids.includes(id), "Required UI control is missing: #" + id);
 }
 assert.ok(js.includes("function solveAdvancedMath("), "Advanced math solver must exist");
+assert.ok(html.includes('class="scientific-calculator"'), "Scientific calculator UI must be present");
+assert.ok(html.includes('data-calc-insert="sin("'), "Scientific trig keys must be present");
+assert.ok(js.includes("function insertCalculatorText("), "Calculator keys must insert at the cursor");
+assert.ok(js.includes('calculatorAngleMode==="DEG"'), "Angle mode must affect trig calculations");
+assert.ok(js.includes("function handleCalculatorAction("), "Calculator memory and editing actions must work");
 assert.ok(js.includes("function solveMathProblem("), "Main math solver must exist");
 assert.ok(js.includes("function renderMathSolution("), "Worked solution renderer must exist");
 assert.ok(js.includes("function renderMathHistory()"), "Math history renderer must exist");
