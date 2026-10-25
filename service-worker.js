@@ -1,11 +1,16 @@
-const CACHE_NAME = "scriptly-shell-v28";
+const CACHE_NAME = "scriptly-shell-v29";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./style.css",
   "./app.js",
   "./logo.svg",
-  "./manifest.json"
+  "./manifest.json",
+  "./vendor/nerdamer/nerdamer.core.js",
+  "./vendor/nerdamer/Algebra.js",
+  "./vendor/nerdamer/Calculus.js",
+  "./vendor/nerdamer/Solve.js",
+  "./vendor/nerdamer/Extra.js"
 ];
 
 self.addEventListener("install", event => {
