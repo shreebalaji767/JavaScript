@@ -128,6 +128,20 @@ assert.ok(html.includes('data-math-example="discount 1000, 20"') && html.include
 const formatSource = js.slice(js.indexOf("  function fmtMath("), js.indexOf("  function arithmeticMath("));
 const formatMath = new Function(formatSource + "; return fmtMath;")();
 assert.equal(formatMath(1e-13), "1e-13", "Very small nonzero results must not be rounded to zero");
+const arithmeticSource = js.slice(js.indexOf("  function arithmeticMath("), js.indexOf("  function linearMath("));
+const arithmeticMath = new Function("fmtMath", arithmeticSource + "; return arithmeticMath;")(formatMath);
+const arithmeticSteps = arithmeticMath("2 + 3 * 4");
+assert.equal(arithmeticSteps.value, 14);
+assert.deepEqual(arithmeticSteps.steps, [" Multiply: 3 × 4 = 12.", " Add: 2 + 12 = 14."], "Arithmetic must show the actual operation order and intermediate values");
+const bracketSteps = arithmeticMath("(12 + 8) * 3");
+assert.equal(bracketSteps.value, 60);
+assert.ok(bracketSteps.steps.some((step) => step.includes("12 + 8 = 20")), "Parentheses must show their intermediate result");
+assert.ok(bracketSteps.steps.some((step) => step.includes("20 × 3 = 60")), "Following operations must use the previous intermediate result");
+assert.equal(arithmeticMath("2^3 + sqrt(16)").value, 12);
+assert.ok(arithmeticMath("2^3 + sqrt(16)").steps.some((step) => step.includes("2 ^ 3 = 8")), "Powers must show their computed value");
+assert.ok(arithmeticMath("2^3 + sqrt(16)").steps.some((step) => step.includes("sqrt(16) = 4")), "Functions must show their computed value");
+assert.throws(() => arithmeticMath("1 / 0"), /Division by zero/);
+
 const quadraticSource = js.slice(js.indexOf("  function quadraticMath("), js.indexOf("  function statisticsMath("));
 const quadraticMath = new Function("fmtMath", quadraticSource + "; return quadraticMath;")(formatMath);
 assert.match(quadraticMath("x^2 - 100000000x + 1 = 0").answer, /1e-8/, "Quadratic solver must preserve a small root beside a large root");
