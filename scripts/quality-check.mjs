@@ -125,6 +125,18 @@ assert.ok(js.includes("function fmtMath("), "Numeric formatting helper must exis
 assert.ok(js.includes("q=-0.5*"), "Quadratic solver should use a stable root calculation");
 assert.ok(js.includes("function discountMath(") && js.includes("function gstMath("), "Everyday discount and GST calculators must exist");
 assert.ok(html.includes('data-math-example="discount 1000, 20"') && html.includes('data-math-example="gst 1000, 18"'), "Everyday calculator examples must be discoverable");
+const formatSource = js.slice(js.indexOf("  function fmtMath("), js.indexOf("  function arithmeticMath("));
+const formatMath = new Function(formatSource + "; return fmtMath;")();
+assert.equal(formatMath(1e-13), "1e-13", "Very small nonzero results must not be rounded to zero");
+const quadraticSource = js.slice(js.indexOf("  function quadraticMath("), js.indexOf("  function statisticsMath("));
+const quadraticMath = new Function("fmtMath", quadraticSource + "; return quadraticMath;")(formatMath);
+assert.match(quadraticMath("x^2 - 100000000x + 1 = 0").answer, /1e-8/, "Quadratic solver must preserve a small root beside a large root");
+const financeSource = js.slice(js.indexOf("  function discountMath("), js.indexOf("  function normalizeMathQuestion("));
+const financeMath = new Function("fmtMath", financeSource + "; return { discountMath, gstMath };")(formatMath);
+assert.equal(financeMath.discountMath("discount 1000, 20").answer, "Discount = 200; final price = 800");
+assert.equal(financeMath.gstMath("gst 1000, 18").answer, "GST amount = 180; total including GST = 1180");
+assert.throws(() => financeMath.discountMath("discount 100, 120"), /0% to 100%/);
+assert.throws(() => financeMath.gstMath("gst -100, 18"), /non-negative/);
 
 console.log("Scriptly quality checks passed.");
 console.log("Checked " + ids.length + " HTML IDs, " + buttons.length + " buttons, " + localReferences.length + " local asset references, PWA shell assets, CSS balance, math-solver controls, and critical interaction regressions.");
