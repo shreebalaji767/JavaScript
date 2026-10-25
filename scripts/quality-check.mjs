@@ -150,6 +150,11 @@ assert.equal(circle.title, "Circle geometry");
 assert.equal(circle.answer, "Area = 78.5398163397; circumference = 31.4159265359");
 assert.ok(js.indexOf('if(mode==="auto"&&/') < js.indexOf("const advanced=solveAdvancedMath(original,mode,s);") && js.includes("return geometryMath(s);"), "Auto-routed geometry prompts must reach geometryMath before symbolic evaluation");
 
+// Restoring a history item must synchronize the visible calculator preview and solver status.
+assert.ok(js.includes('setCalculatorPreview(String(item.solution.answer),"RESTORED","valid")'), "Restoring history must update the calculator preview");
+assert.ok(js.includes('$("#mathSolverStatus").textContent="RESTORED FROM HISTORY"'), "Restoring history must update the solver status");
+assert.ok(js.includes('if(copyButton)copyButton.disabled=false;showToast("Previous calculation restored.")'), "Restored solutions must be available to copy");
+
 // A one-variable equation must not be returned unchanged by symbolic expression evaluation.
 assert.ok(js.includes('if(raw.includes("="))return null;'), "Equations must fall through to problem-type detection unless symbolic solving already handled them");
 const linearSource = js.slice(js.indexOf("  function linearMath("), js.indexOf("  function gcdMath("));
