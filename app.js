@@ -479,7 +479,7 @@
   function normalizeMathQuestion(source){
     let s=String(source||"").trim().toLowerCase();
     if(!s)return s;
-    s=s.replace(/[?？]/g," ").replace(/\b(please|can you|could you|would you|tell me|work out|calculate|evaluate|compute|solve|find the value of|what is|what's|whats|how much is|how many is)\b/g," ");
+    s=s.replace(/[?？]/g," ").replace(/\b(please|can you|could you|would you|tell me|work out|calculate|evaluate|compute|solve|find the value of|find the|calculate the|work out the|what is|what's|whats|how much is|how many is)\b/g," ");
     s=s.replace(/\bthe square root of\s*([+-]?\d+(?:\.\d+)?)/g,"sqrt($1)");
     s=s.replace(/\bsquare root\s*of\s*([+-]?\d+(?:\.\d+)?)/g,"sqrt($1)");
     s=s.replace(/\b([+-]?\d+(?:\.\d+)?)\s*squared\b/g,"($1)^2");
