@@ -25,6 +25,7 @@
   <script src="./app.js" defer></script>
 </head>
 <body>
+  <a class="skip-link" href="#mainContent">Skip to main content</a>
   <div class="app-shell">
     <aside class="sidebar" id="sidebar">
       <a class="brand" href="#home" aria-label="Scriptly home">
@@ -60,7 +61,7 @@
       </div>
     </aside>
 
-    <main class="main-area">
+    <main class="main-area" id="mainContent" tabindex="-1">
       <header class="topbar">
         <button type="button" class="icon-button menu-toggle" id="menuToggle" aria-label="Open menu">☰</button>
         <div class="breadcrumb"><span>Workspace</span><span class="crumb-slash">/</span><strong id="breadcrumbCurrent">Overview</strong></div>
