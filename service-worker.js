@@ -1,4 +1,4 @@
-const CACHE_NAME = "scriptly-shell-v45";
+const CACHE_NAME = "scriptly-shell-v46";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -48,12 +48,16 @@ self.addEventListener("fetch", event => {
       fetch(request)
         .then(response => {
           if (response.ok) {
+            // Cache each page at its own URL; never overwrite index.html with another page.
             const copy = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put("./index.html", copy));
+            caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
           }
           return response;
         })
-        .catch(async () => (await caches.match("./index.html")) || (await caches.match("./")))
+        .catch(async () => {
+          const cachedPage = await caches.match(request);
+          return cachedPage || (await caches.match("./index.html")) || (await caches.match("./"));
+        })
     );
     return;
   }
