@@ -1006,9 +1006,22 @@
     else {state.bookmarks.push(id);showToast("Saved to your bookmarks.");}
     saveState();renderLesson(id);
   }
+  function explainPracticeError(message) {
+    const text=String(message||"");
+    if(/\bReferenceError\b|is not defined|can't find variable/i.test(text)) return {title:"A name is missing",detail:"JavaScript cannot find a variable or function with that name. Check spelling, capital letters, and whether you declared it before using it.",tryThis:'Example: const score = 10; console.log(score);'};
+    if(/\bSyntaxError\b|Unexpected token|missing \)|missing ;|Invalid or unexpected token/i.test(text)) return {title:"The code's grammar needs a fix",detail:"JavaScript could not parse the code. Look near the reported location for a missing quote, bracket, parenthesis, comma, or an extra character.",tryThis:'Check that every opening (, {, and [ has a matching closing one.'};
+    if(/\bTypeError\b|is not a function|Cannot read properties|undefined is not an object/i.test(text)) return {title:"This value is not being used the way you expect",detail:"A value may be missing, have a different type, or not support the operation you called. Inspect the value just before the failing line.",tryThis:'Use console.log(value) and console.log(typeof value) to inspect it.'};
+    if(/\bRangeError\b/i.test(text)) return {title:"A value is outside the allowed range",detail:"An operation received a number or setting outside the range it can handle. Check loop bounds, array sizes, and numeric inputs.",tryThis:"Try a smaller valid number and check your loop's stopping condition."};
+    if(/\bURIError\b/i.test(text)) return {title:"A text-encoding operation failed",detail:"A URI encoding or decoding function received text it could not process. Check the input string and use matching encode/decode operations.",tryThis:"Inspect the string before calling decodeURIComponent()."};
+    return {title:"Read the error message as a clue",detail:"The message above is the browser's original error. Start at the first named variable or operation, inspect its value, and reduce the code to the smallest example that still fails.",tryThis:"Add a console.log() immediately before the line that fails."};
+  }
   function renderOutput(lines) {
     const output=$("#codeOutput");
-    output.innerHTML=lines.length?lines.map(line=>'<div class="output-line '+(line.error?'error':'')+'">'+escapeHTML(line.text)+'</div>').join(""):'<div class="output-placeholder"><span>⌁</span><strong>No output yet</strong><p>Your code ran without logging anything.</p></div>';
+    output.innerHTML=lines.length?lines.map(line=>{
+      const message=escapeHTML(line.text);
+      const help=line.error?explainPracticeError(line.text):null;
+      return '<div class="output-line '+(line.error?'error':'')+'">'+message+'</div>'+(help?'<section class="error-coach" aria-label="Error explanation"><strong>🧭 '+escapeHTML(help.title)+'</strong><p>'+escapeHTML(help.detail)+'</p><small>'+escapeHTML(help.tryThis)+'</small></section>':'');
+    }).join(""):'<div class="output-placeholder"><span>⌁</span><strong>No output yet</strong><p>Your code ran without logging anything.</p></div>';
   }
   async function copyCodeOutput() {
     const output=$("#codeOutput");
