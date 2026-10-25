@@ -683,3 +683,63 @@ body.light .responsive-session-stamp{color:#6d4cc4}
 .calculator-footnote{margin:12px 0 0;color:var(--muted);font-size:.78rem;line-height:1.55}
 @media(max-width:520px){.calculator-live-display{align-items:flex-start;flex-direction:column}.calculator-copy-button{width:100%}.scientific-calculator{padding:12px;margin:14px 0}.scientific-calculator-top{align-items:flex-start;flex-direction:column}.calculator-settings{justify-content:flex-start}.calculator-keypad{gap:6px}.calc-key{min-height:46px;border-radius:10px;font-size:.95rem}.calc-key.calc-function{font-size:.8rem}}
 @media(prefers-reduced-motion:reduce){.calc-key{transition:none}.calc-key:hover,.calc-key:active{transform:none}}
+
+
+/* Math solver visual cleanup: consistent surfaces, clear hierarchy, and balanced layout. */
+#view-math-solver .page-heading{margin-bottom:22px}
+#view-math-solver .page-heading .eyebrow{margin-bottom:9px}
+#view-math-solver .page-heading h1{letter-spacing:-.045em}
+#view-math-solver .page-heading p{max-width:64ch;color:var(--muted)}
+#view-math-solver .solver-layout{grid-template-columns:minmax(0,1fr) minmax(0,.9fr);align-items:stretch;gap:16px;margin:18px 0 14px}
+#view-math-solver .solver-card,
+#view-math-solver .solver-result{padding:clamp(16px,2vw,22px);border:1px solid var(--line);border-radius:16px;background:var(--surface-1,var(--panel));box-shadow:0 8px 24px rgba(0,0,0,.06)}
+#view-math-solver .panel-top{gap:12px;align-items:center}
+#view-math-solver .panel-top strong{font-size:.9rem}
+#view-math-solver .math-label{font-size:.62rem;line-height:1.5;text-align:right}
+#view-math-solver .solver-label{margin:18px 0 8px;font-size:.84rem}
+#view-math-solver .solver-card textarea{min-height:112px;border-color:var(--line);background:var(--surface-2);border-radius:12px;line-height:1.65}
+#view-math-solver .calculator-live-display{margin:12px 0 16px;padding:12px 14px;border-color:var(--line);background:var(--surface-2);border-radius:12px}
+#view-math-solver .calculator-preview{font-size:clamp(1.05rem,2vw,1.4rem)}
+#view-math-solver .solver-examples{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:14px 0 18px}
+#view-math-solver .solver-examples>span{grid-column:1/-1;font-size:.62rem;letter-spacing:.11em}
+#view-math-solver .solver-examples button{min-width:0;padding:8px 9px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);font-size:.74rem;text-align:center;overflow-wrap:anywhere}
+#view-math-solver .solver-controls{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 10px}
+#view-math-solver .solver-controls label{grid-column:1/-1;font-size:.76rem;font-weight:700;color:var(--text)}
+#view-math-solver .solver-controls select{min-height:42px;border-color:var(--line);border-radius:10px;background:var(--surface-2);font-size:.82rem}
+#view-math-solver .solver-controls .primary-button{min-height:42px;padding:10px 16px;border-radius:10px;white-space:nowrap}
+#view-math-solver .solver-hint{font-size:.76rem;line-height:1.65;margin-top:13px}
+#view-math-solver .solver-result{display:flex;flex-direction:column}
+#view-math-solver .solver-output{padding:18px 0;flex:1}
+#view-math-solver .solver-answer-label{font-size:.66rem;letter-spacing:.12em}
+#view-math-solver .solver-answer{font-size:clamp(1.5rem,3vw,2.1rem);line-height:1.25;letter-spacing:-.035em;margin:9px 0 16px}
+#view-math-solver .solver-steps{font-size:.84rem;line-height:1.75;color:var(--text)}
+#view-math-solver .solver-steps li{padding-bottom:8px}
+#view-math-solver .solver-actions{margin-top:auto;padding-top:14px}
+#view-math-solver .solver-actions button{font-size:.78rem}
+#view-math-solver .scientific-calculator{margin:14px 0 18px;padding:clamp(14px,2vw,20px);border-color:var(--line);border-radius:16px;background:var(--surface-1,var(--panel));box-shadow:0 8px 24px rgba(0,0,0,.05)}
+#view-math-solver .scientific-calculator-top{margin-bottom:12px}
+#view-math-solver .calculator-keypad{gap:8px}
+#view-math-solver .calc-key{min-height:46px;border-radius:10px}
+#view-math-solver .calculator-footnote{font-size:.74rem;line-height:1.6}
+#view-math-solver .solver-note{display:flex;align-items:flex-start;gap:12px;padding:13px 15px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--muted);font-size:.8rem;line-height:1.65}
+#view-math-solver .solver-note strong{flex:0 0 auto;color:var(--text)}
+#view-math-solver .solver-note span{min-width:0}
+@media(max-width:900px){
+ #view-math-solver .solver-layout{grid-template-columns:minmax(0,1fr)}
+ #view-math-solver .solver-result{min-height:260px}
+}
+@media(max-width:600px){
+ #view-math-solver .solver-layout{gap:12px;margin-top:14px}
+ #view-math-solver .solver-card,#view-math-solver .solver-result{padding:14px}
+ #view-math-solver .solver-examples{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #view-math-solver .solver-examples button{font-size:.76rem;text-align:left}
+ #view-math-solver .solver-controls{grid-template-columns:minmax(0,1fr)}
+ #view-math-solver .solver-controls .primary-button{width:100%}
+ #view-math-solver .solver-note{flex-direction:column;gap:4px}
+ #view-math-solver .scientific-calculator{padding:13px}
+ #view-math-solver .calculator-keypad{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+ #view-math-solver .calc-key{min-height:43px;padding:4px 2px;font-size:.9rem}
+}
+@media(prefers-reduced-motion:reduce){
+ #view-math-solver *{scroll-behavior:auto}
+}
