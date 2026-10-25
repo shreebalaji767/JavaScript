@@ -270,3 +270,7 @@ assert.ok(js.includes("A name is missing"), "Reference errors should get a pract
 assert.ok(js.includes("The code's grammar needs a fix"), "Syntax errors should get a practical explanation");
 assert.ok(js.includes('class="error-coach"'), "Practice Lab should render contextual error help");
 assert.ok(css.includes(".error-coach"), "Practice Lab error explanations should have dedicated styling");
+
+assert.ok(html.includes('src="./upgrades.js" defer'), "Scriptly upgrades module must load after app.js");
+assert.ok(worker.includes('"./upgrades.js"'), "Upgrade module must be included in offline app shell");
+assert.ok(css.includes(".challenge-layout") && css.includes(".learning-dashboard"), "Challenge and dashboard UI styles must exist");
