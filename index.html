@@ -243,6 +243,10 @@ console.log(2 + 3);</textarea><div class="editor-footer"><span>JavaScript · run
               <div class="panel-top"><div><span class="live-dot"></span><strong>Problem input</strong></div><span class="math-label">ADVANCED SYMBOLIC + NUMERIC ENGINE</span></div>
               <label for="mathProblem" class="solver-label">What problem are we solving?</label>
               <textarea id="mathProblem" rows="3" aria-keyshortcuts="Control+Enter Meta+Enter" placeholder="Try: solve x^3 - 6x^2 + 11x - 6 = 0&#10;Differentiate x^2 sin(x)&#10;Integrate 3x^2 + 2x&#10;Or: What is 15 percent of 240?"></textarea>
+              <div class="calculator-live-display" aria-live="polite" aria-atomic="true">
+                <div class="calculator-live-copy"><span class="calculator-live-label">LIVE RESULT</span><output id="calculatorPreview" class="calculator-preview">Enter a numeric expression</output><span id="calculatorPreviewStatus" class="calculator-preview-status">READY</span></div>
+                <button type="button" class="calculator-copy-button" id="copyCalculatorResult" disabled>Copy result</button>
+              </div>
               <section class="scientific-calculator" aria-label="Scientific calculator">
                 <div class="scientific-calculator-top"><div><span class="eyebrow">QUICK CALCULATOR</span><strong>Scientific keypad</strong></div><div class="calculator-settings"><button type="button" class="calculator-mode-button active" id="calculatorAngleMode" aria-pressed="true" title="Switch between degrees and radians">DEG</button><span id="calculatorMemoryStatus" aria-live="polite">Memory empty</span></div></div>
                 <div class="calculator-keypad" role="group" aria-label="Calculator keys">
