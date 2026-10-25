@@ -1024,6 +1024,59 @@
       showToast("Console output copied.");
     }catch{showToast("Could not copy automatically. Select the output and copy it.");}
   }
+  const SNIPPETS_KEY = "scriptly-practice-snippets-v1";
+  const DRAFT_KEY = "scriptly-practice-draft-v1";
+  function readSavedSnippets() {
+    try {
+      const parsed=JSON.parse(localStorage.getItem(SNIPPETS_KEY)||"[]");
+      return Array.isArray(parsed)?parsed.filter(item=>item&&typeof item.name==="string"&&typeof item.code==="string").slice(0,100):[];
+    } catch { return []; }
+  }
+  function refreshSavedSnippets(selectedId="") {
+    const select=$("#savedSnippets");
+    if(!select)return;
+    const snippets=readSavedSnippets();
+    select.innerHTML='<option value="">Saved…</option>'+snippets.map(item=>'<option value="'+escapeHTML(item.id)+'">'+escapeHTML(item.name)+'</option>').join("");
+    select.value=selectedId;
+  }
+  function saveCurrentSnippet() {
+    const code=$("#codeEditor").value;
+    if(!code.trim()){showToast("Write some code before saving a snippet.");return;}
+    const name=prompt("Name this snippet (for example, Array practice):");
+    if(name===null)return;
+    const cleanName=name.trim().slice(0,60);
+    if(!cleanName){showToast("Give your snippet a short name to save it.");return;}
+    const snippets=readSavedSnippets();
+    const id=Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7);
+    snippets.unshift({id,name:cleanName,code,updatedAt:new Date().toISOString()});
+    try {
+      localStorage.setItem(SNIPPETS_KEY,JSON.stringify(snippets.slice(0,100)));
+      refreshSavedSnippets(id);
+      showToast("Snippet saved on this device.");
+    } catch {
+      showToast("Could not save. Your browser storage may be full or disabled.");
+    }
+  }
+  function loadSavedSnippet(id) {
+    if(!id)return;
+    const snippet=readSavedSnippets().find(item=>item.id===id);
+    if(!snippet){showToast("That saved snippet could not be found.");refreshSavedSnippets();return;}
+    $("#codeEditor").value=snippet.code;
+    $("#codeExample").value="";
+    renderOutput([]);
+    try{localStorage.setItem(DRAFT_KEY,snippet.code);}catch{}
+    showToast("Loaded “"+snippet.name+"”.");
+  }
+  function persistPracticeDraft() {
+    try{localStorage.setItem(DRAFT_KEY,$("#codeEditor").value);}catch{}
+  }
+  function restorePracticeDraft() {
+    try {
+      const draft=localStorage.getItem(DRAFT_KEY);
+      if(draft!==null)$("#codeEditor").value=draft;
+    } catch {}
+    refreshSavedSnippets();
+  }
   function runCode() {
     const code=$("#codeEditor").value;
     $("#codeOutput").innerHTML='<div class="output-placeholder"><span>◌</span><strong>Running your code…</strong></div>';
@@ -1320,8 +1373,9 @@
     if(historyItem){const item=mathHistory[Number(historyItem.dataset.mathHistoryIndex)];if(item){$("#mathProblem").value=item.question;$("#mathMode").value=item.mode||"auto";lastMathSolution=item;renderMathSolution(item.solution);setCalculatorPreview(String(item.solution.answer),"RESTORED","valid");const restoredNumber=Number(String(item.solution.answer).replace(/,/g,""));if(Number.isFinite(restoredNumber))calculatorAns=restoredNumber;$("#mathSolverStatus").textContent="RESTORED FROM HISTORY";$("#mathSolverStatus").classList.add("solved");const copyButton=$("#copyMathSolution");if(copyButton)copyButton.disabled=false;showToast("Previous calculation restored.");}return;}
     const mathExample=event.target.closest("[data-math-example]");if(mathExample){$("#mathProblem").value=mathExample.dataset.mathExample;$("#mathMode").value="auto";runMathSolver();return;}
     if(event.target.closest("#copyCodeOutput")){copyCodeOutput();return;}
+    if(event.target.closest("#saveSnippet")){saveCurrentSnippet();return;}
     if(event.target.closest("#runCode")){runCode();return;}
-    if(event.target.closest("#resetCode")){$("#codeEditor").value='const name = "future developer";\nconsole.log("Hello, " + name + "!");\nconsole.log(2 + 3);';$("#codeExample").value="";renderOutput([]);return;}
+    if(event.target.closest("#resetCode")){$("#codeEditor").value='const name = "future developer";\nconsole.log("Hello, " + name + "!");\nconsole.log(2 + 3);';$("#codeExample").value="";persistPracticeDraft();renderOutput([]);return;}
     if(event.target.closest("#clearOutput")){renderOutput([]);return;}
     if(event.target.closest("#themeToggle")){setTheme(state.theme==="light"?"dark":"light");return;}
     if(event.target.closest("#menuToggle")){$("#sidebar").classList.toggle("open");$("#mobileOverlay").classList.toggle("show");return;}
@@ -1337,6 +1391,8 @@
   });
   $("#searchInput").addEventListener("keydown",event=>{if(event.key==="Enter"){searchLessons(event.target.value);event.target.blur();}});
   $("#referenceSearch").addEventListener("input",renderReference);
+  $("#savedSnippets").addEventListener("change",event=>loadSavedSnippet(event.target.value));
+  $("#codeEditor").addEventListener("input",persistPracticeDraft);
   $("#codeExample").addEventListener("change",event=>{
     const examples={
       variables:'const name = "Ada";\nlet score = 0;\nscore += 5;\nconsole.log(name);\nconsole.log("Score:", score);',
@@ -1349,6 +1405,7 @@
     const code=examples[event.target.value];
     if(code!==undefined){$("#codeEditor").value=code;renderOutput([]);showToast("Example loaded. Press Run code or Ctrl/⌘ + Enter.");}
   });
+  restorePracticeDraft();
   $("#codeEditor").addEventListener("keydown",event=>{
     if((event.ctrlKey||event.metaKey)&&event.key==="Enter"){event.preventDefault();runCode();}
     if(event.key==="Tab"){event.preventDefault();const input=event.target,start=input.selectionStart,end=input.selectionEnd;input.setRangeText("  ",start,end,"end");}
