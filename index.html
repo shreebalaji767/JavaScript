@@ -21,5 +21,5 @@
 <a class="card" href="./progress.html"><div class="cardicon">📈</div><h3>My progress</h3><p>Review your learning dashboard, milestones, challenge wins, and backup tools.</p><span class="go">View progress ↗</span></a>
 <a class="card" href="./roadmap.html"><div class="cardicon">🧭</div><h3>Learning roadmap</h3><p>See the bigger picture and choose a sensible next topic as your skills grow.</p><span class="go">Explore the roadmap ↗</span></a>
 </div></section><section class="section"><div class="banner"><div><div class="eyebrow">NO PRESSURE. JUST PROGRESS.</div><h2>Start small. Keep experimenting.</h2><p>Your learning tools are free to use, and your saved progress stays in your browser.</p></div><a class="btn primary" href="./studio.html#home">Enter Scriptly ↗</a></div></section></main><footer class="wrap footer"><span><strong>Scriptly Learning Studio</strong> · Made for curious minds.</span><span>Learn at your pace · Build with confidence</span></footer>
-<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js").catch(()=>{}));}</script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js",{updateViaCache:"none"}).then(reg=>reg.update()).catch(()=>{}));}</script>
 </body></html>
