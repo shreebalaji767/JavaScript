@@ -843,7 +843,51 @@
     $("#todayLabel").textContent=new Date().toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"}).toUpperCase();
     saveState();
   }
+  function insertCalculatorText(value){
+    const field=$("#mathProblem");
+    const start=field.selectionStart??field.value.length;
+    const end=field.selectionEnd??field.value.length;
+    field.setRangeText(value,start,end,"end");
+    field.focus();
+    field.dispatchEvent(new Event("input",{bubbles:true}));
+  }
+  function calculatorCurrentValue(){
+    if(typeof window.math==="undefined")throw new Error("The numeric calculator library is unavailable. Check your internet connection and refresh.");
+    const expression=$("#mathProblem").value.trim().replace(/\bAns\b/gi,String(calculatorAns));
+    if(!expression)throw new Error("Enter an expression before using a memory key.");
+    const angleFactor=calculatorAngleMode==="DEG"?Math.PI/180:1;
+    return Number(math.evaluate(expression,{sin:value=>Math.sin(Number(value)*angleFactor),cos:value=>Math.cos(Number(value)*angleFactor),tan:value=>Math.tan(Number(value)*angleFactor),asin:value=>Math.asin(Number(value))/angleFactor,acos:value=>Math.acos(Number(value))/angleFactor,atan:value=>Math.atan(Number(value))/angleFactor}));
+  }
+  function refreshCalculatorMemory(){
+    const status=$("#calculatorMemoryStatus");
+    if(status)status.textContent=calculatorHasMemory?"Memory: "+calculatorMemory:"Memory empty";
+    const angle=$("#calculatorAngleMode");
+    if(angle){angle.textContent=calculatorAngleMode;angle.setAttribute("aria-pressed",String(calculatorAngleMode==="DEG"));angle.classList.toggle("active",calculatorAngleMode==="DEG");}
+  }
+  function handleCalculatorAction(action){
+    const field=$("#mathProblem");
+    try{
+      if(action==="solve"){runMathSolver();return;}
+      if(action==="clear"){field.value="";field.focus();$("#mathSolverStatus").textContent="WAITING FOR A PROBLEM";return;}
+      if(action==="backspace"){
+        const start=field.selectionStart??field.value.length,end=field.selectionEnd??start;
+        if(start!==end)field.setRangeText("",start,end,"end");else if(start>0)field.setRangeText("",start-1,start,"end");
+        field.focus();return;
+      }
+      if(action==="angle"){calculatorAngleMode=calculatorAngleMode==="DEG"?"RAD":"DEG";refreshCalculatorMemory();showToast("Angle mode: "+calculatorAngleMode);return;}
+      if(action==="memory-clear"){calculatorMemory=0;calculatorHasMemory=false;refreshCalculatorMemory();showToast("Calculator memory cleared.");return;}
+      if(action==="memory-recall"){if(!calculatorHasMemory){showToast("Calculator memory is empty.");return;}insertCalculatorText(String(calculatorMemory));return;}
+      if(action==="memory-add"||action==="memory-subtract"){
+        const value=calculatorCurrentValue();calculatorMemory=(calculatorHasMemory?calculatorMemory:0)+(action==="memory-add"?value:-value);calculatorHasMemory=true;refreshCalculatorMemory();
+        showToast(action==="memory-add"?"Added to calculator memory.":"Subtracted from calculator memory.");return;
+      }
+    }catch(error){showToast(error.message||"That calculator action could not be completed.");}
+  }
   document.addEventListener("click",event=>{
+    const calcButton=event.target.closest("[data-calc-insert],[data-calc-action]");
+    if(calcButton){if(calcButton.dataset.calcInsert!==undefined){insertCalculatorText(calcButton.dataset.calcInsert);return;}handleCalculatorAction(calcButton.dataset.calcAction);return;}
+    const angleButton=event.target.closest("#calculatorAngleMode");
+    if(angleButton){handleCalculatorAction("angle");return;}
     const previewDevice=event.target.closest("[data-preview-device]");
     if(previewDevice){
       const frame=$("#responsivePreviewFrame");
