@@ -251,3 +251,11 @@ assert.ok(js.includes('function saveCurrentSnippet()'), "Practice lab should sav
 assert.ok(js.includes('function restorePracticeDraft()'), "Practice lab should restore the editor draft");
 assert.ok(js.includes('$("#codeEditor").addEventListener("input",persistPracticeDraft)'), "Editor changes should autosave the draft");
 assert.ok(js.includes('function loadSavedSnippet(id)'), "Practice lab should load a saved snippet");
+
+assert.ok(html.includes('id="deleteSnippet"'), "Practice Lab should expose a saved-snippet delete control");
+assert.ok(html.includes('id="exportCode"'), "Practice Lab should expose a JavaScript export control");
+assert.ok(html.includes('id="importCodeButton"') && html.includes('id="importCodeFile"'), "Practice Lab should expose a JavaScript import control");
+assert.ok(js.includes('function deleteSavedSnippet()'), "Saved snippets should be deletable");
+assert.ok(js.includes('function exportCurrentCode()'), "Current editor code should be exportable");
+assert.ok(js.includes('async function importCodeFile(file)'), "JavaScript files should be importable");
+assert.ok(js.includes('if(file.size>1024*1024)'), "Imported code files should have a size limit");
