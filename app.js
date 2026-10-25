@@ -1010,6 +1010,20 @@
     const output=$("#codeOutput");
     output.innerHTML=lines.length?lines.map(line=>'<div class="output-line '+(line.error?'error':'')+'">'+escapeHTML(line.text)+'</div>').join(""):'<div class="output-placeholder"><span>⌁</span><strong>No output yet</strong><p>Your code ran without logging anything.</p></div>';
   }
+  async function copyCodeOutput() {
+    const output=$("#codeOutput");
+    const lines=$("#codeOutput .output-line").map(line=>(line.classList.contains("error")?"ERROR: ":"")+line.textContent);
+    const text=lines.length?lines.join("\n"):output.innerText.trim();
+    if(!text){showToast("There is no console output to copy yet.");return;}
+    try{
+      if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(text);
+      else{
+        const helper=document.createElement("textarea");helper.value=text;helper.setAttribute("readonly","");helper.style.position="fixed";helper.style.opacity="0";document.body.appendChild(helper);helper.select();
+        const copied=document.execCommand("copy");helper.remove();if(!copied)throw new Error("Copy unavailable");
+      }
+      showToast("Console output copied.");
+    }catch{showToast("Could not copy automatically. Select the output and copy it.");}
+  }
   function runCode() {
     const code=$("#codeEditor").value;
     $("#codeOutput").innerHTML='<div class="output-placeholder"><span>◌</span><strong>Running your code…</strong></div>';
@@ -1305,8 +1319,9 @@
     const historyItem=event.target.closest("[data-math-history-index]");
     if(historyItem){const item=mathHistory[Number(historyItem.dataset.mathHistoryIndex)];if(item){$("#mathProblem").value=item.question;$("#mathMode").value=item.mode||"auto";lastMathSolution=item;renderMathSolution(item.solution);setCalculatorPreview(String(item.solution.answer),"RESTORED","valid");const restoredNumber=Number(String(item.solution.answer).replace(/,/g,""));if(Number.isFinite(restoredNumber))calculatorAns=restoredNumber;$("#mathSolverStatus").textContent="RESTORED FROM HISTORY";$("#mathSolverStatus").classList.add("solved");const copyButton=$("#copyMathSolution");if(copyButton)copyButton.disabled=false;showToast("Previous calculation restored.");}return;}
     const mathExample=event.target.closest("[data-math-example]");if(mathExample){$("#mathProblem").value=mathExample.dataset.mathExample;$("#mathMode").value="auto";runMathSolver();return;}
+    if(event.target.closest("#copyCodeOutput")){copyCodeOutput();return;}
     if(event.target.closest("#runCode")){runCode();return;}
-    if(event.target.closest("#resetCode")){$("#codeEditor").value='const name = "future developer";\nconsole.log("Hello, " + name + "!");\nconsole.log(2 + 3);';renderOutput([]);return;}
+    if(event.target.closest("#resetCode")){$("#codeEditor").value='const name = "future developer";\nconsole.log("Hello, " + name + "!");\nconsole.log(2 + 3);';$("#codeExample").value="";renderOutput([]);return;}
     if(event.target.closest("#clearOutput")){renderOutput([]);return;}
     if(event.target.closest("#themeToggle")){setTheme(state.theme==="light"?"dark":"light");return;}
     if(event.target.closest("#menuToggle")){$("#sidebar").classList.toggle("open");$("#mobileOverlay").classList.toggle("show");return;}
@@ -1322,6 +1337,22 @@
   });
   $("#searchInput").addEventListener("keydown",event=>{if(event.key==="Enter"){searchLessons(event.target.value);event.target.blur();}});
   $("#referenceSearch").addEventListener("input",renderReference);
+  $("#codeExample").addEventListener("change",event=>{
+    const examples={
+      variables:'const name = "Ada";\nlet score = 0;\nscore += 5;\nconsole.log(name);\nconsole.log("Score:", score);',
+      conditions:'const temperature = 28;\nif (temperature > 30) {\n  console.log("It is hot.");\n} else {\n  console.log("It is comfortable.");\n}',
+      loops:'for (let i = 1; i <= 5; i++) {\n  console.log("Count:", i);\n}',
+      arrays:'const fruits = ["apple", "mango", "banana"];\nfruits.push("orange");\nconsole.log("All fruits:", fruits);\nconsole.log("First fruit:", fruits[0]);',
+      functions:'function add(a, b) {\n  return a + b;\n}\nconsole.log("2 + 3 =", add(2, 3));',
+      objects:'const learner = { name: "Sam", level: "beginner" };\nconsole.log(learner.name);\nconsole.log(learner.level);'
+    };
+    const code=examples[event.target.value];
+    if(code!==undefined){$("#codeEditor").value=code;renderOutput([]);showToast("Example loaded. Press Run code or Ctrl/⌘ + Enter.");}
+  });
+  $("#codeEditor").addEventListener("keydown",event=>{
+    if((event.ctrlKey||event.metaKey)&&event.key==="Enter"){event.preventDefault();runCode();}
+    if(event.key==="Tab"){event.preventDefault();const input=event.target,start=input.selectionStart,end=input.selectionEnd;input.setRangeText("  ",start,end,"end");}
+  });
   $("#mathProblem").addEventListener("keydown",event=>{if((event.ctrlKey||event.metaKey)&&event.key==="Enter")runMathSolver();});
   $("#mathProblem").addEventListener("input",updateCalculatorPreview);
   $("#copyCalculatorResult").addEventListener("click",copyCalculatorResult);
