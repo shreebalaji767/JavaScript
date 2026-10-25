@@ -511,9 +511,94 @@
     if(simplePair&&simplePair[3])return simplePair[1]+(simplePair[3]==="less"?" - ":" + ")+simplePair[2];
     return s;
   }
+  function solveAdvancedMath(original,mode,normalized){
+    const raw=String(original||"").trim();
+    const hasNerdamer=typeof window.nerdamer==="function";
+    const hasMath=typeof window.math!=="undefined"&&typeof window.math.evaluate==="function";
+    const make=(title,answer,steps)=>({title,answer,steps});
+    const cleanExpression=x=>String(x||"").trim().replace(/^[:= ]+|[?？]+$/g,"").trim();
+    const variableMatch=raw.match(/\b(?:with respect to|respect to|w\.r\.t\.?|with respect|in terms of)\s+([a-zA-Z]\w*)\b/i);
+    const variable=variableMatch?variableMatch[1]:"x";
+    let m;
+    if(/\b(differentiate|derivative|derivative of|differentiate|differentiate the|find the derivative|diff)\b/i.test(raw)){
+      if(!hasNerdamer)throw new Error("The symbolic maths engine did not load. Check your internet connection and refresh.");
+      let expr=raw.replace(/\b(find the derivative of|find derivative of|derivative of|differentiate the|differentiate|derivative|diff)\b/ig,"").replace(/\b(with respect to|respect to|w\.r\.t\.?|with respect)\s+[a-zA-Z]\w*/ig,"").replace(/[?]/g,"").trim();
+      expr=expr.replace(/\by\s*=\s*/i,"").replace(/\bf\s*\(\s*x\s*\)\s*=\s*/i,"");
+      if(!expr)throw new Error("Enter an expression to differentiate, e.g. differentiate x^3 + sin(x).");
+      const result=nerdamer.diff(expr,variable).toString();
+      return make("Symbolic derivative",result,["Start with f("+variable+") = "+expr+".","Apply differentiation rules (power, sum, product, quotient, and chain rules as required).","Differentiate with respect to "+variable+".","Result: d/d"+variable+" ["+expr+"] = "+result+"."]);
+    }
+    if(/\b(integrate|integral of|find the integral|antiderivative)\b/i.test(raw)){
+      if(!hasNerdamer)throw new Error("The symbolic maths engine did not load. Check your internet connection and refresh.");
+      let expr=raw.replace(/\b(find the integral of|integral of|integrate|antiderivative of|antiderivative)\b/ig,"").replace(/\b(with respect to|respect to|w\.r\.t\.?|with respect)\s+[a-zA-Z]\w*/ig,"").replace(/[?]/g,"").trim();
+      expr=expr.replace(/\by\s*=\s*/i,"").replace(/\bf\s*\(\s*x\s*\)\s*=\s*/i,"");
+      if(!expr)throw new Error("Enter an expression to integrate, e.g. integrate x^2.");
+      const result=nerdamer.integrate(expr,variable).toString();
+      return make("Symbolic integral",result+" + C",["Integrand: "+expr+".","Integrate term by term and apply the appropriate integration rules.","Variable of integration: "+variable+".","Antiderivative: ∫("+expr+") d"+variable+" = "+result+" + C."]);
+    }
+    if(/\blimit\b/i.test(raw)){
+      if(!hasNerdamer)throw new Error("The symbolic maths engine did not load. Check your internet connection and refresh.");
+      m=raw.match(/limit\s+(?:of\s+)?(.+?)\s+as\s+([a-zA-Z]\w*)\s*(?:->|→|approaches|tends to)\s*([+-]?(?:\d+(?:\.\d*)?|\.\d+|infinity|∞))/i);
+      if(!m)m=raw.match(/limit\s*\(?\s*(.+?)\s*,\s*([a-zA-Z]\w*)\s*,\s*([+-]?\d+(?:\.\d+)?)/i);
+      if(!m)throw new Error("Use: limit (sin(x)/x) as x -> 0");
+      const result=nerdamer.limit(m[1].trim(),m[2],m[3].replace("∞","infinity")).toString();
+      return make("Limit",result,["Expression: "+m[1]+".","Variable: "+m[2]+" approaches "+m[3]+".","Evaluate the symbolic limit using algebraic and limit rules.","Limit = "+result+"."]);
+    }
+    if(/\b(simplify|simplification|expand|expand out|factor|factorise|factorize|partial fractions|partial fraction)\b/i.test(raw)){
+      if(!hasNerdamer)throw new Error("The symbolic maths engine did not load. Check your internet connection and refresh.");
+      m=raw.match(/\b(simplify|simplification|expand|expand out|factor|factorise|factorize|partial fractions|partial fraction)\b/i);
+      const operation=/^factor/i.test(m[1])? "factor":/^expand/i.test(m[1])?"expand":/^partial/i.test(m[1])?"partfrac":"simplify";
+      const expr=cleanExpression(raw.replace(m[0],"").replace(/[?]/g,""));
+      if(!expr)throw new Error("Add an expression, e.g. factor x^4 - 1.");
+      const result=nerdamer(operation+"("+expr+")").toString();
+      return make(operation==="factor"?"Factorisation":operation==="expand"?"Expansion":operation==="partfrac"?"Partial fractions":"Simplification",[result].join(""),["Original expression: "+expr+".","Apply symbolic "+operation+" rules while preserving the mathematical value.","Result: "+result+"."]);
+    }
+    if(mode==="advanced"||/\b(solve|find roots?|roots? of|solve for|solve the equation)\b/i.test(raw)){
+      if(!hasNerdamer)throw new Error("The symbolic maths engine did not load. Check your internet connection and refresh.");
+      let equation=raw.replace(/\b(solve for|solve the equation|solve|find roots? of|roots? of|find x|find y)\b/ig,"").replace(/[?]/g,"").trim();
+      equation=equation.replace(/\bwhere\s+/i,"").trim();
+      if(!equation)throw new Error("Enter an equation, e.g. solve x^3 - 6x^2 + 11x - 6 = 0.");
+      const eqParts=equation.split(/\s*(?:;|\n|,)\s*/).filter(Boolean);
+      const variableNames=[...new Set((equation.match(/[a-zA-Z]\w*/g)||[]).filter(v=>!["sin","cos","tan","sqrt","log","ln","exp","pi","infinity"].includes(v.toLowerCase())))];
+      if(eqParts.length>1&&variableNames.length>1&&typeof nerdamer.solveEquations==="function"){
+        const result=nerdamer.solveEquations(eqParts).map(x=>String(x)).join("; ");
+        return make("Equation system",result||"No solution found by the symbolic solver.",["Equations: "+eqParts.join("; ")+".","Solve the system simultaneously for its variables.","Solver result: "+(result||"No solution found.")+"."]);
+      }
+      const variableToSolve=variableNames.includes(variable)?variable:(variableNames[0]||"x");
+      let result;
+      if(equation.includes("=")&&typeof nerdamer.solveEquations==="function"){
+        const sides=equation.split("=");
+        if(sides.length!==2)throw new Error("Enter one equation at a time, or separate a system with semicolons.");
+        result=nerdamer.solveEquations(sides[0]+"-("+sides[1]+")",variableToSolve);
+        result=Array.isArray(result)?result.map(x=>String(x)).join(", "):String(result);
+      }else if(typeof nerdamer.solve==="function"){
+        result=nerdamer.solve(equation,variableToSolve).toString();
+      }else{
+        result=nerdamer("solve("+equation+","+variableToSolve+")").toString();
+      }
+      return make("Equation solution",result||"No solution found by the symbolic solver.",["Equation/expression: "+equation+".","Unknown variable: "+variableToSolve+".","Use symbolic algebra and the solver's supported root-finding methods.","Solution: "+(result||"No solution found.")+"."]);
+    }
+    if(hasMath){
+      let expr=normalized||raw;
+      expr=expr.replace(/\bwhat is\b|\bcalculate\b|\bevaluate\b|\bcompute\b|\bplease\b/ig,"").replace(/[?]/g,"").trim();
+      expr=expr.replace(/(\d)\s*([a-zA-Z])\b/g,"$1*$2").replace(/\)\s*\(/g,")*(");
+      if(expr&&/[+\-*/^()\d]/.test(expr)){
+        try{
+          const result=math.evaluate(expr);
+          const answer=typeof result?.toString==="function"?result.toString():String(result);
+          return make("Mathematical expression",answer,["Expression entered: "+expr+".","Evaluate using the numeric math engine, which supports standard functions, constants, complex numbers, matrices, fractions, and units where the syntax is valid.","Result: "+answer+"."]);
+        }catch(error){
+          // Preserve the established solver's clearer, domain-specific error when it can handle the input.
+        }
+      }
+    }
+    return null;
+  }
   function solveMathProblem(source,mode){
     const original=String(source||"").trim();
     const s=normalizeMathQuestion(source);if(!s)throw new Error("Type a problem first. The maths goblin cannot solve an empty box.");
+    const advanced=solveAdvancedMath(original,mode,s);
+    if(advanced)return advanced;
     if(mode==="auto"){
       if(/^compound interest\b/i.test(s))mode="compound-interest";
       else if(/^(simple interest|interest)\b/i.test(s))mode="simple-interest";
