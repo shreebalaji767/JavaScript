@@ -858,6 +858,76 @@
     if(label){label.textContent=status;label.classList.toggle("preview-valid",kind==="valid");label.classList.toggle("preview-error",kind==="error");}
     if(copy)copy.disabled=kind!=="valid";
   }
+  function evaluateCalculatorExpression(source){
+    let expression=String(source||"").trim();
+    if(!expression)throw new Error("Enter a mathematical expression.");
+    expression=expression.replace(/\bwhat is\b|\bcalculate\b|\bevaluate\b|\bcompute\b|\bplease\b/ig,"").replace(/[?]/g,"").trim();
+    expression=expression.replace(/(-?\d+(?:\.\d+)?)\s*%\s*of\s*(-?\d+(?:\.\d+)?)/ig,"(($1)/100*($2))");
+    expression=expression.replace(/\bAns\b/gi,"("+String(calculatorAns)+")").replace(/[×✕]/g,"*").replace(/[÷]/g,"/").replace(/[−–]/g,"-").replace(/π/g,"pi").replace(/√\s*\(/g,"sqrt(").replace(/√\s*(\d+(?:\.\d+)?)/g,"sqrt($1)");
+    const tokens=expression.match(/(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?|[a-zA-Z_]\w*|[()+\-*/%^!,]/gi)||[];
+    const compact=expression.replace(/\s+/g,"");
+    if(tokens.join("").toLowerCase()!==compact.toLowerCase())throw new Error("Use numbers, brackets, arithmetic operators, constants, and supported functions.");
+    let index=0;
+    const peek=()=>tokens[index],take=()=>tokens[index++];
+    const angleFactor=calculatorAngleMode==="DEG"?Math.PI/180:1;
+    const factorial=n=>{if(!Number.isInteger(n)||n<0||n>170)throw new Error("Factorial needs a whole number from 0 to 170.");let result=1;for(let k=2;k<=n;k++)result*=k;return result;};
+    const functions={
+      sqrt:x=>Math.sqrt(x),cbrt:x=>Math.cbrt(x),abs:x=>Math.abs(x),sin:x=>Math.sin(x*angleFactor),cos:x=>Math.cos(x*angleFactor),tan:x=>Math.tan(x*angleFactor),
+      asin:x=>Math.asin(x)/angleFactor,acos:x=>Math.acos(x)/angleFactor,atan:x=>Math.atan(x)/angleFactor,
+      log:x=>Math.log10(x),log10:x=>Math.log10(x),log2:x=>Math.log2(x),ln:x=>Math.log(x),exp:x=>Math.exp(x),
+      floor:x=>Math.floor(x),ceil:x=>Math.ceil(x),round:x=>Math.round(x),sign:x=>Math.sign(x),
+      min:(...values)=>Math.min(...values),max:(...values)=>Math.max(...values),pow:(x,y)=>Math.pow(x,y),hypot:(...values)=>Math.hypot(...values)
+    };
+    const constants={pi:Math.PI,e:Math.E,tau:2*Math.PI,phi:(1+Math.sqrt(5))/2,infinity:Infinity};
+    const startsPrimary=token=>token!==undefined&&(/^(?:\d|\.)/.test(token)||/^[a-zA-Z_]/.test(token)||token==="(");
+    const parseExpression=()=>{let value=parseTerm();while(peek()==="+"||peek()==="-"){const op=take(),right=parseTerm();value=op==="+"?value+right:value-right;}return value;};
+    const parseTerm=()=>{let value=parseUnary();while(true){const op=peek();if(["*","/","%"].includes(op)){take();const right=parseUnary();if((op==="/"||op==="%")&&right===0)throw new Error("Division by zero is not allowed.");value=op==="*"?value*right:op==="/"?value/right:value%right;continue;}if(startsPrimary(op)){value*=parseUnary();continue;}break;}return value;};
+    const parseUnary=()=>{if(peek()==="+"){take();return parseUnary();}if(peek()==="-"){take();return -parseUnary();}return parsePower();};
+    const parsePower=()=>{let value=parsePostfix();if(peek()==="^"){take();value=Math.pow(value,parseUnary());}return value;};
+    const parsePostfix=()=>{let value=parsePrimary();while(peek()==="!"){take();value=factorial(value);}return value;};
+    const parsePrimary=()=>{
+      const token=take();
+      if(token===undefined)throw new Error("The expression is incomplete.");
+      if(token==="("){const value=parseExpression();if(take()!==")")throw new Error("A closing parenthesis is missing.");return value;}
+      if(/^(?:\d|\.)/.test(token))return Number(token);
+      if(/^[a-zA-Z_]/.test(token)){
+        const name=token.toLowerCase();
+        if(peek()==="("){
+          if(!Object.prototype.hasOwnProperty.call(functions,name))throw new Error("Unknown function: "+token+".");
+          take();const args=[];
+          if(peek()!==")"){args.push(parseExpression());while(peek()===","){take();args.push(parseExpression());}}
+          if(take()!==")")throw new Error("A function call needs a closing parenthesis.");
+          if(!args.length)throw new Error(token+" needs at least one argument.");
+          if(["min","max","hypot"].includes(name)&&args.length<2)throw new Error(token+" needs at least two values.");
+          if(name==="pow"&&args.length!==2)throw new Error("pow needs two values.");
+          if(!["min","max","hypot","pow"].includes(name)&&args.length!==1)throw new Error(token+" takes one argument.");
+          return functions[name](...args);
+        }
+        if(Object.prototype.hasOwnProperty.call(constants,name))return constants[name];
+        throw new Error("Unknown name: "+token+". Use pi, e, or a supported function.");
+      }
+      throw new Error("Unexpected token: "+token+".");
+    };
+    const result=parseExpression();
+    if(index<tokens.length)throw new Error("Unexpected token: "+peek()+".");
+    if(Number.isNaN(result))throw new Error("This expression has no real numeric result.");
+    if(!Number.isFinite(result))throw new Error("The result is not finite.");
+    return result;
+  }
+  function evaluateCalculatorValue(expression){
+    const normalized=String(expression||"").replace(/\bAns\b/gi,"("+String(calculatorAns)+")").replace(/[×✕]/g,"*").replace(/[÷]/g,"/").replace(/[−–]/g,"-").replace(/π/g,"pi").replace(/(-?\d+(?:\.\d+)?)\s*%\s*of\s*(-?\d+(?:\.\d+)?)/ig,"(($1)/100*($2))");
+    if(typeof window.math!=="undefined"&&typeof window.math.evaluate==="function"){
+      const angleFactor=calculatorAngleMode==="DEG"?Math.PI/180:1;
+      const scope={sin:value=>Math.sin(Number(value)*angleFactor),cos:value=>Math.cos(Number(value)*angleFactor),tan:value=>Math.tan(Number(value)*angleFactor),asin:value=>Math.asin(Number(value))/angleFactor,acos:value=>Math.acos(Number(value))/angleFactor,atan:value=>Math.atan(Number(value))/angleFactor};
+      try{
+        const result=window.math.evaluate(normalized,scope);
+        if(typeof result==="number"&&Number.isFinite(result))return result;
+        if(result&&typeof result.toNumber==="function"){const numeric=result.toNumber();if(Number.isFinite(numeric))return numeric;}
+        if(typeof result==="number")return result;
+      }catch{/* The built-in parser provides an offline-safe fallback for ordinary scientific expressions. */}
+    }
+    return evaluateCalculatorExpression(normalized);
+  }
   function updateCalculatorPreview(){
     const field=$("#mathProblem");
     if(!field)return;
@@ -867,28 +937,15 @@
       setCalculatorPreview("Use Solve for the worked solution","MATHS PROBLEM");
       return;
     }
-    if(typeof window.math==="undefined"){
-      setCalculatorPreview("Numeric preview needs the maths library","OFFLINE","error");
-      return;
-    }
-    let expression=raw.replace(/\bwhat is\b|\bcalculate\b|\bevaluate\b|\bcompute\b|\bplease\b/ig,"").replace(/[?]/g,"").trim();
-    expression=expression.replace(/(-?\d+(?:\.\d+)?)\s*%\s*of\s*(-?\d+(?:\.\d+)?)/ig,"(($1)/100*($2))");
-    expression=expression.replace(/\bAns\b/gi,"("+String(calculatorAns)+")").replace(/(\d)\s*([a-zA-Z])\b/g,"$1*$2").replace(/\)\s*\(/g,")*(");
-    const allowedNames=new Set(["sin","cos","tan","asin","acos","atan","sqrt","cbrt","abs","log","log10","log2","ln","exp","floor","ceil","round","min","max","pi","e","tau","Ans","Infinity","i"]);
-    const names=expression.match(/[a-zA-Z]\w*/g)||[];
-    if(names.some(name=>!allowedNames.has(name))){
-      setCalculatorPreview("Keep typing a numeric expression","INCOMPLETE");
-      return;
-    }
+    let expression=raw.replace(/(-?\d+(?:\.\d+)?)\s*%\s*of\s*(-?\d+(?:\.\d+)?)/ig,"(($1)/100*($2))");
     try{
-      const angleFactor=calculatorAngleMode==="DEG"?Math.PI/180:1;
-      const scope={sin:value=>Math.sin(Number(value)*angleFactor),cos:value=>Math.cos(Number(value)*angleFactor),tan:value=>Math.tan(Number(value)*angleFactor),asin:value=>Math.asin(Number(value))/angleFactor,acos:value=>Math.acos(Number(value))/angleFactor,atan:value=>Math.atan(Number(value))/angleFactor};
-      const result=window.math.evaluate(expression,scope);
-      if(result===undefined||typeof result==="function")throw new Error("Not a numeric result");
-      const answer=typeof result?.toString==="function"?result.toString():String(result);
+      const result=evaluateCalculatorValue(expression);
+      const answer=String(Number(result.toPrecision(12)));
       setCalculatorPreview(answer,"PREVIEW · "+calculatorAngleMode,"valid");
-    }catch{
-      setCalculatorPreview("Complete the expression, then press =","INCOMPLETE");
+    }catch(error){
+      const message=error&&error.message||"";
+      if(/Unknown name|Unknown function|Unexpected token|incomplete|closing parenthesis|takes one argument|needs at least/i.test(message))setCalculatorPreview("Keep typing a numeric expression","INCOMPLETE");
+      else setCalculatorPreview("Complete the expression, then press =","INCOMPLETE");
     }
   }
   async function copyCalculatorResult(){
@@ -905,11 +962,9 @@
     }catch{showToast("Could not copy the result automatically.");}
   }
   function calculatorCurrentValue(){
-    if(typeof window.math==="undefined")throw new Error("The numeric calculator library is unavailable. Check your internet connection and refresh.");
-    const expression=$("#mathProblem").value.trim().replace(/\bAns\b/gi,String(calculatorAns));
+    const expression=$("#mathProblem").value.trim();
     if(!expression)throw new Error("Enter an expression before using a memory key.");
-    const angleFactor=calculatorAngleMode==="DEG"?Math.PI/180:1;
-    return Number(math.evaluate(expression,{sin:value=>Math.sin(Number(value)*angleFactor),cos:value=>Math.cos(Number(value)*angleFactor),tan:value=>Math.tan(Number(value)*angleFactor),asin:value=>Math.asin(Number(value))/angleFactor,acos:value=>Math.acos(Number(value))/angleFactor,atan:value=>Math.atan(Number(value))/angleFactor}));
+    return evaluateCalculatorValue(expression);
   }
   function refreshCalculatorMemory(){
     const status=$("#calculatorMemoryStatus");
