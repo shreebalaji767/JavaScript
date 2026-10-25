@@ -410,7 +410,7 @@
     ).join("") : '<div class="empty-state"><strong>No matching concepts</strong><p>Try a shorter search or choose another category.</p></div>';
     $("#referenceCount").textContent = matches.length+" concept"+(matches.length===1?"":"s")+" shown";
   }
-  function fmtMath(n){if(!Number.isFinite(n))throw new Error("The answer is not a finite real number.");if(Math.abs(n)<1e-12)n=0;return Number(n.toPrecision(12)).toString();}
+  function fmtMath(n){if(!Number.isFinite(n))throw new Error("The answer is not a finite real number.");if(Object.is(n,-0))n=0;return Number(n.toPrecision(12)).toString();}
   function arithmeticMath(src){
     const tokens=src.match(/(?:\d+(?:\.\d*)?|\.\d+)|(?:[a-zA-Z]+)|[()+\-*/%^,]/g)||[], compact=src.replace(/\s+/g,"");
     if(tokens.join("")!==compact)throw new Error("Unknown character. Use numbers, + - * / % ^, brackets, pi, e, or a supported function.");
@@ -460,9 +460,9 @@
     }
     const l=coeff(sides[0],1),r=coeff(sides[1],-1),a=l.a+r.a,b=l.b+r.b,c=l.c+r.c;
     if(Math.abs(a)<1e-12)throw new Error("No x² term found. Choose linear equations for a linear equation.");
-    const d=b*b-4*a*c,steps=["Write as ax² + bx + c = 0: a = "+fmtMath(a)+", b = "+fmtMath(b)+", c = "+fmtMath(c)+".","Discriminant D = b² − 4ac = "+fmtMath(b)+"² − 4("+fmtMath(a)+")("+fmtMath(c)+") = "+fmtMath(d)+".","Quadratic formula: x = (−b ± √D) / (2a)."];
+    let d=b*b-4*a*c;const tolerance=Number.EPSILON*16*(b*b+Math.abs(4*a*c));if(d<0&&Math.abs(d)<=tolerance)d=0;const steps=["Write as ax² + bx + c = 0: a = "+fmtMath(a)+", b = "+fmtMath(b)+", c = "+fmtMath(c)+".","Discriminant D = b² − 4ac = "+fmtMath(b)+"² − 4("+fmtMath(a)+")("+fmtMath(c)+") = "+fmtMath(d)+".","Quadratic formula: x = (−b ± √D) / (2a)."];
     if(d<0)return {title:"Quadratic equation",answer:"No real roots (two complex roots)",steps:steps.concat(["D is negative, so there are no real-number solutions."])};
-    const x1=(-b+Math.sqrt(d))/(2*a),x2=(-b-Math.sqrt(d))/(2*a);
+    const root=Math.sqrt(d),q=-0.5*(b+(b<0?-root:root));const x1=d===0?-b/(2*a):q/a,x2=d===0?x1:(q===0?-b/(2*a):c/q);
     steps.push("Substitute: x = ("+fmtMath(-b)+" ± √"+fmtMath(d)+") / "+fmtMath(2*a)+".","Solutions: x₁ = "+fmtMath(x1)+" and x₂ = "+fmtMath(x2)+".");
     return {title:"Quadratic equation",answer:Math.abs(x1-x2)<1e-10?"x = "+fmtMath(x1)+" (repeated root)":"x = "+fmtMath(x1)+" or x = "+fmtMath(x2),steps};
   }
@@ -507,6 +507,20 @@
     let n=Number(m[1]),d=Number(m[2]);if(!d)throw new Error("The denominator cannot be zero.");
     const original=n+"/"+d,g=gcdMath(n,d);n/=g;d/=g;if(d<0){n=-n;d=-d;}
     return {title:"Fraction simplification",answer:n+"/"+d+(d===1?" = "+n:""),steps:["Start with "+original+".","Greatest common divisor = "+g+".","Divide numerator and denominator by "+g+".","Simplified fraction = "+n+"/"+d+"."]};
+  }
+  function discountMath(src){
+    const m=src.match(/discount\s+(-?\d+(?:\.\d+)?)\s*[,; ]\s*(-?\d+(?:\.\d+)?)/i);
+    if(!m)throw new Error("Enter price and discount percent, e.g. discount 1000, 20.");
+    const price=Number(m[1]),rate=Number(m[2]);if(price<0||rate<0||rate>100)throw new Error("Price must be non-negative and discount must be from 0% to 100%.");
+    const saved=price*rate/100,total=price-saved;
+    return {title:"Discount calculator",answer:"Discount = "+fmtMath(saved)+"; final price = "+fmtMath(total),steps:["Original price = "+fmtMath(price)+".","Discount rate = "+fmtMath(rate)+"%.","Discount amount = price × rate ÷ 100 = "+fmtMath(price)+" × "+fmtMath(rate)+" ÷ 100 = "+fmtMath(saved)+".","Final price = original price − discount = "+fmtMath(price)+" − "+fmtMath(saved)+" = "+fmtMath(total)+"."]};
+  }
+  function gstMath(src){
+    const m=src.match(/gst\s+(-?\d+(?:\.\d+)?)\s*[,; ]\s*(-?\d+(?:\.\d+)?)/i);
+    if(!m)throw new Error("Enter price and GST percent, e.g. gst 1000, 18.");
+    const price=Number(m[1]),rate=Number(m[2]);if(price<0||rate<0||rate>100)throw new Error("Price must be non-negative and GST must be from 0% to 100%.");
+    const tax=price*rate/100,total=price+tax;
+    return {title:"GST calculator",answer:"GST amount = "+fmtMath(tax)+"; total including GST = "+fmtMath(total),steps:["Price before GST = "+fmtMath(price)+".","GST rate = "+fmtMath(rate)+"%.","GST = price × rate ÷ 100 = "+fmtMath(price)+" × "+fmtMath(rate)+" ÷ 100 = "+fmtMath(tax)+".","Total including GST = price + GST = "+fmtMath(price)+" + "+fmtMath(tax)+" = "+fmtMath(total)+"."]};
   }
   function normalizeMathQuestion(source){
     let s=String(source||"").trim().toLowerCase();
@@ -666,6 +680,8 @@
     if(advanced)return advanced;
     if(mode==="auto"){
       if(/^compound interest\b/i.test(s))mode="compound-interest";
+      else if(/^discount\b/i.test(s))mode="discount";
+      else if(/^gst\b/i.test(s))mode="gst";
       else if(/^(simple interest|interest)\b/i.test(s))mode="simple-interest";
       else if(/^(pythagorean|hypotenuse)\b/i.test(s))mode="pythagorean";
       else if(/^simplify\s+-?\d+\s*\/\s*-?\d+/i.test(s)||/^fraction\b/i.test(s))mode="fraction";
@@ -677,6 +693,8 @@
       else if(/:\s*-?\d/.test(s))mode="ratio";
       else mode="arithmetic";
     }
+    if(mode==="discount")return discountMath(s);
+    if(mode==="gst")return gstMath(s);
     if(mode==="quadratic")return quadraticMath(s);
     if(mode==="statistics")return statisticsMath(s);
     if(mode==="geometry")return geometryMath(s);
@@ -890,7 +908,7 @@
     const angleFactor=calculatorAngleMode==="DEG"?Math.PI/180:1;
     const factorial=n=>{if(!Number.isInteger(n)||n<0||n>170)throw new Error("Factorial needs a whole number from 0 to 170.");let result=1;for(let k=2;k<=n;k++)result*=k;return result;};
     const functions={
-      sqrt:x=>Math.sqrt(x),cbrt:x=>Math.cbrt(x),abs:x=>Math.abs(x),sin:x=>Math.sin(x*angleFactor),cos:x=>Math.cos(x*angleFactor),tan:x=>Math.tan(x*angleFactor),
+      sqrt:x=>Math.sqrt(x),cbrt:x=>Math.cbrt(x),abs:x=>Math.abs(x),sin:x=>Math.sin(x*angleFactor),cos:x=>Math.cos(x*angleFactor),tan:x=>{if(calculatorAngleMode==="DEG"&&Math.abs((x%180+180)%180-90)<1e-12)throw new Error("tan is undefined at 90° + k × 180°.");return Math.tan(x*angleFactor)},
       asin:x=>Math.asin(x)/angleFactor,acos:x=>Math.acos(x)/angleFactor,atan:x=>Math.atan(x)/angleFactor,
       log:x=>Math.log10(x),log10:x=>Math.log10(x),log2:x=>Math.log2(x),ln:x=>Math.log(x),exp:x=>Math.exp(x),
       floor:x=>Math.floor(x),ceil:x=>Math.ceil(x),round:x=>Math.round(x),sign:x=>Math.sign(x),
@@ -902,7 +920,7 @@
     const parseTerm=()=>{let value=parseUnary();while(true){const op=peek();if(["*","/","%"].includes(op)){take();const right=parseUnary();if((op==="/"||op==="%")&&right===0)throw new Error("Division by zero is not allowed.");value=op==="*"?value*right:op==="/"?value/right:value%right;continue;}if(startsPrimary(op)){value*=parseUnary();continue;}break;}return value;};
     const parseUnary=()=>{if(peek()==="+"){take();return parseUnary();}if(peek()==="-"){take();return -parseUnary();}return parsePower();};
     const parsePower=()=>{let value=parsePostfix();if(peek()==="^"){take();value=Math.pow(value,parseUnary());}return value;};
-    const parsePostfix=()=>{let value=parsePrimary();while(peek()==="!"){take();value=factorial(value);}return value;};
+    const parsePostfix=()=>{let value=parsePrimary();while(peek()==="!"||peek()==="%"){const op=peek();if(op==="%"&&index+1<tokens.length&&! [")",",","+","-","*","/","^"].includes(tokens[index+1]))break;take();value=op==="!"?factorial(value):value/100;}return value;};
     const parsePrimary=()=>{
       const token=take();
       if(token===undefined)throw new Error("The expression is incomplete.");
@@ -919,7 +937,7 @@
           if(["min","max","hypot"].includes(name)&&args.length<2)throw new Error(token+" needs at least two values.");
           if(name==="pow"&&args.length!==2)throw new Error("pow needs two values.");
           if(!["min","max","hypot","pow"].includes(name)&&args.length!==1)throw new Error(token+" takes one argument.");
-          return functions[name](...args);
+          const result=functions[name](...args);if(!Number.isFinite(result))throw new Error("This function has no finite real result for the supplied value.");return result;
         }
         if(Object.prototype.hasOwnProperty.call(constants,name))return constants[name];
         throw new Error("Unknown name: "+token+". Use pi, e, or a supported function.");
@@ -930,7 +948,7 @@
     if(index<tokens.length)throw new Error("Unexpected token: "+peek()+".");
     if(Number.isNaN(result))throw new Error("This expression has no real numeric result.");
     if(!Number.isFinite(result))throw new Error("The result is not finite.");
-    return result;
+    return Object.is(result,-0)?0:result;
   }
   function evaluateCalculatorValue(expression){
     const normalized=String(expression||"").replace(/\bAns\b/gi,"("+String(calculatorAns)+")").replace(/[×✕]/g,"*").replace(/[÷]/g,"/").replace(/[−–]/g,"-").replace(/π/g,"pi").replace(/(-?\d+(?:\.\d+)?)\s*%\s*of\s*(-?\d+(?:\.\d+)?)/ig,"(($1)/100*($2))");
