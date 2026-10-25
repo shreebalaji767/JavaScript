@@ -709,40 +709,55 @@
     }
     return null;
   }
-  function parseLinearEquation2(raw){
+  function parseLinearEquationN(raw){
     const equation=String(raw||"").replace(/\s+/g,"").replace(/[−]/g,"-");
     const sides=equation.split("=");
     if(sides.length!==2)throw new Error("Write each equation with one equals sign.");
     function parseSide(side){
       const tokens=side.match(/[+-]?[^+-]+/g);
-      if(!tokens||tokens.join("")!==side)throw new Error("Use linear terms such as 2x, -y, and constants.");
-      let x=0,y=0,c=0;
+      if(!tokens||tokens.join("")!==side)throw new Error("Use linear terms such as 2x, -y, 3z, and constants.");
+      const coeff={};let c=0;
       for(let token of tokens){
         let sign=1;
         if(token[0]==="-"){sign=-1;token=token.slice(1)}else if(token[0]==="+"){token=token.slice(1)}
         if(!token)continue;
-        const xm=token.match(/^(\d*\.?\d*)\*?x$/i),ym=token.match(/^(\d*\.?\d*)\*?y$/i);
-        if(xm){x+=sign*(xm[1]===""?1:Number(xm[1]));continue}
-        if(ym){y+=sign*(ym[1]===""?1:Number(ym[1]));continue}
+        const vm=token.match(/^(\d*\.?\d*)\*?([a-z])$/i);
+        if(vm){const variable=vm[2].toLowerCase(),n=vm[1]===""?1:Number(vm[1]);coeff[variable]=(coeff[variable]||0)+sign*n;continue}
         if(/^(?:\d+\.?\d*|\.\d+)$/.test(token)){c+=sign*Number(token);continue}
-        throw new Error("Only linear equations in x and y are supported here.");
+        throw new Error("Only linear equations are supported. Use single-letter variables, e.g. x, y, z.");
       }
-      return {x,y,c};
+      return {coeff,c};
     }
-    const l=parseSide(sides[0]),r=parseSide(sides[1]);
-    return {a:l.x-r.x,b:l.y-r.y,c:r.c-l.c};
+    const l=parseSide(sides[0]),r=parseSide(sides[1]),coeff={};
+    for(const v of new Set([...Object.keys(l.coeff),...Object.keys(r.coeff)]))coeff[v]=(l.coeff[v]||0)-(r.coeff[v]||0);
+    return {coeff,c:r.c-l.c};
+  }
+  function parseLinearEquation2(raw){
+    const eq=parseLinearEquationN(raw);
+    return {a:eq.coeff.x||0,b:eq.coeff.y||0,c:eq.c};
   }
   function systemMath(raw){
     const text=String(raw||"").replace(/^\s*(?:solve\s+)?(?:the\s+)?(?:system(?:\s+of\s+equations)?|simultaneous\s+equations)\s*:?\s*/i,"").trim();
     const equations=text.split(/[;\n]+/).map(s=>s.trim()).filter(Boolean);
-    if(equations.length!==2)throw new Error("Enter two linear equations separated by a semicolon, e.g. system: 2x + y = 5; x - y = 1.");
-    const [one,two]=equations.map(parseLinearEquation2);
-    const det=one.a*two.b-two.a*one.b;
-    const scale=Math.max(1,Math.abs(one.a),Math.abs(one.b),Math.abs(two.a),Math.abs(two.b));
-    if(Math.abs(det)<1e-12*scale*scale)throw new Error("The system has no unique solution (parallel or dependent equations).");
-    const x=(one.c*two.b-two.c*one.b)/det,y=(one.a*two.c-two.a*one.c)/det;
-    const clean=n=>Number(n.toPrecision(12)).toString();
-    return {title:"Two-variable linear system",answer:"x = "+clean(x)+"; y = "+clean(y),steps:["Write equations in standard form a₁x + b₁y = c₁ and a₂x + b₂y = c₂.","Calculate determinant Δ = a₁b₂ − a₂b₁ = "+clean(det)+".","Because Δ ≠ 0, there is a unique solution.","Cramer's rule gives x = "+clean(x)+" and y = "+clean(y)+".","Substitute both values into the original equations to check."]};
+    if(equations.length<2||equations.length>6)throw new Error("Enter 2–6 linear equations separated by semicolons. Example: system: x+y+z=6; 2x-y+z=3; x+2y-z=2.");
+    const parsed=equations.map(parseLinearEquationN);
+    const variables=[...new Set(parsed.flatMap(eq=>Object.keys(eq.coeff)))].sort();
+    if(variables.length!==equations.length)throw new Error("For a unique solution, enter the same number of equations as distinct variables (2–6).");
+    const n=variables.length;
+    if(n<2)throw new Error("Enter at least two variables, such as x and y.");
+    const a=parsed.map(eq=>variables.map(v=>eq.coeff[v]||0).concat(eq.c));
+    const scale=Math.max(1,...a.flat().map(Math.abs)),eps=1e-12*scale;
+    for(let col=0;col<n;col++){
+      let pivot=col;
+      for(let r=col+1;r<n;r++)if(Math.abs(a[r][col])>Math.abs(a[pivot][col]))pivot=r;
+      if(Math.abs(a[pivot][col])<=eps)throw new Error("The system has no unique solution (parallel or dependent equations).");
+      [a[col],a[pivot]]=[a[pivot],a[col]];
+      const p=a[col][col];
+      for(let j=col;j<=n;j++)a[col][j]/=p;
+      for(let r=0;r<n;r++)if(r!==col){const factor=a[r][col];for(let j=col;j<=n;j++)a[r][j]-=factor*a[col][j];}
+    }
+    const clean=v=>Number(v.toPrecision(12)).toString(),solutions=variables.map((v,i)=>v+" = "+clean(a[i][n]));
+    return {title:n+"-variable linear system",answer:solutions.join("; "),steps:["Arrange the equations in standard linear form using variables "+variables.join(", ")+".","Build the augmented coefficient matrix with "+n+" equations and "+n+" variables.","Use Gaussian elimination with partial pivoting to reduce the matrix.","Read the solved variable values from the final column: "+solutions.join(", ")+".","Substitute the values into the original equations to verify the solution."]};
   }
   function matrixMath(raw){
     const source=String(raw||"").trim();
