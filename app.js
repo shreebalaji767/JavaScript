@@ -476,8 +476,33 @@
     const original=n+"/"+d,g=gcdMath(n,d);n/=g;d/=g;if(d<0){n=-n;d=-d;}
     return {title:"Fraction simplification",answer:n+"/"+d+(d===1?" = "+n:""),steps:["Start with "+original+".","Greatest common divisor = "+g+".","Divide numerator and denominator by "+g+".","Simplified fraction = "+n+"/"+d+"."]};
   }
+  function normalizeMathQuestion(source){
+    let s=String(source||"").trim().toLowerCase();
+    if(!s)return s;
+    s=s.replace(/[?？]/g," ").replace(/\b(please|can you|could you|would you|tell me|work out|calculate|evaluate|compute|solve|find the value of|what is|what's|whats|how much is|how many is)\b/g," ");
+    s=s.replace(/\bthe square root of\s*([+-]?\d+(?:\.\d+)?)/g,"sqrt($1)");
+    s=s.replace(/\bsquare root\s*of\s*([+-]?\d+(?:\.\d+)?)/g,"sqrt($1)");
+    s=s.replace(/\b([+-]?\d+(?:\.\d+)?)\s*squared\b/g,"($1)^2");
+    s=s.replace(/\b([+-]?\d+(?:\.\d+)?)\s*cubed\b/g,"($1)^3");
+    s=s.replace(/\bmultiplied by\b|\btimes\b|\bmultiplied\b/g," * ");
+    s=s.replace(/\bdivided by\b|\bover\b/g," / ");
+    s=s.replace(/\bplus\b|\badded to\b|\badd\b/g," + ");
+    s=s.replace(/\bminus\b|\bsubtract\b|\bsubtracted by\b/g," - ");
+    s=s.replace(/\bdivided into\b/g," / ");
+    s=s.replace(/\bpercent(?:age)?\b/g,"%");
+    s=s.replace(/\bof\b/g," of ");
+    s=s.replace(/\bpi\b/g,"pi");
+    s=s.replace(/\s+/g," ").trim();
+    // Common word-problem forms become explicit arithmetic before parsing.
+    const percentOf=s.match(/^([+-]?\d+(?:\.\d+)?)\s*%\s*of\s*([+-]?\d+(?:\.\d+)?)$/);
+    if(percentOf)return percentOf[1]+"% of "+percentOf[2];
+    const simplePair=s.match(/^([+-]?\d+(?:\.\d+)?)\s*(?:and)\s*([+-]?\d+(?:\.\d+)?)\s*(more|less|altogether|total)?$/);
+    if(simplePair&&simplePair[3])return simplePair[1]+(simplePair[3]==="less"?" - ":" + ")+simplePair[2];
+    return s;
+  }
   function solveMathProblem(source,mode){
-    const s=source.trim();if(!s)throw new Error("Type a problem first. The maths goblin cannot solve an empty box.");
+    const original=String(source||"").trim();
+    const s=normalizeMathQuestion(source);if(!s)throw new Error("Type a problem first. The maths goblin cannot solve an empty box.");
     if(mode==="auto"){
       if(/^compound interest\b/i.test(s))mode="compound-interest";
       else if(/^(simple interest|interest)\b/i.test(s))mode="simple-interest";
@@ -506,7 +531,9 @@
     }
     if(mode==="equation")return linearMath(s);
     if(mode==="ratio")return ratioMath(s);
-    const n=arithmeticMath(s);return {title:"Arithmetic expression",answer:fmtMath(n),steps:["Order of operations: brackets, powers, multiplication/division, addition/subtraction.","Evaluate the expression.","Answer: "+fmtMath(n)+"."]};
+    const n=arithmeticMath(s);
+    const steps=["Read the question as the expression: "+s+".","Apply the order of operations: brackets, powers, multiplication/division, then addition/subtraction.","Calculate the expression: "+s+" = "+fmtMath(n)+".","Final answer: "+fmtMath(n)+"."];
+    return {title:original&&original!==s?"Math question":"Arithmetic expression",answer:fmtMath(n),steps};
   }
   function renderMathSolution(solution){
     const out=$("#mathSolverOutput");out.replaceChildren();const title=document.createElement("div");title.className="solver-answer-label";title.textContent=solution.title||"Solution";out.appendChild(title);
