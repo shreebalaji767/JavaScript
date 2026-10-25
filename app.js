@@ -707,6 +707,7 @@
       const question=$("#mathProblem").value.trim();
       const solution=solveMathProblem(question,$("#mathMode").value);
       renderMathSolution(solution);
+      setCalculatorPreview(String(solution.answer),"SOLVED","valid");
       const numericAnswer=Number(String(solution.answer).replace(/,/g,""));
       if(Number.isFinite(numericAnswer))calculatorAns=numericAnswer;
       lastMathSolution={question,mode:$("#mathMode").value,solution:{title:solution.title||"Solution",answer:String(solution.answer),steps:Array.isArray(solution.steps)?solution.steps.map(String):[]}};
@@ -718,7 +719,7 @@
     }
   }
   function clearMathProblem(){
-    $("#mathProblem").value="";$("#mathSolverOutput").replaceChildren();
+    $("#mathProblem").value="";updateCalculatorPreview();$("#mathSolverOutput").replaceChildren();
     const placeholder=document.createElement("div");placeholder.className="output-placeholder";
     const symbol=document.createElement("span");symbol.textContent="∑";
     const title=document.createElement("strong");title.textContent="Your solution will appear here";
@@ -851,6 +852,58 @@
     field.focus();
     field.dispatchEvent(new Event("input",{bubbles:true}));
   }
+  function setCalculatorPreview(value,status,kind=""){
+    const output=$("#calculatorPreview"),label=$("#calculatorPreviewStatus"),copy=$("#copyCalculatorResult");
+    if(output)output.textContent=value;
+    if(label){label.textContent=status;label.classList.toggle("preview-valid",kind==="valid");label.classList.toggle("preview-error",kind==="error");}
+    if(copy)copy.disabled=kind!=="valid";
+  }
+  function updateCalculatorPreview(){
+    const field=$("#mathProblem");
+    if(!field)return;
+    const raw=field.value.trim();
+    if(!raw){setCalculatorPreview("Enter a numeric expression","READY");return;}
+    if(raw.includes("=")||/\b(?:differentiate|derivative|integrate|integral|limit|factor|expand|simplify|solve|mean|median|mode|range|circle|rectangle|triangle|square|interest|pythagorean)\b/i.test(raw)){
+      setCalculatorPreview("Use Solve for the worked solution","MATHS PROBLEM");
+      return;
+    }
+    if(typeof window.math==="undefined"){
+      setCalculatorPreview("Numeric preview needs the maths library","OFFLINE","error");
+      return;
+    }
+    let expression=raw.replace(/\bwhat is\b|\bcalculate\b|\bevaluate\b|\bcompute\b|\bplease\b/ig,"").replace(/[?]/g,"").trim();
+    expression=expression.replace(/(-?\d+(?:\.\d+)?)\s*%\s*of\s*(-?\d+(?:\.\d+)?)/ig,"(($1)/100*($2))");
+    expression=expression.replace(/\bAns\b/gi,"("+String(calculatorAns)+")").replace(/(\d)\s*([a-zA-Z])\b/g,"$1*$2").replace(/\)\s*\(/g,")*(");
+    const allowedNames=new Set(["sin","cos","tan","asin","acos","atan","sqrt","cbrt","abs","log","log10","log2","ln","exp","floor","ceil","round","min","max","pi","e","tau","Ans","Infinity","i"]);
+    const names=expression.match(/[a-zA-Z]\w*/g)||[];
+    if(names.some(name=>!allowedNames.has(name))){
+      setCalculatorPreview("Keep typing a numeric expression","INCOMPLETE");
+      return;
+    }
+    try{
+      const angleFactor=calculatorAngleMode==="DEG"?Math.PI/180:1;
+      const scope={sin:value=>Math.sin(Number(value)*angleFactor),cos:value=>Math.cos(Number(value)*angleFactor),tan:value=>Math.tan(Number(value)*angleFactor),asin:value=>Math.asin(Number(value))/angleFactor,acos:value=>Math.acos(Number(value))/angleFactor,atan:value=>Math.atan(Number(value))/angleFactor};
+      const result=window.math.evaluate(expression,scope);
+      if(result===undefined||typeof result==="function")throw new Error("Not a numeric result");
+      const answer=typeof result?.toString==="function"?result.toString():String(result);
+      setCalculatorPreview(answer,"PREVIEW · "+calculatorAngleMode,"valid");
+    }catch{
+      setCalculatorPreview("Complete the expression, then press =","INCOMPLETE");
+    }
+  }
+  async function copyCalculatorResult(){
+    const value=$("#calculatorPreview")?.textContent||"";
+    const status=$("#calculatorPreviewStatus")?.textContent||"";
+    if(!value||!status.startsWith("PREVIEW")&&!status.startsWith("SOLVED"))return;
+    try{
+      if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(value);
+      else{
+        const helper=document.createElement("textarea");helper.value=value;helper.setAttribute("readonly","");helper.style.position="fixed";helper.style.opacity="0";document.body.appendChild(helper);helper.select();
+        const copied=document.execCommand("copy");helper.remove();if(!copied)throw new Error("Copy unavailable");
+      }
+      showToast("Calculator result copied.");
+    }catch{showToast("Could not copy the result automatically.");}
+  }
   function calculatorCurrentValue(){
     if(typeof window.math==="undefined")throw new Error("The numeric calculator library is unavailable. Check your internet connection and refresh.");
     const expression=$("#mathProblem").value.trim().replace(/\bAns\b/gi,String(calculatorAns));
@@ -863,6 +916,7 @@
     if(status)status.textContent=calculatorHasMemory?"Memory: "+calculatorMemory:"Memory empty";
     const angle=$("#calculatorAngleMode");
     if(angle){angle.textContent=calculatorAngleMode;angle.setAttribute("aria-pressed",String(calculatorAngleMode==="DEG"));angle.classList.toggle("active",calculatorAngleMode==="DEG");}
+    updateCalculatorPreview();
   }
   function handleCalculatorAction(action){
     const field=$("#mathProblem");
@@ -985,6 +1039,8 @@
   $("#searchInput").addEventListener("keydown",event=>{if(event.key==="Enter"){searchLessons(event.target.value);event.target.blur();}});
   $("#referenceSearch").addEventListener("input",renderReference);
   $("#mathProblem").addEventListener("keydown",event=>{if((event.ctrlKey||event.metaKey)&&event.key==="Enter")runMathSolver();});
+  $("#mathProblem").addEventListener("input",updateCalculatorPreview);
+  $("#copyCalculatorResult").addEventListener("click",copyCalculatorResult);
   $("#referenceFilters").addEventListener("click",event=>{
     const button=event.target.closest("[data-reference-filter]");
     if(!button)return;
