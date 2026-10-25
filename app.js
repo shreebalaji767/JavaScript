@@ -709,13 +709,31 @@
     }
     return null;
   }
+  function theoremMath(source){
+    const raw=String(source||"").trim();
+    const intent=/\b(explain|teach me|what is|state|prove|show why|theorem|identity|formula for|derive)\b/i.test(raw);
+    if(!intent)return null;
+    const text=raw.toLowerCase().replace(/[?!.]/g," ").replace(/\s+/g," ").trim();
+    const entries=[
+      {keys:/pythagorean|pythagoras/,title:"Pythagorean theorem",answer:"a² + b² = c² (for a right-angled triangle)",steps:["The theorem applies only to a right-angled triangle.","Let a and b be the perpendicular sides and c the hypotenuse (the side opposite the right angle).","The squares of the two shorter sides add to the square of the hypotenuse: a² + b² = c².","Example: if a = 3 and b = 4, then c² = 3² + 4² = 9 + 16 = 25, so c = 5.","Check: 3² + 4² = 5², or 9 + 16 = 25."]},
+      {keys:/quadratic formula|quadratic equation formula/,title:"Quadratic formula",answer:"For ax² + bx + c = 0: x = (−b ± √(b² − 4ac)) / (2a), where a ≠ 0.",steps:["Identify a, b and c by comparing the equation with ax² + bx + c = 0.","Calculate the discriminant D = b² − 4ac.","Substitute into x = (−b ± √D)/(2a). The ± gives up to two real roots; if D < 0, the roots are complex.","Example: x² − 5x + 6 = 0 gives a = 1, b = −5, c = 6 and D = 25 − 24 = 1.","Therefore x = (5 ± 1)/2, so x = 3 or x = 2."]},
+      {keys:/angle sum|sum of angles in (a )?triangle|triangle angle theorem/,title:"Triangle angle-sum theorem",answer:"A triangle’s three interior angles add up to 180°.",steps:["Name the interior angles A, B and C.","The theorem states A + B + C = 180° in ordinary Euclidean plane geometry.","Example: if A = 50° and B = 60°, then C = 180° − 50° − 60° = 70°.","This follows by drawing a line through one vertex parallel to the opposite side and using alternate interior angles."]},
+      {keys:/difference of squares|square difference identity/,title:"Difference of squares identity",answer:"a² − b² = (a − b)(a + b)",steps:["Recognise a subtraction of two perfect squares.","Expand the right-hand side: (a − b)(a + b) = a² + ab − ab − b².","The middle terms cancel, leaving a² − b².","Example: x² − 9 = x² − 3² = (x − 3)(x + 3)."]},
+      {keys:/power rule|power rule of differentiation|differentiat(?:e|ion) rule/,title:"Power rule of differentiation",answer:"d/dx (xⁿ) = n xⁿ⁻¹ (for differentiable powers in the usual domain)",steps:["Bring the exponent n down as a coefficient.","Reduce the exponent by one.","Example: d/dx (x⁵) = 5x⁴.","For a constant multiple, keep the constant: d/dx (3x²) = 3 × 2x = 6x.","This is a rule for differentiating powers, not a general rule for every function by itself."]},
+      {keys:/fundamental theorem of calculus/,title:"Fundamental theorem of calculus",answer:"Differentiation and definite integration are linked: ∫ₐᵇ f(x) dx = F(b) − F(a), when F′ = f and the required continuity conditions hold.",steps:["Find an antiderivative F such that F′(x) = f(x).","Evaluate F at the upper bound b and lower bound a.","Subtract: the definite integral is F(b) − F(a).","Example: ∫₀² 2x dx = [x²]₀² = 2² − 0² = 4.","The theorem connects accumulated area (integration) with rates of change (differentiation)."]}
+    ];
+    const entry=entries.find(item=>item.keys.test(text));
+    if(!entry)return null;
+    return {title:"Theorem & formula assistant: "+entry.title,answer:entry.answer,steps:entry.steps};
+  }
+
   function solveMathProblem(source,mode){
     const original=String(source||"").trim();
     const s=normalizeMathQuestion(source);if(!s)throw new Error("Type a problem first. The maths goblin cannot solve an empty box.");
     // Route explicit shape calculations before symbolic expression evaluation.
     // Otherwise Nerdamer can treat "circle 5" as the product 5 * circle.
     if(mode==="auto"&&/^(circle|rectangle|square|triangle)\s*[: ]?\s*-?\d/i.test(s))return geometryMath(s);
-    const advanced=solveAdvancedMath(original,mode,s);
+    const theorem=theoremMath(original);\n    if(theorem)return theorem;\n    const advanced=solveAdvancedMath(original,mode,s);
     if(advanced)return advanced;
     if(mode==="auto"){
       if(/^compound interest\b/i.test(s))mode="compound-interest";
