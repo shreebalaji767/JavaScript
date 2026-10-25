@@ -16,6 +16,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/14.8.1/math.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/nerdamer@1.1.13/nerdamer.core.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/nerdamer@1.1.13/Algebra.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/nerdamer@1.1.13/Calculus.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/nerdamer@1.1.13/Solve.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/nerdamer@1.1.13/Extra.js" defer></script>
   <script src="./app.js" defer></script>
 </head>
 <body>
@@ -233,19 +239,19 @@ console.log(2 + 3);</textarea><div class="editor-footer"><span>JavaScript · run
           <div class="page-heading"><div class="eyebrow">SHOW YOUR WORK · NOT JUST THE ANSWER</div><h1>Math problem solver<span class="gradient-text">.</span></h1><p>Type a maths problem, get the answer, and see the steps. No magic calculator goblin hiding the working.</p></div>
           <div class="solver-layout">
             <div class="solver-card panel">
-              <div class="panel-top"><div><span class="live-dot"></span><strong>Problem input</strong></div><span class="math-label">FREE · IN YOUR BROWSER</span></div>
+              <div class="panel-top"><div><span class="live-dot"></span><strong>Problem input</strong></div><span class="math-label">ADVANCED SYMBOLIC + NUMERIC ENGINE</span></div>
               <label for="mathProblem" class="solver-label">What problem are we solving?</label>
-              <textarea id="mathProblem" rows="3" placeholder="Ask: What is 12 plus 8?&#10;Or: 15 percent of 240&#10;Or: 2x + 3 = 11"></textarea>
+              <textarea id="mathProblem" rows="3" placeholder="Try: solve x^3 - 6x^2 + 11x - 6 = 0&#10;Differentiate x^2 sin(x)&#10;Integrate 3x^2 + 2x&#10;Or: What is 15 percent of 240?"></textarea>
               <div class="solver-examples"><span>TRY ONE:</span><button type="button" data-math-example="What is 12 plus 8?">12 plus 8?</button><button type="button" data-math-example="(12 + 8) * 3">(12 + 8) × 3</button><button type="button" data-math-example="15% of 240">15% of 240</button><button type="button" data-math-example="2x + 3 = 11">2x + 3 = 11</button><button type="button" data-math-example="simplify 12:18">Simplify 12:18</button><button type="button" data-math-example="x^2 - 5x + 6 = 0">Quadratic</button><button type="button" data-math-example="mean 2, 4, 6">Mean</button><button type="button" data-math-example="circle 5">Circle</button><button type="button" data-math-example="pythagorean 3, 4">Pythagorean</button><button type="button" data-math-example="simple interest 1000, 5, 2">Interest</button><button type="button" data-math-example="simplify 18/24">Fraction</button></div>
-              <div class="solver-controls"><label for="mathMode">Problem type</label><select id="mathMode"><option value="auto">Auto-detect</option><option value="arithmetic">Arithmetic / expressions</option><option value="percentage">Percentages</option><option value="equation">Linear equations (one x)</option><option value="ratio">Ratios and proportions</option><option value="quadratic">Quadratic equations</option><option value="statistics">Statistics (mean / median / mode / range)</option><option value="geometry">Geometry (area / perimeter)</option><option value="fraction">Simplify fractions</option><option value="pythagorean">Pythagorean theorem</option><option value="simple-interest">Simple interest</option><option value="compound-interest">Compound interest</option></select><button class="primary-button" id="solveMath">Solve it →</button></div>
-              <p class="solver-hint">Understands arithmetic expressions and some common school-style questions, including percentages, equations, fractions, statistics, basic geometry, Pythagorean theorem, and interest. For word problems, include the numbers and what you want to find; choose a problem type if auto-detection is unsure.</p>
+              <div class="solver-controls"><label for="mathMode">Problem type</label><select id="mathMode"><option value="auto">Auto-detect</option><option value="arithmetic">Arithmetic / expressions</option><option value="percentage">Percentages</option><option value="equation">Linear equations (one x)</option><option value="ratio">Ratios and proportions</option><option value="quadratic">Quadratic equations</option><option value="statistics">Statistics (mean / median / mode / range)</option><option value="geometry">Geometry (area / perimeter)</option><option value="fraction">Simplify fractions</option><option value="pythagorean">Pythagorean theorem</option><option value="simple-interest">Simple interest</option><option value="compound-interest">Compound interest</option><option value="advanced">Advanced / symbolic maths</option></select><button class="primary-button" id="solveMath">Solve it →</button></div>
+              <p class="solver-hint">Expanded with symbolic algebra, polynomial and supported equation solving, derivatives, integrals, limits, simplification, expansion, factorisation, matrices, complex numbers, and numeric expressions. Advanced calculations load open-source maths libraries from CDNs, so an internet connection is needed for those features. Arbitrary word problems and every possible equation still cannot be guaranteed.</p>
             </div>
             <div class="solver-result panel" aria-live="polite" aria-atomic="true">
               <div class="panel-top"><strong>Working out</strong><span class="solver-status" id="mathSolverStatus">WAITING FOR A PROBLEM</span></div>
               <div id="mathSolverOutput" class="solver-output"><div class="output-placeholder"><span>∑</span><strong>Your solution will appear here</strong><p>Choose an example or type a problem, then press Solve it.</p></div></div>
             </div>
           </div>
-          <div class="math-roadmap-note"><h3>🧠 The rule of the maths goblin</h3><p>This solves supported problem types and explains the steps. It is not a universal symbolic maths engine, so advanced notation or ambiguous word problems may need rewriting into a supported format.</p></div>
+          <div class="math-roadmap-note"><h3>🧠 The rule of the maths goblin</h3><p>This now combines a numeric expression engine with a symbolic computer-algebra engine. It can handle a much broader range of calculations, equations, algebra, and calculus, but no calculator can guarantee every possible equation, ambiguous word problem, or unsolved mathematical problem. Write the mathematical expression clearly and check the assumptions and units.</p></div>
         </section>
 
         <section class="view" id="view-responsive">
