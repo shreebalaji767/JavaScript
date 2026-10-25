@@ -94,6 +94,7 @@
   const theoryNotes = {"1":["JavaScript is the extremely literal intern who runs the amusement park","You give it instructions in a language it understands. It follows the rules exactly—even if your instruction is a spectacularly bad idea.","JavaScript is a programming language: values + instructions + rules. The browser can run it without installing a separate tool.","Expecting the computer to guess what you meant. Computers are powerful, not psychic."],"2":["console.log is a megaphone, not a storage cupboard","It shouts a value into the console so you can inspect it. It does not automatically save that value for later.","A program can calculate silently. Logging is a debugging tool that lets you observe what happened.","Thinking console.log changes the value or returns it from a function. Displaying and returning are different jobs."],"3":["Variables are labelled lunchboxes; const is a sticker you cannot rename","The label points to a value. let lets you point that label at a different value later; const stops reassignment.","Variables give names to values so you can reuse information and make code readable.","Using const does not freeze an object or array. It prevents reassignment of the variable binding."],"4":["Types are different species at a zoo. Do not feed them the same operation blindly","The text '42' and the number 42 look similar to a human, but JavaScript treats them differently. One is text; one is a number.","Types influence which operations make sense and what result an expression produces.","Putting numbers inside quotes and then wondering why maths acts weird."],"5":["Operators are tiny kitchen appliances: each symbol has a job","+ can add numbers or join strings. === compares without the loose conversions of ==. The symbol is small; the consequences can be loud.","An expression combines values and operators to produce a new value, often a number or boolean.","Using = to compare. A single = assigns a value; === asks whether values are strictly equal."],"6":["if/else is a goblin at a fork in the road with a yes/no clipboard","If the condition is true, go down one path. Otherwise, take the else path. It does not run both just because it feels social.","Conditions evaluate to booleans. Branches let programs react differently to different inputs.","Using = inside a condition when you meant to compare values, or forgetting that false conditions skip the block."],"7":["A loop is a washing machine for instructions—check the door before leaving it on forever","The loop repeats while its condition allows it. Update the counter or change the condition so it can eventually stop.","Loops automate repetition. A loop needs a starting state, a continuation condition, and a way to make progress.","Off-by-one errors and infinite loops. Trace the counter for the first few passes."],"8":["A function is a vending machine with inputs, a job, and maybe a snack coming out","Call it with arguments. Parameters receive those values. return sends a result back; console.log merely shows one.","Functions package reusable behaviour and help separate a problem into smaller pieces.","Confusing a parameter with an argument, or expecting a function to run before it is called."],"9":["An array is a row of numbered drawers, but the first drawer is numbered zero because JavaScript is a little weird","Use an index to get an item. push adds to the end, and length tells you how many items are there.","Arrays are ordered collections. Zero-based indexing means the first valid index is 0 and the last is length - 1.","Trying to read array[ length ] for the final item. That index is one past the end."],"10":["An object is a backpack with named pockets","Instead of remembering that slot 0 means name and slot 1 means city, use person.name and person.city. Names make data easier to understand.","Objects group related properties into one value and are useful for modelling people, products, tasks, and more.","Confusing property access with a function call, or assuming a missing property will magically exist."],"11":["Built-in methods are tools already in the JavaScript toolbox","You do not need to invent a hammer. Learn what a method receives, what it returns, and whether it changes the original value.","Methods are functions associated with values or objects. Read the method name, input, output, and mutation behaviour.","Assuming every method changes the original. Some return a new value; others mutate."],"12":["Debugging is detective work, not a public execution of your laptop","Reproduce the problem, inspect the error, check the line, and test one change. Do not randomly rewrite everything and call it science.","A bug is a mismatch between expected and actual behaviour. Small experiments narrow down the cause.","Changing five things at once. Then you have no idea which change fixed or broke it."],"13":["The DOM is the browser's cardboard puppet theatre","JavaScript can select an element, read or change its content, and create new elements. The page becomes something your code can control.","The DOM represents a document as objects and nodes that scripts can inspect and modify.","Changing innerHTML with untrusted text. Prefer textContent when you mean plain text."],"14":["An event listener is a doorbell. Your function waits until someone rings it","Register a callback for a click, input, or submit event. The callback runs when that event happens—not immediately when you attach it.","Event-driven programs respond to things that happen, rather than only executing from top to bottom once.","Calling the function immediately instead of passing a function to addEventListener."],"15":["Scope is the room where a variable is allowed to live","A variable inside a function is not automatically available everywhere. Block scope and function scope decide where names can be accessed.","Scope controls name visibility. Closures allow functions to retain access to variables from their surrounding lexical environment.","Assuming a variable exists everywhere because it was created somewhere else."],"16":["Promises are delivery receipts for results that have not arrived yet","A promise can be pending, fulfilled, or rejected. async/await makes promise-based code easier to read, but the waiting still exists.","Asynchronous operations allow other work to continue while waiting for results such as timers or network responses.","Forgetting to handle rejection, or thinking await blocks the entire browser."],"17":["Modern JavaScript is a toolbox upgrade, not a new language you must fear","Template strings, destructuring, spread, and modules reduce repetitive code. Understand the older idea first, then learn the shortcut.","Modern syntax improves readability and composition, but concise syntax is not automatically clearer.","Using a clever one-liner that nobody—including future you—can understand."],"18":["A project is a pile of tiny solved problems wearing one trench coat","Break it into inputs, data, functions, display, and tests. Build a tiny working version, then add one feature at a time.","Projects connect syntax to problem-solving: plan, model data, implement, test, debug, and improve.","Trying to build every feature in one giant sitting before the first small piece works."]};
   Object.assign(theoryNotes, {"19":["Arithmetic is a kitchen: precedence decides who gets the chopping board first","Multiplication gets served before addition unless parentheses put another order in writing.","Arithmetic expressions combine numeric values. Operator precedence and associativity determine evaluation order.","Assuming every expression runs strictly left to right."],"20":["Negative numbers live in the basement; zero is the lobby","On a number line, moving right means larger values—even if you are still below zero.","Signed numbers represent direction or values below a reference point. Absolute value measures distance from zero.","Thinking -8 is greater than -3 because eight is a bigger-looking number."],"21":["Percentages are pie slices wearing a business suit","Twenty percent means twenty out of a hundred. Turn it into a decimal multiplier before calculating.","Percentages express a ratio per hundred and are used in discounts, growth, tax, and data visualisation.","Subtracting a percentage number directly from a price instead of calculating the percentage amount."],"22":["A ratio is a recipe; the scale factor is the giant spoon","If every ingredient must double, multiply every amount by the same factor. Do not double only the salt unless you want a very upsetting soup.","Ratios compare quantities; proportional scaling preserves the relationship between them.","Mixing units, such as adding minutes to kilometres."],"23":["Algebra is a mystery novel where x is the suspect","An equation is a balanced seesaw. Do the same operation to both sides to keep it balanced.","Algebra represents relationships between quantities using symbols and equations.","Confusing the assignment operator = in JavaScript with mathematical equality."],"24":["A mathematical function is a vending machine with a predictable snack","Put in x, apply the rule, and get an output. A JavaScript function can implement the same rule.","A function maps inputs to outputs according to a rule; graphing shows how outputs change as inputs vary.","Forgetting to return the computed result from a JavaScript function."],"25":["Exponentiation is multiplication on an energy drink","2 ** 3 means 2 multiplied by itself three times. The ^ symbol is not the power operator in JavaScript.","Powers, roots, and scientific notation describe scale and relationships between numerical values.","Using ^ for exponentiation. In JavaScript, ^ is bitwise XOR."],"26":["Boolean logic is a bouncer with a clipboard and three moods","AND needs both boxes ticked, OR needs at least one, and NOT flips the answer.","Boolean logic combines truth values to express conditions and reason about program behaviour.","Making a long condition more complicated without writing down its true/false cases."],"27":["Binary is a light switch panel: each tiny switch is off or on","Binary uses only 0 and 1. Hexadecimal is a compact way to write binary patterns.","Number bases represent values using different digit systems; bitwise operators work on binary representations of integers.","Confusing && with &, or assuming ^ means exponentiation."],"28":["Statistics is trying to understand a flock of pigeons without interviewing every pigeon","The mean averages values, the median finds the middle, and probability describes uncertainty—not a promise about the next roll.","Descriptive statistics summarise datasets; probability models uncertainty and random outcomes.","Assuming a small random sample must perfectly match the long-run average."],"29":["Coordinates are a treasure map; trigonometry tells you which way to launch the catapult","Coordinates locate points. Sine and cosine turn angles into components of movement. JavaScript expects radians.","Geometry studies shapes and distances; trigonometry relates angles to sides and circular movement.","Passing degrees to Math.sin() or Math.cos() without converting to radians."],"30":["Floating-point numbers are tiny measuring cups with slightly wonky markings","Some decimal fractions cannot be stored exactly in binary. The computer keeps the nearest representable value.","JavaScript Number uses IEEE 754 double-precision binary floating-point, which has finite precision.","Using exact equality for computed decimals or assuming toFixed changes the underlying number."]});
   const STORE_KEY = "scriptly-static-v1";
+  const SOLVER_HISTORY_KEY = "scriptly-math-history-v1";
   const referenceItems = [{"title":"Variables","category":"Basics","syntax":"const name = \"Mina\";\\nlet score = 0;","plain":"A named box that holds a value. Use const when you will not reassign it; use let when the value needs to change.","example":"const city = \"Delhi\";"},{"title":"Data types","category":"Basics","syntax":"\"hello\" · 42 · true · null","plain":"Values come in different kinds: strings (text), numbers, booleans (true/false), and special values such as null and undefined.","example":"console.log(typeof 42); // \"number\""},{"title":"console.log()","category":"Basics","syntax":"console.log(value);","plain":"Prints a value to the console so you can see what your program is doing.","example":"console.log(\"Hello!\");"},{"title":"Operators","category":"Logic","syntax":"+  -  *  /  ===  !==  >","plain":"Symbols that calculate or compare values. Prefer === for strict equality checks.","example":"console.log(5 === 5); // true"},{"title":"if / else","category":"Logic","syntax":"if (condition) { } else { }","plain":"Lets your code choose what to do. The first block runs when the condition is true; else handles the other path.","example":"if (score > 0) console.log(\"Go!\");"},{"title":"Loops","category":"Logic","syntax":"for (let i = 0; i < 3; i++) { }","plain":"Repeats a block of code. Check the stopping condition so the loop does not run forever.","example":"for (let i = 1; i <= 3; i++) console.log(i);"},{"title":"Functions","category":"Functions","syntax":"function greet(name) { return \"Hi \" + name; }","plain":"A reusable set of instructions. Parameters are input names; return sends a result back.","example":"console.log(greet(\"Sam\"));"},{"title":"Arrow functions","category":"Functions","syntax":"const double = n => n * 2;","plain":"A shorter way to write many functions. Great for small operations and array callbacks.","example":"const double = n => n * 2;"},{"title":"Arrays","category":"Collections","syntax":"const fruits = [\"apple\", \"pear\"];","plain":"An ordered list. Positions start at index 0, so the first item is array[0].","example":"console.log(fruits[0]);"},{"title":"Array methods","category":"Collections","syntax":".map() · .filter() · .find()","plain":"Methods that help work with lists. map transforms items; filter keeps matching items; find returns the first match.","example":"[1, 2, 3].map(n => n * 2);"},{"title":"Objects","category":"Collections","syntax":"const user = { name: \"Mina\" };","plain":"A collection of named properties. Read a property with dot notation or square brackets.","example":"console.log(user.name);"},{"title":"Strings","category":"Basics","syntax":"text.length · text.toUpperCase()","plain":"Strings hold text. Useful tools include length, includes(), slice(), and template literals.","example":"console.log(\"hello\".toUpperCase());"},{"title":"Template literals","category":"Basics","syntax":"`Hello, ${name}`","plain":"Backticks let you insert values inside text using ${...}, often easier to read than joining strings.","example":"const message = \"Score: \" + score;"},{"title":"Scope","category":"Functions","syntax":"{ const localValue = 1; }","plain":"Scope describes where a variable can be used. Variables declared inside a function or block stay local to that area.","example":"function demo() { const secret = 7; }"},{"title":"DOM selection","category":"Browser","syntax":"document.querySelector(\".card\")","plain":"The DOM is the browser's object representation of the page. querySelector finds the first matching element.","example":"const heading = document.querySelector(\"h1\");"},{"title":"Events","category":"Browser","syntax":"button.addEventListener(\"click\", handler)","plain":"Events let your page respond to actions such as clicks, typing, and form submission.","example":"button.addEventListener(\"click\", () => console.log(\"Clicked!\"));"},{"title":"Promises","category":"Functions","syntax":"fetch(url).then(result => ...)","plain":"A Promise represents a result that may arrive later. It can be pending, fulfilled, or rejected.","example":"Promise.resolve(\"done\").then(console.log);"},{"title":"async / await","category":"Functions","syntax":"async function load() { await task(); }","plain":"A readable way to work with Promises. Use try/catch when you need to handle errors from awaited work.","example":"async function start() { const value = await getValue(); }"}];
   const defaults = {completed:[],bookmarks:[],quizPassed:[],minutes:0,theme:"dark",lastLesson:1,visits:[]};
   let state = loadState();
@@ -101,6 +102,34 @@
   let activeLesson = 1;
   let toastTimer;
   let deferredInstallPrompt = null;
+  let lastMathSolution = null;
+  let mathHistory = loadMathHistory();
+
+  function loadMathHistory() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(SOLVER_HISTORY_KEY) || "[]");
+      return Array.isArray(saved) ? saved.filter(item => item && typeof item.question === "string" && item.solution && typeof item.solution.answer === "string").slice(0, 8) : [];
+    } catch { return []; }
+  }
+  function saveMathHistory() {
+    try { localStorage.setItem(SOLVER_HISTORY_KEY, JSON.stringify(mathHistory.slice(0, 8))); }
+    catch { showToast("Calculation history could not be saved in this browser."); }
+  }
+  function renderMathHistory() {
+    const host = $("#mathHistory");
+    if (!host) return;
+    host.replaceChildren();
+    if (!mathHistory.length) {
+      const empty = document.createElement("p"); empty.className = "math-history-empty"; empty.textContent = "Your recent calculations will appear here on this device."; host.appendChild(empty); return;
+    }
+    const heading = document.createElement("h3"); heading.className = "math-history-heading"; heading.textContent = "Recent calculations"; host.appendChild(heading);
+    mathHistory.forEach((item, index) => {
+      const button = document.createElement("button"); button.type = "button"; button.className = "math-history-item"; button.dataset.mathHistoryIndex = String(index);
+      const question = document.createElement("span"); question.className = "math-history-question"; question.textContent = item.question;
+      const answer = document.createElement("strong"); answer.className = "math-history-answer"; answer.textContent = item.solution.answer;
+      button.append(question, answer); host.appendChild(button);
+    });
+  }
 
   function loadState() {
     try {
@@ -636,19 +665,55 @@
     const out=$("#mathSolverOutput");out.replaceChildren();const title=document.createElement("div");title.className="solver-answer-label";title.textContent=solution.title||"Solution";out.appendChild(title);
     const answer=document.createElement("div");answer.className="solver-answer";answer.textContent=solution.answer;out.appendChild(answer);
     const heading=document.createElement("h3");heading.textContent="Step by step";out.appendChild(heading);
-    const list=document.createElement("ol");list.className="solver-steps";solution.steps.forEach(step=>{const li=document.createElement("li");li.textContent=step;list.appendChild(li);});out.appendChild(list);
+    const list=document.createElement("ol");list.className="solver-steps";(solution.steps||[]).forEach(step=>{const li=document.createElement("li");li.textContent=step;list.appendChild(li);});out.appendChild(list);
     $("#mathSolverStatus").textContent="SOLVED";$("#mathSolverStatus").classList.add("solved");
+    const copyButton=$("#copyMathSolution");if(copyButton)copyButton.disabled=false;
+  }
+  function solutionAsText(entry){
+    return [entry.solution.title||"Math solution","Problem: "+entry.question,"Answer: "+entry.solution.answer,"","Steps:",...(entry.solution.steps||[]).map((step,index)=>(index+1)+". "+step)].join("\n");
+  }
+  async function copyMathSolution(){
+    if(!lastMathSolution)return;
+    const text=solutionAsText(lastMathSolution);
+    try{
+      if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(text);
+      else{
+        const helper=document.createElement("textarea");helper.value=text;helper.setAttribute("readonly","");helper.style.position="fixed";helper.style.opacity="0";document.body.appendChild(helper);helper.select();
+        const copied=document.execCommand("copy");helper.remove();if(!copied)throw new Error("Copy unavailable");
+      }
+      showToast("Solution and working copied.");
+    }catch{showToast("Could not copy automatically. Select the solution text and copy it.");}
   }
   function runMathSolver(){
-    const out=$("#mathSolverOutput");try{renderMathSolution(solveMathProblem($("#mathProblem").value,$("#mathMode").value));}
-    catch(error){out.replaceChildren();const box=document.createElement("div");box.className="solver-error";const title=document.createElement("strong");title.textContent="Not solved yet — no panic.";box.appendChild(title);const message=document.createElement("p");message.textContent=error.message||"Check the format and try again.";box.appendChild(message);const hint=document.createElement("p");hint.textContent="Try: (12 + 8) * 3, 15% of 240, 2x + 3 = 11, or simplify 12:18.";box.appendChild(hint);out.appendChild(box);$("#mathSolverStatus").textContent="CHECK THE FORMAT";$("#mathSolverStatus").classList.remove("solved");}
+    const out=$("#mathSolverOutput");
+    try{
+      const question=$("#mathProblem").value.trim();
+      const solution=solveMathProblem(question,$("#mathMode").value);
+      renderMathSolution(solution);
+      lastMathSolution={question,mode:$("#mathMode").value,solution:{title:solution.title||"Solution",answer:String(solution.answer),steps:Array.isArray(solution.steps)?solution.steps.map(String):[]}};
+      mathHistory=[lastMathSolution,...mathHistory.filter(item=>item.question!==question)].slice(0,8);
+      saveMathHistory();renderMathHistory();
+    }catch(error){
+      lastMathSolution=null;const copyButton=$("#copyMathSolution");if(copyButton)copyButton.disabled=true;
+      out.replaceChildren();const box=document.createElement("div");box.className="solver-error";const title=document.createElement("strong");title.textContent="Not solved yet — no panic.";box.appendChild(title);const message=document.createElement("p");message.textContent=error.message||"Check the format and try again.";box.appendChild(message);const hint=document.createElement("p");hint.textContent="Try: (12 + 8) * 3, 15% of 240, 2x + 3 = 11, or simplify 12:18.";box.appendChild(hint);out.appendChild(box);$("#mathSolverStatus").textContent="CHECK THE FORMAT";$("#mathSolverStatus").classList.remove("solved");
+    }
+  }
+  function clearMathProblem(){
+    $("#mathProblem").value="";$("#mathSolverOutput").replaceChildren();
+    const placeholder=document.createElement("div");placeholder.className="output-placeholder";
+    const symbol=document.createElement("span");symbol.textContent="∑";
+    const title=document.createElement("strong");title.textContent="Your solution will appear here";
+    const hint=document.createElement("p");hint.textContent="Choose an example or type a problem, then press Solve it.";
+    placeholder.append(symbol,title,hint);$("#mathSolverOutput").appendChild(placeholder);
+    $("#mathSolverStatus").textContent="WAITING FOR A PROBLEM";$("#mathSolverStatus").classList.remove("solved");
+    lastMathSolution=null;const copyButton=$("#copyMathSolution");if(copyButton)copyButton.disabled=true;$("#mathProblem").focus();
   }
 
   function showView(name) {
     const valid=["home","learn","lesson","practice","math","math-solver","responsive","history","projects","projectdetail","roadmap","bookmarks","reference","search"];
     if(!valid.includes(name)) name="home";
     $$(".view").forEach(view=>view.classList.toggle("active",view.id==="view-"+name));
-    $$(".nav-link[data-view]").forEach(link=>link.classList.toggle("active",link.dataset.view===name || (name==="lesson"&&link.dataset.view==="learn")));
+    $$(".nav-link[data-view]").forEach(link=>{const active=link.dataset.view===name || (name==="lesson"&&link.dataset.view==="learn");link.classList.toggle("active",active);if(active)link.setAttribute("aria-current","page");else link.removeAttribute("aria-current");});
     const names={home:"Overview",learn:"My learning",lesson:"Lesson",practice:"Practice lab",roadmap:"Roadmap",bookmarks:"Bookmarks",reference:"Quick reference",search:"Search results",projects:"Project arena",projectdetail:"Project mission",math:"Math for JavaScript","math-solver":"Math problem solver",responsive:"Responsive UI session",history:"History classroom"};
     $("#breadcrumbCurrent").textContent=names[name]||"Overview";
     $("#sidebar").classList.remove("open");$("#mobileOverlay").classList.remove("show");
@@ -701,8 +766,8 @@
       gotMessage=true;
       const args=event.data.args||[];
       const line={text:args.join(" "),error:event.data.type==="error"};
-      const existing=$("#codeOutput .output-line");
-      const lines=existing.length?[...existing].map(el=>({text:el.textContent,error:el.classList.contains("error")})):[];
+      const existing=$$("#codeOutput .output-line");
+      const lines=existing.length?existing.map(el=>({text:el.textContent,error:el.classList.contains("error")})):[];
       if($("#codeOutput .output-placeholder")) lines.length=0;
       lines.push(line);renderOutput(lines);
     };
@@ -717,7 +782,7 @@
   function exportProgress() {
     const payload={app:"Scriptly",version:1,exportedAt:new Date().toISOString(),state};
     const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
-    const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="scriptly-progress.json";a.click();URL.revokeObjectURL(url);
+    const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="scriptly-progress.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
     showToast("Progress backup exported.");
   }
   function importProgress(file) {
@@ -765,7 +830,7 @@
       const frame=$("#responsivePreviewFrame");
       const devices={phone:"Phone layout · one column",tablet:"Tablet layout · two columns",desktop:"Desktop layout · three columns",ultrawide:"Ultrawide layout · three flexible columns"};
       frame.dataset.device=previewDevice.dataset.previewDevice;
-      $(".responsive-device-button").forEach(button=>{const selected=button===previewDevice;button.classList.toggle("active",selected);button.setAttribute("aria-pressed",String(selected));});
+      $$(".responsive-device-button").forEach(button=>{const selected=button===previewDevice;button.classList.toggle("active",selected);button.setAttribute("aria-pressed",String(selected));});
       $("#responsivePreviewStatus").textContent=devices[frame.dataset.device]||"Responsive layout";
       return;
     }
@@ -834,6 +899,10 @@
       return;
     }
     if(event.target.closest("#solveMath")){runMathSolver();return;}
+    if(event.target.closest("#copyMathSolution")){copyMathSolution();return;}
+    if(event.target.closest("#clearMathProblem")){clearMathProblem();return;}
+    const historyItem=event.target.closest("[data-math-history-index]");
+    if(historyItem){const item=mathHistory[Number(historyItem.dataset.mathHistoryIndex)];if(item){$("#mathProblem").value=item.question;$("#mathMode").value=item.mode||"auto";lastMathSolution=item;renderMathSolution(item.solution);showToast("Previous calculation restored.");}return;}
     const mathExample=event.target.closest("[data-math-example]");if(mathExample){$("#mathProblem").value=mathExample.dataset.mathExample;$("#mathMode").value="auto";runMathSolver();return;}
     if(event.target.closest("#runCode")){runCode();return;}
     if(event.target.closest("#resetCode")){$("#codeEditor").value='const name = "future developer";\nconsole.log("Hello, " + name + "!");\nconsole.log(2 + 3);';renderOutput([]);return;}
@@ -848,6 +917,7 @@
   document.addEventListener("keydown",event=>{
     if((event.metaKey||event.ctrlKey)&&event.key.toLowerCase()==="k"){event.preventDefault();$("#searchInput").focus();}
     if(event.key==="Enter"&&event.target.matches("[data-lesson],[data-goto],[data-module]"))event.target.click();
+    if(event.key==="Escape"){$("#sidebar").classList.remove("open");$("#mobileOverlay").classList.remove("show");}
   });
   $("#searchInput").addEventListener("keydown",event=>{if(event.key==="Enter"){searchLessons(event.target.value);event.target.blur();}});
   $("#referenceSearch").addEventListener("input",renderReference);
@@ -872,7 +942,6 @@
   // Shift-click the export action to restore a previously exported JSON backup.
   $("#exportProgress").title="Click to export. Shift-click to import a backup.";
   // Native download action remains available; shift-click is handled as a restore shortcut.
-  const originalExport=exportProgress;
   document.addEventListener("click",event=>{
     const mini=event.target.closest(".mini-course");if(mini){showView("roadmap");return;}
   });
@@ -927,6 +996,7 @@
   const originalSetTheme=state.theme;
   setTheme(originalSetTheme);
   recordVisit();
+  renderMathHistory();
   renderHome();
   const hash=location.hash;
   if(hash.startsWith("#lesson-"))openLesson(Number(hash.replace("#lesson-","")));
