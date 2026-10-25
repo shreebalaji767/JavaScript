@@ -553,7 +553,7 @@
       const result=nerdamer(operation+"("+expr+")").toString();
       return make(operation==="factor"?"Factorisation":operation==="expand"?"Expansion":operation==="partfrac"?"Partial fractions":"Simplification",[result].join(""),["Original expression: "+expr+".","Apply symbolic "+operation+" rules while preserving the mathematical value.","Result: "+result+"."]);
     }
-    if(mode==="advanced"||/\b(solve|find roots?|roots? of|solve for|solve the equation)\b/i.test(raw)){
+    if(mode==="advanced"||/\b(solve|find roots?|roots? of|solve for|solve the equation)\b/i.test(raw)||(raw.includes("=")&&mode!=="equation"&&mode!=="quadratic")||(/\bx\s*\^\s*[3-9]|[xyz]³|[xyz]⁴|[xyz]⁵|\b(sin|cos|tan|log|ln|exp)\s*\(/i.test(raw)&&raw.includes("="))){
       if(!hasNerdamer)throw new Error("The symbolic maths engine did not load. Check your internet connection and refresh.");
       let equation=raw.replace(/\b(solve for|solve the equation|solve|find roots? of|roots? of|find x|find y)\b/ig,"").replace(/[?]/g,"").trim();
       equation=equation.replace(/\bwhere\s+/i,"").trim();
