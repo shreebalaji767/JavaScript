@@ -54,20 +54,20 @@
           <p>Small steps make strong developers.</p>
           <div class="streak-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         </div>
-        <button class="nav-link settings-link" id="exportProgress"><span class="nav-icon">⇩</span> Export my progress</button>
-        <button class="nav-link settings-link" id="importProgress"><span class="nav-icon">⇧</span> Import progress backup</button>
+        <button type="button" class="nav-link settings-link" id="exportProgress"<span class="nav-icon">⇩</span> Export my progress</button>
+        <button type="button" class="nav-link settings-link" id="importProgress"<span class="nav-icon">⇧</span> Import progress backup</button>
         <div class="profile-row"><div class="avatar">JS</div><div><strong>JavaScript learner</strong><small>Learning at your pace</small></div><span class="online-dot"></span></div>
       </div>
     </aside>
 
     <main class="main-area">
       <header class="topbar">
-        <button class="icon-button menu-toggle" id="menuToggle" aria-label="Open menu">☰</button>
+        <button type="button" class="icon-button menu-toggle" id="menuToggle" aria-label="Open menu"☰</button>
         <div class="breadcrumb"><span>Workspace</span><span class="crumb-slash">/</span><strong id="breadcrumbCurrent">Overview</strong></div>
         <div class="topbar-actions">
           <label class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="Search lessons..." aria-label="Search lessons"><kbd>⌘ K</kbd></label>
           <button class="install-button" id="installApp" type="button" aria-label="Install Scriptly app"><span class="install-icon" aria-hidden="true">↓</span><span class="install-label">Install</span></button>
-          <button class="icon-button theme-toggle" id="themeToggle" aria-label="Toggle light and dark theme">☼</button>
+          <button type="button" class="icon-button theme-toggle" id="themeToggle" aria-label="Toggle light and dark theme"☼</button>
         </div>
       </header>
 
@@ -85,12 +85,12 @@
               <h2 id="continueTitle">JavaScript, from zero</h2>
               <p id="continueDescription">Start with the basics and build confidence as you go.</p>
               <div class="hero-meta"><span>◷ <b id="continueDuration">8 min</b></span><span>▤ Beginner friendly</span></div>
-              <button class="primary-button" id="continueButton">Continue learning <span>↗</span></button>
+              <button type="button" class="primary-button" id="continueButton"Continue learning <span>↗</span></button>
             </div>
             <div class="hero-art" aria-hidden="true"><div class="orb orb-one"></div><div class="orb orb-two"></div><div class="code-window"><div class="window-dots"><i></i><i></i><i></i><span>hello-world.js</span></div><div class="code-lines"><p><span class="line-no">01</span> <span class="code-purple">const</span> <span class="code-blue">futureYou</span> = <span class="code-yellow">"developer"</span>;</p><p><span class="line-no">02</span></p><p><span class="line-no">03</span> <span class="code-green">console</span>.log(<span class="code-blue">futureYou</span>);</p><p><span class="line-no">04</span> <span class="code-comment">// look at you go ✨</span></p></div><div class="code-cursor"></div></div><div class="floating-badge badge-top">✦ &nbsp; learn by doing</div><div class="floating-badge badge-bottom"><span>✓</span> progress saved</div></div>
           </div>
 
-          <div class="course-method-banner"><div class="course-method-icon">🧠💣</div><div><span class="eyebrow">THE SCRIPTLY METHOD</span><h2>Understand the theory. Then build something gloriously weird.</h2><p>Every lesson connects the real computer-science idea to a chaotic analogy, a common mistake, and a tiny experiment. Then the Project Arena makes you use the idea for real.</p></div><button class="primary-button" data-goto="projects">Enter Project Arena <span>↗</span></button></div>
+          <div class="course-method-banner"><div class="course-method-icon">🧠💣</div><div><span class="eyebrow">THE SCRIPTLY METHOD</span><h2>Understand the theory. Then build something gloriously weird.</h2><p>Every lesson connects the real computer-science idea to a chaotic analogy, a common mistake, and a tiny experiment. Then the Project Arena makes you use the idea for real.</p></div><button type="button" class="primary-button" data-goto="projects"Enter Project Arena <span>↗</span></button></div>
           <section class="weird-build panel" aria-labelledby="weirdBuildHeading">
             <div class="weird-build-copy">
               <div class="eyebrow">THEORY → EXPERIMENT → BEAUTIFUL NONSENSE</div>
@@ -113,34 +113,34 @@
             <article class="stat-card"><div class="stat-heading"><span class="stat-icon blue">⌁</span><span class="stat-trend">YOUR MILESTONE</span></div><div class="stat-number"><span id="statPercent">0</span><small>%</small></div><p>Course progress</p><div class="mini-progress blue-progress"><span id="statCourseBar"></span></div></article>
           </div>
 
-          <div class="section-heading"><div><div class="eyebrow">PICK UP WHERE YOU LEFT OFF</div><h2>Keep your momentum</h2></div><button class="text-button" data-goto="learn">View all lessons <span>→</span></button></div>
+          <div class="section-heading"><div><div class="eyebrow">PICK UP WHERE YOU LEFT OFF</div><h2>Keep your momentum</h2></div><button type="button" class="text-button" data-goto="learn"View all lessons <span>→</span></button></div>
           <div class="learning-grid" id="continueGrid"></div>
 
-          <div class="section-heading roadmap-heading"><div><div class="eyebrow">THE BIG PICTURE</div><h2>Your learning path</h2></div><button class="text-button" data-goto="roadmap">Explore roadmap <span>→</span></button></div>
+          <div class="section-heading roadmap-heading"><div><div class="eyebrow">THE BIG PICTURE</div><h2>Your learning path</h2></div><button type="button" class="text-button" data-goto="roadmap"Explore roadmap <span>→</span></button></div>
           <div class="roadmap-strip" id="roadmapStrip"></div>
           <footer class="site-footer"><span>Made for curious minds. <b>Keep experimenting.</b></span><span>100% static · Your progress stays on this device</span></footer>
         </section>
 
         <section class="view" id="view-learn">
           <div class="page-heading"><div class="eyebrow">THE COURSE LIBRARY</div><h1>My learning<span class="gradient-text">.</span></h1><p>Clear explanations, tiny examples, and practice that builds on itself.</p></div>
-          <div class="filter-row"><div class="filter-pills" id="lessonFilters"><button class="filter-pill active" data-filter="all">All lessons</button><button class="filter-pill" data-filter="incomplete">To do</button><button class="filter-pill" data-filter="completed">Completed</button></div><span class="muted" id="lessonResultsCount">75 lessons</span></div>
+          <div class="filter-row"><div class="filter-pills" id="lessonFilters"><button type="button" class="filter-pill active" data-filter="all"All lessons</button><button type="button" class="filter-pill" data-filter="incomplete"To do</button><button type="button" class="filter-pill" data-filter="completed"Completed</button></div><span class="muted" id="lessonResultsCount">75 lessons</span></div>
           <div class="lesson-library" id="lessonLibrary"></div>
         </section>
 
         <section class="view" id="view-lesson">
-          <button class="back-link" data-goto="learn">← Back to all lessons</button>
+          <button type="button" class="back-link" data-goto="learn"← Back to all lessons</button>
           <div id="lessonDetail"></div>
         </section>
 
         <section class="view" id="view-practice">
           <div class="page-heading"><div class="eyebrow">EXPERIMENT WITHOUT FEAR</div><h1>Practice lab<span class="gradient-text">.</span></h1><p>Write JavaScript, run it safely, and see what happens. Break things. Learn things.</p></div>
           <div class="lab-layout">
-            <div class="lab-editor panel"><div class="panel-top"><div><span class="live-dot"></span><strong>playground.js</strong></div><button class="small-ghost" id="resetCode">Reset example ↺</button></div><label for="codeEditor" class="sr-only">JavaScript code editor</label><textarea id="codeEditor" spellcheck="false" autocapitalize="off" autocomplete="off">const name = "future developer";
+            <div class="lab-editor panel"><div class="panel-top"><div><span class="live-dot"></span><strong>playground.js</strong></div><button type="button" class="small-ghost" id="resetCode"Reset example ↺</button></div><label for="codeEditor" class="sr-only">JavaScript code editor</label><textarea id="codeEditor" spellcheck="false" autocapitalize="off" autocomplete="off">const name = "future developer";
 console.log("Hello, " + name + "!");
-console.log(2 + 3);</textarea><div class="editor-footer"><span>JavaScript · runs in a sandbox</span><button class="run-button" id="runCode">▶ Run code</button></div></div>
-            <div class="lab-output panel"><div class="panel-top"><strong>Console output</strong><button class="small-ghost" id="clearOutput">Clear</button></div><div class="output-body" id="codeOutput"><div class="output-placeholder"><span>⌁</span><strong>Your output appears here</strong><p>Press Run code to see what your JavaScript does.</p></div></div><div class="tip-card"><span>✦</span><div><strong>Experiment tip</strong><p>Try changing the text or numbers, then run the code again.</p></div></div></div>
+console.log(2 + 3);</textarea><div class="editor-footer"><span>JavaScript · runs in a sandbox</span><button type="button" class="run-button" id="runCode"▶ Run code</button></div></div>
+            <div class="lab-output panel"><div class="panel-top"><strong>Console output</strong><button type="button" class="small-ghost" id="clearOutput"Clear</button></div><div class="output-body" id="codeOutput"><div class="output-placeholder"><span>⌁</span><strong>Your output appears here</strong><p>Press Run code to see what your JavaScript does.</p></div></div><div class="tip-card"><span>✦</span><div><strong>Experiment tip</strong><p>Try changing the text or numbers, then run the code again.</p></div></div></div>
           </div>
-          <div class="practice-callout"><span class="callout-icon">☻</span><div><strong>Just getting started?</strong><p>That's exactly where you should be. The best way to learn is to try one small change at a time.</p></div><button class="text-button" data-goto="learn">Start a lesson →</button></div>
+          <div class="practice-callout"><span class="callout-icon">☻</span><div><strong>Just getting started?</strong><p>That's exactly where you should be. The best way to learn is to try one small change at a time.</p></div><button type="button" class="text-button" data-goto="learn"Start a lesson →</button></div>
         </section>
 
         <section class="view" id="view-projectdetail"><div id="projectDetailBody"></div></section>
@@ -243,12 +243,14 @@ console.log(2 + 3);</textarea><div class="editor-footer"><span>JavaScript · run
               <label for="mathProblem" class="solver-label">What problem are we solving?</label>
               <textarea id="mathProblem" rows="3" placeholder="Try: solve x^3 - 6x^2 + 11x - 6 = 0&#10;Differentiate x^2 sin(x)&#10;Integrate 3x^2 + 2x&#10;Or: What is 15 percent of 240?"></textarea>
               <div class="solver-examples"><span>TRY ONE:</span><button type="button" data-math-example="What is 12 plus 8?">12 plus 8?</button><button type="button" data-math-example="(12 + 8) * 3">(12 + 8) × 3</button><button type="button" data-math-example="15% of 240">15% of 240</button><button type="button" data-math-example="2x + 3 = 11">2x + 3 = 11</button><button type="button" data-math-example="simplify 12:18">Simplify 12:18</button><button type="button" data-math-example="x^2 - 5x + 6 = 0">Quadratic</button><button type="button" data-math-example="mean 2, 4, 6">Mean</button><button type="button" data-math-example="circle 5">Circle</button><button type="button" data-math-example="pythagorean 3, 4">Pythagorean</button><button type="button" data-math-example="simple interest 1000, 5, 2">Interest</button><button type="button" data-math-example="simplify 18/24">Fraction</button><button type="button" data-math-example="solve x^3 - 6x^2 + 11x - 6 = 0">Cubic equation</button><button type="button" data-math-example="differentiate x^3 + sin(x)">Derivative</button><button type="button" data-math-example="integrate 3x^2 + 2x">Integral</button><button type="button" data-math-example="factor x^4 - 1">Factor</button></div>
-              <div class="solver-controls"><label for="mathMode">Problem type</label><select id="mathMode"><option value="auto">Auto-detect</option><option value="arithmetic">Arithmetic / expressions</option><option value="percentage">Percentages</option><option value="equation">Linear equations (one x)</option><option value="ratio">Ratios and proportions</option><option value="quadratic">Quadratic equations</option><option value="statistics">Statistics (mean / median / mode / range)</option><option value="geometry">Geometry (area / perimeter)</option><option value="fraction">Simplify fractions</option><option value="pythagorean">Pythagorean theorem</option><option value="simple-interest">Simple interest</option><option value="compound-interest">Compound interest</option><option value="advanced">Advanced / symbolic maths</option></select><button class="primary-button" id="solveMath">Solve it →</button></div>
+              <div class="solver-controls"><label for="mathMode">Problem type</label><select id="mathMode"><option value="auto">Auto-detect</option><option value="arithmetic">Arithmetic / expressions</option><option value="percentage">Percentages</option><option value="equation">Linear equations (one x)</option><option value="ratio">Ratios and proportions</option><option value="quadratic">Quadratic equations</option><option value="statistics">Statistics (mean / median / mode / range)</option><option value="geometry">Geometry (area / perimeter)</option><option value="fraction">Simplify fractions</option><option value="pythagorean">Pythagorean theorem</option><option value="simple-interest">Simple interest</option><option value="compound-interest">Compound interest</option><option value="advanced">Advanced / symbolic maths</option></select><button type="button" class="primary-button" id="solveMath"Solve it →</button></div>
               <p class="solver-hint">Expanded with symbolic algebra, polynomial and supported equation solving, derivatives, integrals, limits, simplification, expansion, factorisation, matrices, complex numbers, and numeric expressions. Advanced calculations load open-source maths libraries from CDNs, so an internet connection is needed for those features. Arbitrary word problems and every possible equation still cannot be guaranteed.</p>
             </div>
             <div class="solver-result panel" aria-live="polite" aria-atomic="true">
               <div class="panel-top"><strong>Working out</strong><span class="solver-status" id="mathSolverStatus">WAITING FOR A PROBLEM</span></div>
               <div id="mathSolverOutput" class="solver-output"><div class="output-placeholder"><span>∑</span><strong>Your solution will appear here</strong><p>Choose an example or type a problem, then press Solve it.</p></div></div>
+              <div class="solver-actions"><button class="secondary-button" id="copyMathSolution" type="button" disabled>Copy solution + steps</button><button class="text-button" id="clearMathProblem" type="button">Clear problem</button></div>
+              <div id="mathHistory" class="math-history" aria-label="Recent calculations"></div>
             </div>
           </div>
           <div class="math-roadmap-note"><h3>🧠 The rule of the maths goblin</h3><p>This now combines a numeric expression engine with a symbolic computer-algebra engine. It can handle a much broader range of calculations, equations, algebra, and calculus, but no calculator can guarantee every possible equation, ambiguous word problem, or unsolved mathematical problem. Write the mathematical expression clearly and check the assumptions and units.</p></div>
@@ -320,7 +322,7 @@ console.log(2 + 3);</textarea><div class="editor-footer"><span>JavaScript · run
         <section class="view" id="view-reference">
           <div class="page-heading"><div class="eyebrow">YOUR EVERYDAY TOOLKIT</div><h1>Quick reference<span class="gradient-text">.</span></h1><p>Plain-English reminders for the JavaScript ideas you use most.</p></div>
           <label class="reference-search" for="referenceSearch"><span>⌕</span><input id="referenceSearch" type="search" placeholder="Search a concept, e.g. array or function" autocomplete="off"><kbd>LIVE</kbd></label>
-          <div class="reference-filters" id="referenceFilters"><button class="filter-pill active" data-reference-filter="all">All concepts</button><button class="filter-pill" data-reference-filter="Basics">Basics</button><button class="filter-pill" data-reference-filter="Logic">Logic</button><button class="filter-pill" data-reference-filter="Collections">Collections</button><button class="filter-pill" data-reference-filter="Functions">Functions</button><button class="filter-pill" data-reference-filter="Browser">Browser</button></div>
+          <div class="reference-filters" id="referenceFilters"><button type="button" class="filter-pill active" data-reference-filter="all"All concepts</button><button type="button" class="filter-pill" data-reference-filter="Basics"Basics</button><button type="button" class="filter-pill" data-reference-filter="Logic"Logic</button><button type="button" class="filter-pill" data-reference-filter="Collections"Collections</button><button type="button" class="filter-pill" data-reference-filter="Functions"Functions</button><button type="button" class="filter-pill" data-reference-filter="Browser"Browser</button></div>
           <div class="reference-count muted" id="referenceCount">JavaScript concepts</div><div class="reference-grid" id="referenceGrid"></div>
         </section>
 
