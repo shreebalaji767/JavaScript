@@ -748,3 +748,8 @@ body.light .responsive-session-stamp{color:#6d4cc4}
 #savedSnippets{max-width:100px;min-width:68px}
 #saveSnippet{color:var(--mint);border-color:#70e1c144}
 @media(max-width:620px){.lab-toolbar{flex-wrap:wrap;justify-content:flex-end}.lab-toolbar select{max-width:100px}#savedSnippets{max-width:84px}}
+
+#savedSnippets{max-width:100px;min-width:68px}
+#deleteSnippet{color:var(--orange)}
+#exportCode,#importCodeButton{white-space:nowrap}
+@media(max-width:760px){.lab-toolbar{flex-wrap:wrap;justify-content:flex-end}.lab-toolbar select{max-width:100px}#savedSnippets{max-width:84px}}
