@@ -26,7 +26,7 @@
     }
     const home=$("#view-home"), stats=home&&$(".stats-grid",home);
     if (stats && !$("#learningDashboard")) {
-      const box=document.createElement("section"); box.id="learningDashboard"; box.className="learning-dashboard panel"; box.innerHTML='<div class="dashboard-heading"><div><div class="eyebrow">YOUR PERSONAL LEARNING DASHBOARD</div><h2>Progress that means something</h2><p>Progress is stored in this browser. Export a backup before changing devices.</p></div><button type="button" class="secondary-button dashboard-export" id="dashboardExport">Export backup</button></div><div class="dashboard-metrics"><article><span>Lessons completed</span><strong id="upgradeLessons">0</strong></article><article><span>Challenge wins</span><strong id="upgradeChallenges">0 / 5</strong></article><article><span>Project checkpoints</span><strong id="upgradeCheckpoints">0</strong></article><article><span>Learning streak</span><strong id="upgradeStreak">0 days</strong></article></div><div class="dashboard-next"><strong id="upgradeNextTitle">Your next step</strong><p id="upgradeNextText">Try a short challenge, then run the automatic tests.</p><button type="button" class="primary-button" data-upgrade-view="challenges">Practice with a challenge ↗</button></div>';
+      const box=document.createElement("section"); box.id="learningDashboard"; box.className="learning-dashboard panel"; box.innerHTML='<div class="dashboard-heading"><div><div class="eyebrow">YOUR PERSONAL LEARNING DASHBOARD</div><h2>Progress that means something</h2><p>Progress is stored in this browser. Export a backup before changing devices.</p></div><div class="dashboard-backup-actions"><button type="button" class="secondary-button dashboard-export" id="dashboardExport">Export full backup</button><button type="button" class="secondary-button dashboard-export" id="dashboardImportButton">Import backup</button><input type="file" id="dashboardImportFile" accept="application/json,.json" hidden></div></div><div class="dashboard-metrics"><article><span>Lessons completed</span><strong id="upgradeLessons">0</strong></article><article><span>Challenge wins</span><strong id="upgradeChallenges">0 / 5</strong></article><article><span>Project checkpoints</span><strong id="upgradeCheckpoints">0</strong></article><article><span>Learning streak</span><strong id="upgradeStreak">0 days</strong></article></div><div class="dashboard-next"><strong id="upgradeNextTitle">Your next step</strong><p id="upgradeNextText">Try a short challenge, then run the automatic tests.</p><button type="button" class="primary-button" data-upgrade-view="challenges">Practice with a challenge ↗</button></div>';
       stats.after(box);
     }
     const picker=$("#challengePicker");
@@ -68,6 +68,27 @@
     };
     addEventListener("message",onMessage);const timer=setTimeout(()=>{if(finished)return;finished=true;removeEventListener("message",onMessage);frame.remove();host.innerHTML="<strong>Timed out</strong><p>Check for an endless loop and try again.</p>";},2500);
   }
+  function exportCombinedBackup() {
+    try {
+      const course=JSON.parse(localStorage.getItem("scriptly-static-v1")||"{}");
+      const payload={format:"scriptly-learning-backup-v1",exportedAt:new Date().toISOString(),course,upgrades:read()};
+      const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+      const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="scriptly-learning-backup.json";a.click();URL.revokeObjectURL(url);
+    } catch { alert("The backup could not be created. Check that browser storage is available."); }
+  }
+  async function importCombinedBackup(file) {
+    if(!file)return;
+    try {
+      if(file.size>2*1024*1024)throw new Error("The backup file is larger than 2 MB.");
+      const payload=JSON.parse(await file.text());
+      if(payload.format!=="scriptly-learning-backup-v1"||!payload.course||!payload.upgrades)throw new Error("This is not a Scriptly full learning backup.");
+      if(!confirm("Import this backup? Your current local learning progress will be replaced."))return;
+      localStorage.setItem("scriptly-static-v1",JSON.stringify(payload.course));
+      localStorage.setItem(STORE,JSON.stringify({passed:Array.isArray(payload.upgrades.passed)?payload.upgrades.passed:[],checkpoints:payload.upgrades.checkpoints&&typeof payload.upgrades.checkpoints==="object"?payload.upgrades.checkpoints:{}}));
+      location.reload();
+    } catch(error) { alert(error.message||"The backup could not be imported."); }
+    finally { const input=$("#dashboardImportFile");if(input)input.value=""; }
+  }
   function showChallengeView() {
     document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id==="view-challenges"));
     document.querySelectorAll(".nav-link[data-view]").forEach(a=>{a.classList.remove("active");a.removeAttribute("aria-current");});
@@ -92,8 +113,10 @@
       if(e.target.closest("#runChallengeTests")){e.preventDefault();runTests();}
       if(e.target.closest("#challengeReset"))renderChallenge(active);
       if(e.target.closest("#loadChallengeLab")){const editor=$("#codeEditor");if(editor){editor.value=$("#challengeEditor").value;editor.dispatchEvent(new Event("input",{bubbles:true}));}document.querySelector('[data-view="practice"]')?.click();}
-      if(e.target.closest("#dashboardExport"))document.querySelector("#exportProgress")?.click();
+      if(e.target.closest("#dashboardExport"))exportCombinedBackup();
+      if(e.target.closest("#dashboardImportButton"))$("#dashboardImportFile")?.click();
     },true);
+    $("#dashboardImportFile")?.addEventListener("change",e=>importCombinedBackup(e.target.files&&e.target.files[0]));
     $("#challengePicker")?.addEventListener("change",e=>renderChallenge(e.target.value));
     $("#challengeEditor")?.addEventListener("keydown",e=>{if(e.key==="Tab"){e.preventDefault();e.target.setRangeText("  ",e.target.selectionStart,e.target.selectionEnd,"end");}});
     document.addEventListener("change",e=>{const box=e.target.closest("[data-upgrade-checkpoint]");if(!box)return;const id=String(box.dataset.upgradeCheckpoint),idx=Number(box.dataset.index),list=data.checkpoints[id]||[];data.checkpoints[id]=box.checked?[...new Set([...list,idx])]:list.filter(n=>n!==idx);save(data);attachCheckpoints();});
