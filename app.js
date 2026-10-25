@@ -1403,7 +1403,7 @@
       objects:'const learner = { name: "Sam", level: "beginner" };\nconsole.log(learner.name);\nconsole.log(learner.level);'
     };
     const code=examples[event.target.value];
-    if(code!==undefined){$("#codeEditor").value=code;renderOutput([]);showToast("Example loaded. Press Run code or Ctrl/⌘ + Enter.");}
+    if(code!==undefined){$("#codeEditor").value=code;persistPracticeDraft();renderOutput([]);showToast("Example loaded. Press Run code or Ctrl/⌘ + Enter.");}
   });
   restorePracticeDraft();
   $("#codeEditor").addEventListener("keydown",event=>{
