@@ -868,7 +868,7 @@
     const field=$("#mathProblem");
     try{
       if(action==="solve"){runMathSolver();return;}
-      if(action==="clear"){field.value="";field.focus();$("#mathSolverStatus").textContent="WAITING FOR A PROBLEM";return;}
+      if(action==="clear"){clearMathProblem();return;}
       if(action==="backspace"){
         const start=field.selectionStart??field.value.length,end=field.selectionEnd??start;
         if(start!==end)field.setRangeText("",start,end,"end");else if(start>0)field.setRangeText("",start-1,start,"end");
