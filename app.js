@@ -584,7 +584,8 @@
       return make(operation==="factor"?"Factorisation":operation==="expand"?"Expansion":operation==="partfrac"?"Partial fractions":"Simplification",[result].join(""),["Original expression: "+expr+".","Apply symbolic "+operation+" rules while preserving the mathematical value.","Result: "+result+"."]);
     }
     const solveIntent=/\b(solve|find roots?|roots? of|solve for|solve the equation)\b/i.test(raw);
-    const equationVariables=[...new Set((raw.match(/[a-zA-Z]\w*/g)||[]).filter(name=>!["sin","cos","tan","asin","acos","atan","sqrt","log","ln","exp","abs","pi","e","infinity"].includes(name.toLowerCase())))];
+    const variableSource=raw.replace(/\b(solve|find roots?|roots? of|solve for|solve the equation)\b/ig,"");
+    const equationVariables=[...new Set((variableSource.match(/[a-zA-Z]\w*/g)||[]).filter(name=>!["sin","cos","tan","asin","acos","atan","sqrt","log","ln","exp","abs","pi","e","infinity"].includes(name.toLowerCase())))];
     const nonlinearEquation=raw.includes("=")&&(/\b(?:sin|cos|tan|asin|acos|atan|log|ln|exp)\s*\(/i.test(raw)||/[a-zA-Z]\s*\^\s*[3-9]|[a-zA-Z]³|[a-zA-Z]⁴|[a-zA-Z]⁵/i.test(raw));
     const useSymbolicEquationSolver=solveIntent||(raw.includes("=")&&(mode==="advanced"||nonlinearEquation||equationVariables.length>1));
     if(useSymbolicEquationSolver){
