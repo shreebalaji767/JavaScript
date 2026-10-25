@@ -470,7 +470,7 @@
     }
     const l=parse(sides[0]),r=parse(sides[1]),coef=l.a-r.a,constant=r.b-l.b;
     if(Math.abs(coef)<1e-12)throw new Error(Math.abs(constant)<1e-12?"Both sides match for every x; there are infinitely many solutions.":"There is no solution because the x terms cancel but the constants do not.");
-    const x=constant/coef;return {title:"Linear equation",answer:"x = "+fmtMath(x),steps:["Left side: "+fmtMath(l.a)+"x + "+fmtMath(l.b)+". Right side: "+fmtMath(r.a)+"x + "+fmtMath(r.b)+".","Move x terms to the left and constants to the right.","So "+fmtMath(coef)+"x = "+fmtMath(constant)+".","Divide both sides by "+fmtMath(coef)+": x = "+fmtMath(x)+"."]};
+    const x=constant/coef;return {title:"Linear equation",answer:"x = "+fmtMath(x),steps:["Start with the equation: "+sides[0].trim()+" = "+sides[1].trim()+".","Collect the x terms on the left and constants on the right: ("+fmtMath(l.a)+" − "+fmtMath(r.a)+")x = "+fmtMath(r.b)+" − "+fmtMath(l.b)+".","Calculate both sides: "+fmtMath(coef)+"x = "+fmtMath(constant)+".","Divide both sides by "+fmtMath(coef)+": x = "+fmtMath(constant)+" ÷ "+fmtMath(coef)+" = "+fmtMath(x)+"."]};
   }
   function gcdMath(a,b){a=Math.abs(Math.round(a));b=Math.abs(Math.round(b));while(b){const r=a%b;a=b;b=r;}return a||1;}
   function ratioMath(src){
@@ -667,6 +667,9 @@
       }
       return make("Equation solution",result||"No solution found by the symbolic solver.",["Equation/expression: "+equation+".","Unknown variable: "+variableToSolve+".","Use symbolic algebra and the solver's supported root-finding methods.","Solution: "+(result||"No solution found.")+"."]);
     }
+    // An equation must reach the problem-type dispatcher below; evaluating it as an expression
+    // can otherwise return the unchanged text (for example, "2*x+3=11") as a false result.
+    if(raw.includes("="))return null;
     if(hasNerdamer){
       let expr=normalized||raw;
       expr=expr.replace(/\bwhat is\b|\bcalculate\b|\bevaluate\b|\bcompute\b|\bplease\b/ig,"").replace(/[?]/g,"").trim();
