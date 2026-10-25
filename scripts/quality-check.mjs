@@ -232,5 +232,14 @@ assert.ok(solverHint.includes("require an internet connection"), "Solver hint sh
 assert.equal((solverHint.match(/Arbitrary word problems/g) || []).length, 1, "Solver limitations should not be duplicated");
 assert.equal((solverHint.match(/internet connection/g) || []).length, 1, "Internet requirement should appear only once");
 
+assert.ok(html.includes('id="codeExample"'), "Practice lab should expose the starter-example selector");
+assert.ok(html.includes('id="copyCodeOutput"'), "Practice lab should expose copy-output control");
+assert.ok(js.includes('$("#codeEditor").addEventListener("keydown"'), "Practice editor should support keyboard shortcuts");
+assert.ok(js.includes('input.setRangeText("  ",start,end,"end")'), "Tab in the editor should insert indentation instead of changing focus");
+assert.ok(js.includes('async function copyCodeOutput()'), "Practice lab should have a copy-output implementation");
+for (const example of ["variables", "conditions", "loops", "arrays", "functions", "objects"]) {
+  assert.ok(js.includes(example + ":"), "Missing practice starter example: " + example);
+}
+
 console.log("Scriptly quality checks passed.");
 console.log("Checked " + ids.length + " HTML IDs, " + buttons.length + " buttons, " + localReferences.length + " local asset references, PWA shell assets, CSS balance, math-solver controls, and critical interaction regressions.");
