@@ -1067,6 +1067,50 @@
     try{localStorage.setItem(DRAFT_KEY,snippet.code);}catch{}
     showToast("Loaded “"+snippet.name+"”.");
   }
+  function deleteSavedSnippet() {
+    const select=$("#savedSnippets");
+    const id=select.value;
+    if(!id){showToast("Choose a saved snippet first.");return;}
+    const snippet=readSavedSnippets().find(item=>item.id===id);
+    if(!snippet)return;
+    if(!confirm("Delete the saved snippet “"+snippet.name+"”? This cannot be undone."))return;
+    try {
+      localStorage.setItem(SNIPPETS_KEY,JSON.stringify(readSavedSnippets().filter(item=>item.id!==id)));
+      refreshSavedSnippets();
+      showToast("Saved snippet deleted.");
+    } catch {showToast("Could not update saved snippets in this browser.");}
+  }
+  function exportCurrentCode() {
+    const code=$("#codeEditor").value;
+    if(!code.trim()){showToast("There is no code to export yet.");return;}
+    try {
+      const blob=new Blob([code],{type:"text/javascript;charset=utf-8"});
+      const url=URL.createObjectURL(blob);
+      const link=document.createElement("a");
+      link.href=url;
+      link.download="scriptly-practice-"+new Date().toISOString().slice(0,10)+".js";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),1000);
+      showToast("JavaScript file exported.");
+    } catch {showToast("Could not export the code in this browser.");}
+  }
+  async function importCodeFile(file) {
+    if(!file)return;
+    const allowed=/\.(?:js|mjs|cjs|txt)$/i.test(file.name)||["text/javascript","application/javascript","text/plain",""].includes(file.type);
+    if(!allowed){showToast("Choose a .js, .mjs, .cjs, or .txt code file.");return;}
+    if(file.size>1024*1024){showToast("That file is larger than 1 MB. Choose a smaller code file.");return;}
+    try {
+      const code=await file.text();
+      $("#codeEditor").value=code;
+      $("#codeExample").value="";
+      persistPracticeDraft();
+      renderOutput([]);
+      showToast("Imported "+file.name+". Review the code, then run it when ready.");
+    } catch {showToast("Could not read that file.");}
+    finally {$("#importCodeFile").value="";}
+  }
   function persistPracticeDraft() {
     try{localStorage.setItem(DRAFT_KEY,$("#codeEditor").value);}catch{}
   }
@@ -1374,6 +1418,9 @@
     const mathExample=event.target.closest("[data-math-example]");if(mathExample){$("#mathProblem").value=mathExample.dataset.mathExample;$("#mathMode").value="auto";runMathSolver();return;}
     if(event.target.closest("#copyCodeOutput")){copyCodeOutput();return;}
     if(event.target.closest("#saveSnippet")){saveCurrentSnippet();return;}
+    if(event.target.closest("#deleteSnippet")){deleteSavedSnippet();return;}
+    if(event.target.closest("#exportCode")){exportCurrentCode();return;}
+    if(event.target.closest("#importCodeButton")){$("#importCodeFile").click();return;}
     if(event.target.closest("#runCode")){runCode();return;}
     if(event.target.closest("#resetCode")){$("#codeEditor").value='const name = "future developer";\nconsole.log("Hello, " + name + "!");\nconsole.log(2 + 3);';$("#codeExample").value="";persistPracticeDraft();renderOutput([]);return;}
     if(event.target.closest("#clearOutput")){renderOutput([]);return;}
@@ -1392,6 +1439,7 @@
   $("#searchInput").addEventListener("keydown",event=>{if(event.key==="Enter"){searchLessons(event.target.value);event.target.blur();}});
   $("#referenceSearch").addEventListener("input",renderReference);
   $("#savedSnippets").addEventListener("change",event=>loadSavedSnippet(event.target.value));
+  $("#importCodeFile").addEventListener("change",event=>importCodeFile(event.target.files&&event.target.files[0]));
   $("#codeEditor").addEventListener("input",persistPracticeDraft);
   $("#codeExample").addEventListener("change",event=>{
     const examples={
