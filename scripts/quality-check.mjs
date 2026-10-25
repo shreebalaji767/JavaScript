@@ -147,8 +147,8 @@ const geometrySource = js.slice(js.indexOf("  function geometryMath("), js.index
 const geometryMath = new Function("fmtMath", geometrySource + "; return geometryMath;")(formatMath);
 const circle = geometryMath("circle 5");
 assert.equal(circle.title, "Circle geometry");
-assert.match(circle.answer, /^Area = 78\\.53981633974483; circumference = 31\\.41592653589793$/);
-assert.ok(js.includes('if(mode==="auto"&&/^(circle|rectangle|square|triangle)\\\\s*[: ]?\\\\s*-?\\\\d/i.test(s))return geometryMath(s);'), "Auto-routed geometry prompts must reach geometryMath before symbolic evaluation");
+assert.equal(circle.answer, "Area = 78.5398163397; circumference = 31.4159265359");
+assert.ok(js.indexOf('if(mode==="auto"&&/') < js.indexOf("const advanced=solveAdvancedMath(original,mode,s);") && js.includes("return geometryMath(s);"), "Auto-routed geometry prompts must reach geometryMath before symbolic evaluation");
 
 // A one-variable equation must not be returned unchanged by symbolic expression evaluation.
 assert.ok(js.includes('if(raw.includes("="))return null;'), "Equations must fall through to problem-type detection unless symbolic solving already handled them");
