@@ -142,6 +142,14 @@ assert.ok(arithmeticMath("2^3 + sqrt(16)").steps.some((step) => step.includes("2
 assert.ok(arithmeticMath("2^3 + sqrt(16)").steps.some((step) => step.includes("sqrt(16) = 4")), "Functions must show their computed value");
 assert.throws(() => arithmeticMath("1 / 0"), /Division by zero/);
 
+// Explicit geometry prompts must bypass symbolic expression evaluation.
+const geometrySource = js.slice(js.indexOf("  function geometryMath("), js.indexOf("  function pythagoreanMath("));
+const geometryMath = new Function("fmtMath", geometrySource + "; return geometryMath;")(formatMath);
+const circle = geometryMath("circle 5");
+assert.equal(circle.title, "Circle geometry");
+assert.match(circle.answer, /^Area = 78\\.53981633974483; circumference = 31\\.41592653589793$/);
+assert.ok(js.includes('if(mode==="auto"&&/^(circle|rectangle|square|triangle)\\\\s*[: ]?\\\\s*-?\\\\d/i.test(s))return geometryMath(s);'), "Auto-routed geometry prompts must reach geometryMath before symbolic evaluation");
+
 // A one-variable equation must not be returned unchanged by symbolic expression evaluation.
 assert.ok(js.includes('if(raw.includes("="))return null;'), "Equations must fall through to problem-type detection unless symbolic solving already handled them");
 const linearSource = js.slice(js.indexOf("  function linearMath("), js.indexOf("  function gcdMath("));
