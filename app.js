@@ -709,6 +709,75 @@
     }
     return null;
   }
+  function parseLinearEquation2(raw){
+    const equation=String(raw||"").replace(/\s+/g,"").replace(/[−]/g,"-");
+    const sides=equation.split("=");
+    if(sides.length!==2)throw new Error("Write each equation with one equals sign.");
+    function parseSide(side){
+      const tokens=side.match(/[+-]?[^+-]+/g);
+      if(!tokens||tokens.join("")!==side)throw new Error("Use linear terms such as 2x, -y, and constants.");
+      let x=0,y=0,c=0;
+      for(let token of tokens){
+        let sign=1;
+        if(token[0]==="-"){sign=-1;token=token.slice(1)}else if(token[0]==="+"){token=token.slice(1)}
+        if(!token)continue;
+        const xm=token.match(/^(\d*\.?\d*)\*?x$/i),ym=token.match(/^(\d*\.?\d*)\*?y$/i);
+        if(xm){x+=sign*(xm[1]===""?1:Number(xm[1]));continue}
+        if(ym){y+=sign*(ym[1]===""?1:Number(ym[1]));continue}
+        if(/^(?:\d+\.?\d*|\.\d+)$/.test(token)){c+=sign*Number(token);continue}
+        throw new Error("Only linear equations in x and y are supported here.");
+      }
+      return {x,y,c};
+    }
+    const l=parseSide(sides[0]),r=parseSide(sides[1]);
+    return {a:l.x-r.x,b:l.y-r.y,c:r.c-l.c};
+  }
+  function systemMath(raw){
+    const text=String(raw||"").replace(/^\s*(?:solve\s+)?(?:the\s+)?(?:system(?:\s+of\s+equations)?|simultaneous\s+equations)\s*:?\s*/i,"").trim();
+    const equations=text.split(/[;\n]+/).map(s=>s.trim()).filter(Boolean);
+    if(equations.length!==2)throw new Error("Enter two linear equations separated by a semicolon, e.g. system: 2x + y = 5; x - y = 1.");
+    const [one,two]=equations.map(parseLinearEquation2);
+    const det=one.a*two.b-two.a*one.b;
+    const scale=Math.max(1,Math.abs(one.a),Math.abs(one.b),Math.abs(two.a),Math.abs(two.b));
+    if(Math.abs(det)<1e-12*scale*scale)throw new Error("The system has no unique solution (parallel or dependent equations).");
+    const x=(one.c*two.b-two.c*one.b)/det,y=(one.a*two.c-two.a*one.c)/det;
+    const clean=n=>Number(n.toPrecision(12)).toString();
+    return {title:"Two-variable linear system",answer:"x = "+clean(x)+"; y = "+clean(y),steps:["Write equations in standard form a₁x + b₁y = c₁ and a₂x + b₂y = c₂.","Calculate determinant Δ = a₁b₂ − a₂b₁ = "+clean(det)+".","Because Δ ≠ 0, there is a unique solution.","Cramer's rule gives x = "+clean(x)+" and y = "+clean(y)+".","Substitute both values into the original equations to check."]};
+  }
+  function matrixMath(raw){
+    const m=String(raw||"").match(/\b(matrix|determinant|det)\b\s*:?\s*(.*)/i);
+    if(!m)return null;
+    const determinant=/\b(determinant|det)\b/i.test(m[1]);
+    const rows=m[2].replace(/[\[\]()]/g,"").trim().split(/[;\n]+/).map(row=>row.trim()).filter(Boolean).map(row=>row.split(/[,\s]+/).filter(Boolean).map(Number));
+    if(!rows.length||rows.some(row=>row.some(n=>!Number.isFinite(n))))throw new Error("Enter matrix rows as numbers separated by commas, and separate rows with semicolons. Example: determinant 1,2;3,4.");
+    const width=rows[0].length;
+    if(!width||rows.some(row=>row.length!==width))throw new Error("Every matrix row must contain the same number of entries.");
+    if(!determinant)return {title:"Matrix dimensions",answer:rows.length+" × "+width+" matrix",steps:["Rows: "+rows.length+".","Columns: "+width+".","Matrix: ["+rows.map(row=>row.join(", ")).join("] [")+"]"]};
+    if(rows.length!==width)throw new Error("A determinant requires a square matrix.");
+    if(rows.length>6)throw new Error("This built-in determinant tool supports matrices up to 6 × 6.");
+    const a=rows.map(row=>row.slice());let det=1,sign=1;
+    for(let i=0;i<a.length;i++){
+      let pivot=i;for(let j=i+1;j<a.length;j++)if(Math.abs(a[j][i])>Math.abs(a[pivot][i]))pivot=j;
+      if(Math.abs(a[pivot][i])<1e-14){det=0;break}
+      if(pivot!==i){[a[i],a[pivot]]=[a[pivot],a[i]];sign*=-1}
+      const p=a[i][i];det*=p;
+      for(let j=i+1;j<a.length;j++){const factor=a[j][i]/p;for(let k=i+1;k<a.length;k++)a[j][k]-=factor*a[i][k]}
+    }
+    det=Number((det*sign).toPrecision(12));
+    return {title:"Matrix determinant",answer:"det(A) = "+det,steps:["Read the matrix row by row.","Use row reduction with pivoting to obtain triangular form.","Multiply the diagonal pivots and account for row swaps.","Result: det(A) = "+det+"."]};
+  }
+  function inequalityMath(raw){
+    const text=String(raw||"").replace(/[−]/g,"-").trim();
+    const m=text.match(/^(?:solve\s+)?(?:inequality\s*:?\s*)?([+-]?(?:\d+(?:\.\d*)?|\.\d+)?)\s*\*?\s*x\s*(<=|>=|<|>|≤|≥)\s*([+-]?(?:\d+(?:\.\d*)?|\.\d+))$/i);
+    if(!m)return null;
+    const a=m[1]===""||m[1]==="+"?1:m[1]==="-"?-1:Number(m[1]),op=m[2],b=Number(m[3]);
+    if(a===0)throw new Error("The coefficient of x cannot be zero.");
+    let relation=op.replace("<=","≤").replace(">=","≥");
+    if(a<0)relation=({"<":">",">":"<","≤":"≥","≥":"≤"}[relation]||relation);
+    const bound=Number((b/a).toPrecision(12));
+    return {title:"Linear inequality",answer:"x "+relation+" "+bound,steps:["Start with "+text+".","Divide both sides by "+a+".",a<0?"Reverse the inequality sign because the coefficient is negative.":"Keep the inequality sign because the coefficient is positive.","Solution: x "+relation+" "+bound+"."]};
+  }
+
   function theoremMath(source){
     const raw=String(source||"").trim();
     const intent=/\b(explain|teach me|what is|state|prove|show why|theorem|identity|formula for|derive)\b/i.test(raw);
@@ -741,6 +810,9 @@
     // Route explicit shape calculations before symbolic expression evaluation.
     // Otherwise Nerdamer can treat "circle 5" as the product 5 * circle.
     if(mode==="auto"&&/^(circle|rectangle|square|triangle)\s*[: ]?\s*-?\d/i.test(s))return geometryMath(s);
+    if(/^\s*(?:solve\s+)?(?:the\s+)?(?:system(?:\s+of\s+equations)?|simultaneous\s+equations)\s*:/i.test(original))return systemMath(original);
+    if(/^\s*(?:matrix|determinant|det)\b/i.test(original)){const matrix=matrixMath(original);if(matrix)return matrix;}
+    if(/^\s*(?:solve\s+)?(?:inequality\s*:?\s*)?[+-]?(?:\d+(?:\.\d*)?|\.\d+)?\s*\*?\s*x\s*(?:<=|>=|<|>|≤|≥)/i.test(original)){const inequality=inequalityMath(original);if(inequality)return inequality;}
     const theorem=theoremMath(original);
     if(theorem)return theorem;
     const advanced=solveAdvancedMath(original,mode,s);
