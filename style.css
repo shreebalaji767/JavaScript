@@ -630,3 +630,17 @@ body.light .responsive-session-stamp{color:#6d4cc4}
 @media(max-width:340px){
   #view-math-solver .solver-examples button{flex-basis:100%;text-align:left}
 }
+
+
+/* Quality upgrade: math history and utility actions */
+#view-math-solver .solver-actions{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+#view-math-solver .solver-actions button{min-height:40px;max-width:100%;white-space:normal}
+#view-math-solver .solver-actions button:disabled{opacity:.45;cursor:not-allowed}
+#view-math-solver .math-history{margin-top:18px;min-width:0}
+#view-math-solver .math-history-heading{margin:0 0 9px;font-size:.92rem}
+#view-math-solver .math-history-empty{margin:0;color:var(--muted);font-size:.86rem}
+#view-math-solver .math-history-item{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;width:100%;min-width:0;padding:10px 11px;margin-top:7px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);color:var(--text);text-align:left}
+#view-math-solver .math-history-item:hover{border-color:var(--purple)}
+#view-math-solver .math-history-question{min-width:0;overflow-wrap:anywhere;color:var(--muted);font-size:.84rem}
+#view-math-solver .math-history-answer{max-width:48%;overflow-wrap:anywhere;text-align:right;font-size:.88rem}
+@media(max-width:520px){#view-math-solver .solver-actions{align-items:stretch}#view-math-solver .solver-actions button{flex:1 1 100%;width:100%}#view-math-solver .math-history-item{flex-direction:column;gap:4px}#view-math-solver .math-history-answer{max-width:100%;text-align:left}}
