@@ -644,3 +644,8 @@ body.light .responsive-session-stamp{color:#6d4cc4}
 #view-math-solver .math-history-question{min-width:0;overflow-wrap:anywhere;color:var(--muted);font-size:.84rem}
 #view-math-solver .math-history-answer{max-width:48%;overflow-wrap:anywhere;text-align:right;font-size:.88rem}
 @media(max-width:520px){#view-math-solver .solver-actions{align-items:stretch}#view-math-solver .solver-actions button{flex:1 1 100%;width:100%}#view-math-solver .math-history-item{flex-direction:column;gap:4px}#view-math-solver .math-history-answer{max-width:100%;text-align:left}}
+
+
+/* Keyboard users can bypass repeated navigation and jump to the main workspace. */
+.skip-link{position:fixed;top:10px;left:10px;z-index:9999;transform:translateY(-160%);padding:10px 14px;border:2px solid var(--text);border-radius:9px;background:var(--mint);color:#101019;font-weight:700;text-decoration:none}
+.skip-link:focus{transform:translateY(0);outline:3px solid var(--purple);outline-offset:3px}
