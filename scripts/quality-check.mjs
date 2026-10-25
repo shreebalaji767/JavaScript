@@ -99,5 +99,44 @@ for (const path of ["vendor/nerdamer/nerdamer.core.js", "vendor/nerdamer/Algebra
 }
 assert.ok(!js.includes("event.preventDefault();\n    deferredInstallPrompt = event;"), "Install UI should not suppress the browser's native install prompt");
 
+// Execute the actual offline-safe calculator parser against numerical edge cases.
+const evaluatorSource = js.slice(js.indexOf("  function evaluateCalculatorExpression(source){"), js.indexOf("  function evaluateCalculatorValue(expression){"));
+assert.ok(evaluatorSource.includes("function evaluateCalculatorExpression"), "Numeric evaluator source must be extractable for tests");
+const getEvaluator = new Function("calculatorAngleMode", "calculatorAns", evaluatorSource + "; return evaluateCalculatorExpression;");
+const evaluateDeg = getEvaluator("DEG", 42);
+const closeTo = (actual, expected, epsilon = 1e-10) => assert.ok(Math.abs(actual - expected) <= epsilon, actual + " should be close to " + expected);
+closeTo(evaluateDeg("2 + 3 * 4"), 14);
+closeTo(evaluateDeg("-2^2"), -4);
+closeTo(evaluateDeg("2^3^2"), 512);
+closeTo(evaluateDeg("sin(30)"), 0.5);
+closeTo(evaluateDeg("sqrt(81)"), 9);
+closeTo(evaluateDeg("15%"), 0.15);
+closeTo(evaluateDeg("15% of 240"), 36);
+closeTo(evaluateDeg("200 * 15%"), 30);
+closeTo(evaluateDeg("Ans + 1"), 43);
+closeTo(evaluateDeg("tau / 2"), Math.PI);
+assert.throws(() => evaluateDeg("1 / 0"), /Division by zero/);
+assert.throws(() => evaluateDeg("sqrt(-1)"), /finite real result|real numeric result/);
+assert.throws(() => evaluateDeg("tan(90)"), /undefined at 90/);
+assert.throws(() => evaluateDeg("2 + alert(1)"), /Unknown function/);
+const evaluateRad = getEvaluator("RAD", 0);
+closeTo(evaluateRad("sin(pi / 2)"), 1);
+assert.ok(js.includes("function fmtMath("), "Numeric formatting helper must exist");
+assert.ok(js.includes("q=-0.5*"), "Quadratic solver should use a stable root calculation");
+assert.ok(js.includes("function discountMath(") && js.includes("function gstMath("), "Everyday discount and GST calculators must exist");
+assert.ok(html.includes('data-math-example="discount 1000, 20"') && html.includes('data-math-example="gst 1000, 18"'), "Everyday calculator examples must be discoverable");
+const formatSource = js.slice(js.indexOf("  function fmtMath("), js.indexOf("  function arithmeticMath("));
+const formatMath = new Function(formatSource + "; return fmtMath;")();
+assert.equal(formatMath(1e-13), "1e-13", "Very small nonzero results must not be rounded to zero");
+const quadraticSource = js.slice(js.indexOf("  function quadraticMath("), js.indexOf("  function statisticsMath("));
+const quadraticMath = new Function("fmtMath", quadraticSource + "; return quadraticMath;")(formatMath);
+assert.match(quadraticMath("x^2 - 100000000x + 1 = 0").answer, /1e-8/, "Quadratic solver must preserve a small root beside a large root");
+const financeSource = js.slice(js.indexOf("  function discountMath("), js.indexOf("  function normalizeMathQuestion("));
+const financeMath = new Function("fmtMath", financeSource + "; return { discountMath, gstMath };")(formatMath);
+assert.equal(financeMath.discountMath("discount 1000, 20").answer, "Discount = 200; final price = 800");
+assert.equal(financeMath.gstMath("gst 1000, 18").answer, "GST amount = 180; total including GST = 1180");
+assert.throws(() => financeMath.discountMath("discount 100, 120"), /0% to 100%/);
+assert.throws(() => financeMath.gstMath("gst -100, 18"), /non-negative/);
+
 console.log("Scriptly quality checks passed.");
 console.log("Checked " + ids.length + " HTML IDs, " + buttons.length + " buttons, " + localReferences.length + " local asset references, PWA shell assets, CSS balance, math-solver controls, and critical interaction regressions.");
