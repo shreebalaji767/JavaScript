@@ -104,6 +104,10 @@
   let deferredInstallPrompt = null;
   let lastMathSolution = null;
   let mathHistory = loadMathHistory();
+  let calculatorAngleMode = "DEG";
+  let calculatorMemory = 0;
+  let calculatorHasMemory = false;
+  let calculatorAns = 0;
 
   function loadMathHistory() {
     try {
@@ -624,7 +628,10 @@
       expr=expr.replace(/(\d)\s*([a-zA-Z])\b/g,"$1*$2").replace(/\)\s*\(/g,")*(");
       if(expr&&/[+\-*/^()\d]/.test(expr)){
         try{
-          const result=math.evaluate(expr);
+          expr=expr.replace(/\bAns\b/gi,String(calculatorAns));
+          const angleFactor=calculatorAngleMode==="DEG"?Math.PI/180:1;
+          const scope={sin:value=>Math.sin(Number(value)*angleFactor),cos:value=>Math.cos(Number(value)*angleFactor),tan:value=>Math.tan(Number(value)*angleFactor),asin:value=>Math.asin(Number(value))/angleFactor,acos:value=>Math.acos(Number(value))/angleFactor,atan:value=>Math.atan(Number(value))/angleFactor};
+          const result=math.evaluate(expr,scope);
           const answer=typeof result?.toString==="function"?result.toString():String(result);
           return make("Mathematical expression",answer,["Expression entered: "+expr+".","Evaluate using the numeric math engine, which supports standard functions, constants, complex numbers, matrices, fractions, and units where the syntax is valid.","Result: "+answer+"."]);
         }catch(error){
@@ -700,6 +707,8 @@
       const question=$("#mathProblem").value.trim();
       const solution=solveMathProblem(question,$("#mathMode").value);
       renderMathSolution(solution);
+      const numericAnswer=Number(String(solution.answer).replace(/,/g,""));
+      if(Number.isFinite(numericAnswer))calculatorAns=numericAnswer;
       lastMathSolution={question,mode:$("#mathMode").value,solution:{title:solution.title||"Solution",answer:String(solution.answer),steps:Array.isArray(solution.steps)?solution.steps.map(String):[]}};
       mathHistory=[lastMathSolution,...mathHistory.filter(item=>item.question!==question)].slice(0,8);
       saveMathHistory();renderMathHistory();
