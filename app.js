@@ -745,23 +745,60 @@
     return {title:"Two-variable linear system",answer:"x = "+clean(x)+"; y = "+clean(y),steps:["Write equations in standard form a₁x + b₁y = c₁ and a₂x + b₂y = c₂.","Calculate determinant Δ = a₁b₂ − a₂b₁ = "+clean(det)+".","Because Δ ≠ 0, there is a unique solution.","Cramer's rule gives x = "+clean(x)+" and y = "+clean(y)+".","Substitute both values into the original equations to check."]};
   }
   function matrixMath(raw){
-    const m=String(raw||"").match(/\b(matrix|determinant|det)\b\s*:?\s*(.*)/i);
-    if(!m)return null;
-    const determinant=/\b(determinant|det)\b/i.test(m[1]);
-    const rows=m[2].replace(/[\[\]()]/g,"").trim().split(/[;\n]+/).map(row=>row.trim()).filter(Boolean).map(row=>row.split(/[,\s]+/).filter(Boolean).map(Number));
-    if(!rows.length||rows.some(row=>row.some(n=>!Number.isFinite(n))))throw new Error("Enter matrix rows as numbers separated by commas, and separate rows with semicolons. Example: determinant 1,2;3,4.");
-    const width=rows[0].length;
-    if(!width||rows.some(row=>row.length!==width))throw new Error("Every matrix row must contain the same number of entries.");
-    if(!determinant)return {title:"Matrix dimensions",answer:rows.length+" × "+width+" matrix",steps:["Rows: "+rows.length+".","Columns: "+width+".","Matrix: ["+rows.map(row=>row.join(", ")).join("] [")+"]"]};
-    if(rows.length!==width)throw new Error("A determinant requires a square matrix.");
-    if(rows.length>6)throw new Error("This built-in determinant tool supports matrices up to 6 × 6.");
-    const a=rows.map(row=>row.slice());let det=1,sign=1;
-    for(let i=0;i<a.length;i++){
-      let pivot=i;for(let j=i+1;j<a.length;j++)if(Math.abs(a[j][i])>Math.abs(a[pivot][i]))pivot=j;
+    const source=String(raw||"").trim();
+    const opMatch=source.match(/\bmatrix\s+(add|subtract|multiply|inverse)\b\s*:?\s*(.*)/i);
+    const determinant=/\b(determinant|det)\b/i.test(source);
+    const rowsText=opMatch?opMatch[2]:source.replace(/^\s*(?:matrix|determinant|det)\b\s*:?\s*/i,"");
+    const parseRows=text=>{
+      const rows=String(text||"").replace(/[\[\]()]/g,"").trim().split(/[;\n]+/).map(row=>row.trim()).filter(Boolean).map(row=>row.split(/[,\s]+/).filter(Boolean).map(Number));
+      if(!rows.length||rows.some(row=>row.some(n=>!Number.isFinite(n))))throw new Error("Enter matrix rows as numbers separated by commas, and separate rows with semicolons. Example: matrix add: 1,2;3,4 | 5,6;7,8.");
+      const width=rows[0].length;
+      if(!width||rows.some(row=>row.length!==width))throw new Error("Every matrix row must contain the same number of entries.");
+      if(rows.length>8||width>8)throw new Error("This matrix tool supports matrices up to 8 × 8.");
+      return rows;
+    };
+    const fmt=n=>Number((Math.abs(n)<1e-12?0:n).toPrecision(10)).toString();
+    const display=a=>a.map(row=>"[ "+row.map(fmt).join(", ")+" ]").join("\n");
+    if(opMatch){
+      const op=opMatch[1].toLowerCase(), parts=rowsText.split("|");
+      if(op==="inverse"){
+        if(parts.length!==1)throw new Error("For an inverse, enter one matrix only: matrix inverse: 1,2;3,4.");
+        const a=parseRows(parts[0]);
+        if(a.length!==a[0].length)throw new Error("Only square matrices have an inverse.");
+        const n=a.length, aug=a.map((row,i)=>row.concat(row.map((_,j)=>i===j?1:0)));
+        for(let col=0;col<n;col++){
+          let pivot=col;for(let r=col+1;r<n;r++)if(Math.abs(aug[r][col])>Math.abs(aug[pivot][col]))pivot=r;
+          if(Math.abs(aug[pivot][col])<1e-12)throw new Error("This matrix is singular, so it has no inverse.");
+          [aug[col],aug[pivot]]=[aug[pivot],aug[col]];
+          const divisor=aug[col][col];for(let j=0;j<2*n;j++)aug[col][j]/=divisor;
+          for(let r=0;r<n;r++)if(r!==col){const factor=aug[r][col];for(let j=0;j<2*n;j++)aug[r][j]-=factor*aug[col][j];}
+        }
+        const inv=aug.map(row=>row.slice(n));
+        return {title:"Matrix inverse",answer:"A⁻¹ =\n"+display(inv),steps:["Augment A with the identity matrix: [A | I].","Use row operations to turn the left side into the identity matrix.","The right side is the inverse matrix A⁻¹.","Check by multiplying A × A⁻¹; the result should be the identity matrix."]};
+      }
+      if(parts.length!==2)throw new Error("Enter two matrices separated by a vertical bar |. Example: matrix "+op+": 1,2;3,4 | 5,6;7,8.");
+      const a=parseRows(parts[0]),b=parseRows(parts[1]);
+      let result;
+      if(op==="add"||op==="subtract"){
+        if(a.length!==b.length||a[0].length!==b[0].length)throw new Error("Addition and subtraction require matrices with the same dimensions.");
+        result=a.map((row,i)=>row.map((n,j)=>n+(op==="add"?1:-1)*b[i][j]));
+      }else{
+        if(a[0].length!==b.length)throw new Error("Matrix multiplication requires columns in the first matrix to equal rows in the second.");
+        result=a.map(row=>b[0].map((_,j)=>row.reduce((sum,n,k)=>sum+n*b[k][j],0)));
+      }
+      const symbol=op==="add"?"+":op==="subtract"?"−":"×";
+      return {title:"Matrix "+op,answer:"A "+symbol+" B =\n"+display(result),steps:[ "Matrix A has dimensions "+a.length+" × "+a[0].length+".","Matrix B has dimensions "+b.length+" × "+b[0].length+".",op==="multiply"?"Multiply each row of A by each column of B and add the products.":"Apply the operation to matching entries in the two matrices.", "Result:\n"+display(result)]};
+    }
+    const rows=parseRows(rowsText);
+    if(!determinant)return {title:"Matrix dimensions",answer:rows.length+" × "+rows[0].length+" matrix",steps:["Rows: "+rows.length+".","Columns: "+rows[0].length+".","Matrix:\n"+display(rows)]};
+    if(rows.length!==rows[0].length)throw new Error("A determinant requires a square matrix.");
+    const a=rows.map(row=>row.slice()),n=a.length;let det=1,sign=1;
+    for(let i=0;i<n;i++){
+      let pivot=i;for(let j=i+1;j<n;j++)if(Math.abs(a[j][i])>Math.abs(a[pivot][i]))pivot=j;
       if(Math.abs(a[pivot][i])<1e-14){det=0;break}
       if(pivot!==i){[a[i],a[pivot]]=[a[pivot],a[i]];sign*=-1}
       const p=a[i][i];det*=p;
-      for(let j=i+1;j<a.length;j++){const factor=a[j][i]/p;for(let k=i+1;k<a.length;k++)a[j][k]-=factor*a[i][k]}
+      for(let j=i+1;j<n;j++){const factor=a[j][i]/p;for(let k=i+1;k<n;k++)a[j][k]-=factor*a[i][k]}
     }
     det=Number((det*sign).toPrecision(12));
     return {title:"Matrix determinant",answer:"det(A) = "+det,steps:["Read the matrix row by row.","Use row reduction with pivoting to obtain triangular form.","Multiply the diagonal pivots and account for row swaps.","Result: det(A) = "+det+"."]};
