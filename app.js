@@ -412,15 +412,48 @@
   }
   function fmtMath(n){if(!Number.isFinite(n))throw new Error("The answer is not a finite real number.");if(Object.is(n,-0))n=0;return Number(n.toPrecision(12)).toString();}
   function arithmeticMath(src){
-    const tokens=src.match(/(?:\d+(?:\.\d*)?|\.\d+)|(?:[a-zA-Z]+)|[()+\-*/%^,]/g)||[], compact=src.replace(/\s+/g,"");
+    const tokens=src.match(/(?:\d+(?:\.\d*)?|\.\d+)|(?:[a-zA-Z]+)|[()+\-*/%^,]/g)||[],compact=src.replace(/\s+/g,"");
     if(tokens.join("")!==compact)throw new Error("Unknown character. Use numbers, + - * / % ^, brackets, pi, e, or a supported function.");
     let i=0;const peek=()=>tokens[i],take=()=>tokens[i++];
-    const expr=()=>{let v=term();while(peek()==="+"||peek()==="-"){const op=take(),r=term();v=op==="+"?v+r:v-r;}return v;};
-    const term=()=>{let v=unary();while(["*","/","%"].includes(peek())){const op=take(),r=unary();if((op==="/"||op==="%")&&r===0)throw new Error("Division by zero is not allowed.");v=op==="*"?v*r:op==="/"?v/r:v%r;}return v;};
-    const unary=()=>{if(peek()==="+"){take();return unary();}if(peek()==="-"){take();return -unary();}return power();};
-    const power=()=>{let v=primary();if(peek()==="^"){take();v=Math.pow(v,unary());}return v;};
-    const primary=()=>{const t=take();if(t===undefined)throw new Error("The expression is incomplete.");if(t==="("){const v=expr();if(take()!==")")throw new Error("A closing ) is missing.");return v;}if(/^(?:\d|\.)/.test(t))return Number(t);if(/^[a-z]+$/i.test(t)){const name=t.toLowerCase();if(name==="pi")return Math.PI;if(name==="e")return Math.E;if(peek()==="("){take();const x=expr();let y;if(peek()===","){take();y=expr();}if(take()!==")")throw new Error("A function call needs a closing ).");const f={sqrt:x=>Math.sqrt(x),abs:x=>Math.abs(x),sin:x=>Math.sin(x),cos:x=>Math.cos(x),tan:x=>Math.tan(x),log:x=>Math.log10(x),ln:x=>Math.log(x),floor:x=>Math.floor(x),ceil:x=>Math.ceil(x),round:x=>Math.round(x),min:(x,y)=>Math.min(x,y),max:(x,y)=>Math.max(x,y)};if(!f[name])throw new Error("Unknown function "+name+". Try sqrt, abs, sin, cos, tan, log, ln, floor, ceil, round, min, or max.");if(["min","max"].includes(name)&&y===undefined)throw new Error(name+" needs two values, e.g. "+name+"(3, 7).");return f[name](x,y);}throw new Error("Unknown name "+t+". Use pi, e, or a supported function.");}throw new Error("Expected a number or an opening bracket.");};
-    const value=expr();if(i<tokens.length)throw new Error("I could not use everything after "+tokens[i]+". Check the operators.");return value;
+    const expr=()=>{let node=term();while(peek()==="+"||peek()==="-"){const op=take();node={type:"binary",op,left:node,right:term()};}return node;};
+    const term=()=>{let node=unary();while(["*","/","%"].includes(peek())){const op=take();node={type:"binary",op,left:node,right:unary()};}return node;};
+    const unary=()=>{if(peek()==="+"){take();return {type:"unary",op:"+",value:unary()};}if(peek()==="-"){take();return {type:"unary",op:"-",value:unary()};}return power();};
+    const power=()=>{let node=primary();if(peek()==="^"){take();node={type:"binary",op:"^",left:node,right:unary()};}return node;};
+    const primary=()=>{
+      const t=take();if(t===undefined)throw new Error("The expression is incomplete.");
+      if(t==="("){const node=expr();if(take()!==")")throw new Error("A closing ) is missing.");return {type:"group",value:node};}
+      if(/^(?:\d|\.)/.test(t))return {type:"number",value:Number(t),label:t};
+      if(/^[a-z]+$/i.test(t)){
+        const name=t.toLowerCase();if(name==="pi")return {type:"number",value:Math.PI,label:"π"};if(name==="e")return {type:"number",value:Math.E,label:"e"};
+        if(peek()==="("){take();const args=[expr()];if(peek()===","){take();args.push(expr());}if(take()!==")")throw new Error("A function call needs a closing ).");const allowed=["sqrt","abs","sin","cos","tan","log","ln","floor","ceil","round","min","max"];if(!allowed.includes(name))throw new Error("Unknown function "+name+". Try sqrt, abs, sin, cos, tan, log, ln, floor, ceil, round, min, or max.");if(["min","max"].includes(name)&&args.length!==2)throw new Error(name+" needs two values, e.g. "+name+"(3, 7).");return {type:"function",name,args};}
+        throw new Error("Unknown name "+t+". Use pi, e, or a supported function.");
+      }
+      throw new Error("Expected a number or an opening bracket.");
+    };
+    const tree=expr();if(i<tokens.length)throw new Error("I could not use everything after "+tokens[i]+". Check the operators.");
+    const steps=[];
+    const show=n=>fmtMath(n);
+    const evaluate=node=>{
+      if(node.type==="number")return node.value;
+      if(node.type==="group"){const value=evaluate(node.value);steps.push("Evaluate the parentheses: ("+show(value)+") = "+show(value)+".");return value;}
+      if(node.type==="unary"){const v=evaluate(node.value),result=node.op==="-"?-v:v;steps.push((node.op==="-"?"Apply the negative sign: −":"Apply the positive sign: +")+show(v)+" = "+show(result)+".");return result;}
+      if(node.type==="binary"){
+        const a=evaluate(node.left),b=evaluate(node.right);
+        if((node.op==="/"||node.op==="%")&&b===0)throw new Error("Division by zero is not allowed.");
+        const ops={"+":"add","-":"subtract","*":"multiply","/":"divide","%":"find the remainder of","^":"raise to the power"};
+        const result=node.op==="+"?a+b:node.op==="-"?a-b:node.op==="*"?a*b:node.op==="/"?a/b:node.op==="%"?a%b:Math.pow(a,b);
+        if(!Number.isFinite(result))throw new Error("This operation does not produce a finite real number.");
+        const symbol=node.op==="*"?"×":node.op==="/"?"÷":node.op==="^"?"^":node.op;
+        steps.push(" "+ops[node.op].charAt(0).toUpperCase()+ops[node.op].slice(1)+": "+show(a)+" "+symbol+" "+show(b)+" = "+show(result)+".");
+        return result;
+      }
+      const args=node.args.map(evaluate),x=args[0],y=args[1];
+      const f={sqrt:()=>Math.sqrt(x),abs:()=>Math.abs(x),sin:()=>Math.sin(x),cos:()=>Math.cos(x),tan:()=>Math.tan(x),log:()=>Math.log10(x),ln:()=>Math.log(x),floor:()=>Math.floor(x),ceil:()=>Math.ceil(x),round:()=>Math.round(x),min:()=>Math.min(x,y),max:()=>Math.max(x,y)};
+      const result=f[node.name]();if(!Number.isFinite(result))throw new Error(node.name+" does not produce a finite real result for these inputs.");
+      steps.push("Evaluate "+node.name+"("+args.map(show).join(", ")+") = "+show(result)+".");return result;
+    };
+    const value=evaluate(tree);
+    return {value,steps};
   }
   function linearMath(src){
     const sides=src.split("=");if(sides.length!==2)throw new Error("Write one equation with one equals sign, e.g. 2x + 3 = 11.");
@@ -710,8 +743,8 @@
     }
     if(mode==="equation")return linearMath(s);
     if(mode==="ratio")return ratioMath(s);
-    const n=arithmeticMath(s);
-    const steps=["Read the question as the expression: "+s+".","Apply the order of operations: brackets, powers, multiplication/division, then addition/subtraction.","Calculate the expression: "+s+" = "+fmtMath(n)+".","Final answer: "+fmtMath(n)+"."];
+    const calculation=arithmeticMath(s),n=calculation.value;
+    const steps=["Expression: "+s+".",...calculation.steps.map(step=>step.trim()),"Final answer: "+fmtMath(n)+"."];
     return {title:original&&original!==s?"Math question":"Arithmetic expression",answer:fmtMath(n),steps};
   }
   function renderMathSolution(solution){
