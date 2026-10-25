@@ -1067,6 +1067,24 @@
     try{localStorage.setItem(DRAFT_KEY,snippet.code);}catch{}
     showToast("Loaded “"+snippet.name+"”.");
   }
+  function renameSavedSnippet() {
+    const select=$("#savedSnippets");
+    const id=select.value;
+    if(!id){showToast("Choose a saved snippet first.");return;}
+    const snippets=readSavedSnippets();
+    const snippet=snippets.find(item=>item.id===id);
+    if(!snippet){showToast("That saved snippet could not be found.");refreshSavedSnippets();return;}
+    const name=prompt("Rename this snippet:",snippet.name);
+    if(name===null)return;
+    const cleanName=name.trim().slice(0,60);
+    if(!cleanName){showToast("A snippet name cannot be empty.");return;}
+    try {
+      const updated=snippets.map(item=>item.id===id?{...item,name:cleanName,updatedAt:new Date().toISOString()}:item);
+      localStorage.setItem(SNIPPETS_KEY,JSON.stringify(updated));
+      refreshSavedSnippets(id);
+      showToast("Snippet renamed.");
+    } catch {showToast("Could not rename this snippet in browser storage.");}
+  }
   function deleteSavedSnippet() {
     const select=$("#savedSnippets");
     const id=select.value;
@@ -1418,6 +1436,7 @@
     const mathExample=event.target.closest("[data-math-example]");if(mathExample){$("#mathProblem").value=mathExample.dataset.mathExample;$("#mathMode").value="auto";runMathSolver();return;}
     if(event.target.closest("#copyCodeOutput")){copyCodeOutput();return;}
     if(event.target.closest("#saveSnippet")){saveCurrentSnippet();return;}
+    if(event.target.closest("#renameSnippet")){renameSavedSnippet();return;}
     if(event.target.closest("#deleteSnippet")){deleteSavedSnippet();return;}
     if(event.target.closest("#exportCode")){exportCurrentCode();return;}
     if(event.target.closest("#importCodeButton")){$("#importCodeFile").click();return;}
