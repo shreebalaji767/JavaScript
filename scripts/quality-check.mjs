@@ -264,3 +264,9 @@ assert.ok(html.includes('id="renameSnippet"'), "Practice Lab should expose a sav
 assert.ok(js.includes('function renameSavedSnippet()'), "Saved snippets should be renameable");
 assert.ok(js.includes('if(event.target.closest("#renameSnippet")){renameSavedSnippet();return;}'), "Rename control should be wired to its handler");
 assert.ok(js.includes('updatedAt:new Date().toISOString()'), "Renaming a snippet should refresh its update timestamp");
+
+assert.ok(js.includes("function explainPracticeError(message)"), "Practice Lab should explain common JavaScript errors in beginner-friendly language");
+assert.ok(js.includes("A name is missing"), "Reference errors should get a practical explanation");
+assert.ok(js.includes("The code's grammar needs a fix"), "Syntax errors should get a practical explanation");
+assert.ok(js.includes('class="error-coach"'), "Practice Lab should render contextual error help");
+assert.ok(css.includes(".error-coach"), "Practice Lab error explanations should have dedicated styling");
