@@ -73,7 +73,7 @@ assert.ok(js.includes("const equationVariables="), "Equation solver must disting
 assert.ok(js.includes("const variableSource=raw.replace"), "Solve instructions must not be mistaken for equation variables");
 assert.ok(js.includes('$$(".responsive-device-button").forEach'), "Responsive controls must use a collection selector");
 assert.ok(js.includes('const existing=$$("#codeOutput .output-line");'), "Practice output must collect all console lines");
-assert.ok(!js.includes('$(".responsive-device-button").forEach'), "Single-element selector regression detected");
+assert.ok(!js.includes('\n    $(".responsive-device-button").forEach'), "Single-element selector regression detected");
 assert.ok(!js.includes('const existing=$("#codeOutput .output-line");'), "Single-element output regression detected");
 const scriptTags = [...html.matchAll(/<script\b[^>]*>/gi)].map((match) => match[0]);
 assert.ok(scriptTags.length >= 2, "Application scripts must be present");
