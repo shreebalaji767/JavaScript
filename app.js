@@ -712,6 +712,9 @@
   function solveMathProblem(source,mode){
     const original=String(source||"").trim();
     const s=normalizeMathQuestion(source);if(!s)throw new Error("Type a problem first. The maths goblin cannot solve an empty box.");
+    // Route explicit shape calculations before symbolic expression evaluation.
+    // Otherwise Nerdamer can treat "circle 5" as the product 5 * circle.
+    if(mode==="auto"&&/^(circle|rectangle|square|triangle)\s*[: ]?\s*-?\d/i.test(s))return geometryMath(s);
     const advanced=solveAdvancedMath(original,mode,s);
     if(advanced)return advanced;
     if(mode==="auto"){
