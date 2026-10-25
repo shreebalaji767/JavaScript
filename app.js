@@ -761,7 +761,7 @@
   }
   function matrixMath(raw){
     const source=String(raw||"").trim();
-    const opMatch=source.match(/\bmatrix\s+(add|subtract|multiply|inverse)\b\s*:?\s*(.*)/i);
+    const opMatch=source.match(/\bmatrix\s+(add|subtract|multiply|inverse|transpose|trace)\b\s*:?\s*(.*)/i);
     const determinant=/\b(determinant|det)\b/i.test(source);
     const rowsText=opMatch?opMatch[2]:source.replace(/^\s*(?:matrix|determinant|det)\b\s*:?\s*/i,"");
     const parseRows=text=>{
@@ -776,6 +776,18 @@
     const display=a=>a.map(row=>"[ "+row.map(fmt).join(", ")+" ]").join("\n");
     if(opMatch){
       const op=opMatch[1].toLowerCase(), parts=rowsText.split("|");
+      if(op==="transpose"||op==="trace"){
+        if(parts.length!==1)throw new Error("For "+op+", enter one matrix only: matrix "+op+": 1,2;3,4.");
+        const a=parseRows(parts[0]);
+        if(op==="transpose"){
+          const result=a[0].map((_,j)=>a.map(row=>row[j]));
+          return {title:"Matrix transpose",answer:"Aᵀ =\n"+display(result),steps:["Start with A, which has "+a.length+" rows and "+a[0].length+" columns.","Swap rows and columns: entry Aᵢⱼ becomes Aᵀⱼᵢ.","The transpose has "+result.length+" rows and "+result[0].length+" columns.","Result:\n"+display(result)]};
+        }
+        if(a.length!==a[0].length)throw new Error("The trace is defined only for a square matrix.");
+        const diagonal=a.map((row,i)=>row[i]);
+        const trace=diagonal.reduce((sum,n)=>sum+n,0);
+        return {title:"Matrix trace",answer:"tr(A) = "+fmt(trace),steps:["The trace is defined for a square matrix.","Add the main diagonal entries: "+diagonal.map(fmt).join(" + ") + ".","tr(A) = "+fmt(trace)+"." ]};
+      }
       if(op==="inverse"){
         if(parts.length!==1)throw new Error("For an inverse, enter one matrix only: matrix inverse: 1,2;3,4.");
         const a=parseRows(parts[0]);
