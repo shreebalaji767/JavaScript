@@ -1,9 +1,10 @@
-const CACHE_NAME = "scriptly-shell-v42";
+const CACHE_NAME = "scriptly-shell-v43";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./style.css",
   "./app.js",
+  "./upgrades.js",
   "./logo.svg",
   "./manifest.json",
   "./vendor/nerdamer/nerdamer.core.js",
