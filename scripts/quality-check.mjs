@@ -163,6 +163,10 @@ assert.throws(() => systems.matrixMath("determinant 1,2;3"), /same number/i);
 assert.equal(systems.matrixMath("matrix add: 1,2;3,4 | 5,6;7,8").answer, "A + B =\n[ 6, 8 ]\n[ 10, 12 ]");
 assert.equal(systems.matrixMath("matrix multiply: 1,2,3;4,5,6 | 7,8;9,10;11,12").answer, "A × B =\n[ 58, 64 ]\n[ 139, 154 ]");
 assert.match(systems.matrixMath("matrix inverse: 1,2;3,4").answer, /-2/);
+assert.equal(systems.matrixMath("matrix transpose: 1,2,3;4,5,6").answer, "Aᵀ =\\n[ 1, 4 ]\\n[ 2, 5 ]\\n[ 3, 6 ]");
+assert.equal(systems.matrixMath("matrix trace: 1,2,3;4,5,6;7,8,9").answer, "tr(A) = 15");
+assert.throws(() => systems.matrixMath("matrix trace: 1,2;3,4;5,6"), /square matrix/i);
+
 assert.throws(() => systems.matrixMath("matrix inverse: 1,2;2,4"), /singular/i);
 assert.throws(() => systems.matrixMath("matrix multiply: 1,2 | 3,4"), /columns.*equal rows/i);
 
