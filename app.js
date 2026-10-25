@@ -1139,7 +1139,7 @@
     if(event.target.closest("#copyMathSolution")){copyMathSolution();return;}
     if(event.target.closest("#clearMathProblem")){clearMathProblem();return;}
     const historyItem=event.target.closest("[data-math-history-index]");
-    if(historyItem){const item=mathHistory[Number(historyItem.dataset.mathHistoryIndex)];if(item){$("#mathProblem").value=item.question;$("#mathMode").value=item.mode||"auto";lastMathSolution=item;renderMathSolution(item.solution);showToast("Previous calculation restored.");}return;}
+    if(historyItem){const item=mathHistory[Number(historyItem.dataset.mathHistoryIndex)];if(item){$("#mathProblem").value=item.question;$("#mathMode").value=item.mode||"auto";lastMathSolution=item;renderMathSolution(item.solution);setCalculatorPreview(String(item.solution.answer),"RESTORED","valid");const restoredNumber=Number(String(item.solution.answer).replace(/,/g,""));if(Number.isFinite(restoredNumber))calculatorAns=restoredNumber;$("#mathSolverStatus").textContent="RESTORED FROM HISTORY";$("#mathSolverStatus").classList.add("solved");const copyButton=$("#copyMathSolution");if(copyButton)copyButton.disabled=false;showToast("Previous calculation restored.");}return;}
     const mathExample=event.target.closest("[data-math-example]");if(mathExample){$("#mathProblem").value=mathExample.dataset.mathExample;$("#mathMode").value="auto";runMathSolver();return;}
     if(event.target.closest("#runCode")){runCode();return;}
     if(event.target.closest("#resetCode")){$("#codeEditor").value='const name = "future developer";\nconsole.log("Hello, " + name + "!");\nconsole.log(2 + 3);';renderOutput([]);return;}
