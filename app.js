@@ -934,16 +934,6 @@
   }
   function evaluateCalculatorValue(expression){
     const normalized=String(expression||"").replace(/\bAns\b/gi,"("+String(calculatorAns)+")").replace(/[×✕]/g,"*").replace(/[÷]/g,"/").replace(/[−–]/g,"-").replace(/π/g,"pi").replace(/(-?\d+(?:\.\d+)?)\s*%\s*of\s*(-?\d+(?:\.\d+)?)/ig,"(($1)/100*($2))");
-    if(typeof window.math!=="undefined"&&typeof window.math.evaluate==="function"){
-      const angleFactor=calculatorAngleMode==="DEG"?Math.PI/180:1;
-      const scope={sin:value=>Math.sin(Number(value)*angleFactor),cos:value=>Math.cos(Number(value)*angleFactor),tan:value=>Math.tan(Number(value)*angleFactor),asin:value=>Math.asin(Number(value))/angleFactor,acos:value=>Math.acos(Number(value))/angleFactor,atan:value=>Math.atan(Number(value))/angleFactor};
-      try{
-        const result=window.math.evaluate(normalized,scope);
-        if(typeof result==="number"&&Number.isFinite(result))return result;
-        if(result&&typeof result.toNumber==="function"){const numeric=result.toNumber();if(Number.isFinite(numeric))return numeric;}
-        if(typeof result==="number")return result;
-      }catch{/* The built-in parser provides an offline-safe fallback for ordinary scientific expressions. */}
-    }
     return evaluateCalculatorExpression(normalized);
   }
   function updateCalculatorPreview(){
