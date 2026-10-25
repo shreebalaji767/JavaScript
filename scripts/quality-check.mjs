@@ -142,6 +142,15 @@ assert.ok(arithmeticMath("2^3 + sqrt(16)").steps.some((step) => step.includes("2
 assert.ok(arithmeticMath("2^3 + sqrt(16)").steps.some((step) => step.includes("sqrt(16) = 4")), "Functions must show their computed value");
 assert.throws(() => arithmeticMath("1 / 0"), /Division by zero/);
 
+// A one-variable equation must not be returned unchanged by symbolic expression evaluation.
+assert.ok(js.includes('if(raw.includes("="))return null;'), "Equations must fall through to problem-type detection unless symbolic solving already handled them");
+const linearSource = js.slice(js.indexOf("  function linearMath("), js.indexOf("  function gcdMath("));
+const linearMath = new Function("fmtMath", linearSource + "; return linearMath;")(formatMath);
+const linear = linearMath("2*x+3=11");
+assert.equal(linear.answer, "x = 4", "Auto-routed linear equations must return the solved variable");
+assert.ok(linear.steps.some((step) => step.includes("2x = 8")), "Linear equation steps must show the simplified equation");
+assert.ok(linear.steps.some((step) => step.includes("8 ÷ 2 = 4")), "Linear equation steps must show the actual final division");
+
 const quadraticSource = js.slice(js.indexOf("  function quadraticMath("), js.indexOf("  function statisticsMath("));
 const quadraticMath = new Function("fmtMath", quadraticSource + "; return quadraticMath;")(formatMath);
 assert.match(quadraticMath("x^2 - 100000000x + 1 = 0").answer, /1e-8/, "Quadratic solver must preserve a small root beside a large root");
