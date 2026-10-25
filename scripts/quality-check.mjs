@@ -243,3 +243,11 @@ for (const example of ["variables", "conditions", "loops", "arrays", "functions"
 
 console.log("Scriptly quality checks passed.");
 console.log("Checked " + ids.length + " HTML IDs, " + buttons.length + " buttons, " + localReferences.length + " local asset references, PWA shell assets, CSS balance, math-solver controls, and critical interaction regressions.");
+
+assert.ok(html.includes('id="savedSnippets"'), "Practice lab should allow loading saved snippets");
+assert.ok(html.includes('id="saveSnippet"'), "Practice lab should expose a save-snippet control");
+assert.ok(js.includes('const SNIPPETS_KEY = "scriptly-practice-snippets-v1"'), "Saved snippets should use a dedicated storage key");
+assert.ok(js.includes('function saveCurrentSnippet()'), "Practice lab should save named snippets");
+assert.ok(js.includes('function restorePracticeDraft()'), "Practice lab should restore the editor draft");
+assert.ok(js.includes('$("#codeEditor").addEventListener("input",persistPracticeDraft)'), "Editor changes should autosave the draft");
+assert.ok(js.includes('function loadSavedSnippet(id)'), "Practice lab should load a saved snippet");
