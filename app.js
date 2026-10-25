@@ -733,7 +733,9 @@
     // Route explicit shape calculations before symbolic expression evaluation.
     // Otherwise Nerdamer can treat "circle 5" as the product 5 * circle.
     if(mode==="auto"&&/^(circle|rectangle|square|triangle)\s*[: ]?\s*-?\d/i.test(s))return geometryMath(s);
-    const theorem=theoremMath(original);\n    if(theorem)return theorem;\n    const advanced=solveAdvancedMath(original,mode,s);
+    const theorem=theoremMath(original);
+    if(theorem)return theorem;
+    const advanced=solveAdvancedMath(original,mode,s);
     if(advanced)return advanced;
     if(mode==="auto"){
       if(/^compound interest\b/i.test(s))mode="compound-interest";
