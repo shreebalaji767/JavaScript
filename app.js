@@ -500,8 +500,8 @@
     if(m)return "rectangle "+m[1]+", "+m[2];
     m=s.match(/(?:hypotenuse|pythagorean)(?: of a triangle)?(?: with sides)?\s*(-?\d+(?:\.\d+)?)\s*(?:and|,|by)\s*(-?\d+(?:\.\d+)?)/);
     if(m)return "pythagorean "+m[1]+", "+m[2];
-    m=s.match(/(?:mean|average|median|mode|range)\s+(?:of\s+)?(.+)/);
-    if(m)return s.match(/^(mean|average|median|mode|range)\b/) ? s : s.replace(/^(?:find|calculate|what is|the)\s+/,"");
+    m=s.match(/^(?:find|calculate|work out|what is|the)?\s*(mean|average|median|mode|range)\s+(?:of\s+)?(.+)$/);
+    if(m)return m[1]+" "+m[2];
     m=s.match(/(?:simple interest|compound interest)\s+(?:on\s+)?(.+)/);
     if(m)return s.replace(/\b(on|at|for|years?|annual rate|principal|is)\b/g," ").replace(/\s+/g," ").trim();
     // Common word-problem forms become explicit arithmetic before parsing.
