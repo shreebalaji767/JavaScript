@@ -218,3 +218,17 @@ Open the site and choose **Responsive UI session** in the sidebar, or visit `#re
 - The practice lab and responsive-device controls include regression checks for common selector/output mistakes.
 - GitHub Actions validates JavaScript syntax, unique HTML IDs, button types, local asset references, the service-worker app shell, CSS brace balance, and key interaction regressions before publishing the site.
 - The solver's advanced symbolic operations still rely on third-party CDN libraries and an internet connection; the quality check validates the local app shell, not every possible mathematical input or live CDN availability.
+
+
+## Maths solver: input guide and limits
+
+The solver combines a built-in school-maths path with optional Math.js and Nerdamer browser libraries for broader numerical and symbolic work. Use **Ctrl+Enter** (or **⌘+Enter** on macOS) while focused in the problem box to solve quickly.
+
+Examples to try:
+- Arithmetic: \`(12 + 8) * 3\`, \`sqrt(81)\`, \`sin(pi / 2)\`
+- Percentages and ratios: \`15% of 240\`, \`simplify 12:18\`
+- School algebra: \`2x + 3 = 11\`, \`x^2 - 5x + 6 = 0\`
+- Symbolic algebra: \`solve x^3 - 6x^2 + 11x - 6 = 0\`, \`factor x^4 - 1\`, \`expand (x + 2)^3\`
+- Calculus: \`differentiate x^3 + sin(x)\`, \`integrate 3x^2 + 2x\`, \`limit (sin(x)/x) as x -> 0\`
+
+Write the expression clearly and name the variable when it is not \`x\` (for example, “differentiate t^3 with respect to t”). The solver displays an answer and a working outline; the symbolic engine does not always expose a fully detailed derivation for every operation. Advanced symbolic features require the third-party libraries to load, which currently means an internet connection. If they are unavailable, supported school-level calculations should still use the built-in solver. No general-purpose calculator can guarantee a correct solution for every ambiguous word problem, unsupported syntax, or mathematically unsolved problem, so check assumptions, domains, units, and results.
