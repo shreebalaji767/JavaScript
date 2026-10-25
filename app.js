@@ -583,8 +583,17 @@
       const result=nerdamer(operation+"("+expr+")").toString();
       return make(operation==="factor"?"Factorisation":operation==="expand"?"Expansion":operation==="partfrac"?"Partial fractions":"Simplification",[result].join(""),["Original expression: "+expr+".","Apply symbolic "+operation+" rules while preserving the mathematical value.","Result: "+result+"."]);
     }
-    if(mode==="advanced"||/\b(solve|find roots?|roots? of|solve for|solve the equation)\b/i.test(raw)||(raw.includes("=")&&mode!=="equation"&&mode!=="quadratic")||(/\bx\s*\^\s*[3-9]|[xyz]³|[xyz]⁴|[xyz]⁵|\b(sin|cos|tan|log|ln|exp)\s*\(/i.test(raw)&&raw.includes("="))){
-      if(!hasNerdamer)throw new Error("The symbolic maths engine did not load. Check your internet connection and refresh.");
+    const solveIntent=/\b(solve|find roots?|roots? of|solve for|solve the equation)\b/i.test(raw);
+    const equationVariables=[...new Set((raw.match(/[a-zA-Z]\w*/g)||[]).filter(name=>!["sin","cos","tan","asin","acos","atan","sqrt","log","ln","exp","abs","pi","e","infinity"].includes(name.toLowerCase())))];
+    const nonlinearEquation=raw.includes("=")&&(/\b(?:sin|cos|tan|asin|acos|atan|log|ln|exp)\s*\(/i.test(raw)||/[a-zA-Z]\s*\^\s*[3-9]|[a-zA-Z]³|[a-zA-Z]⁴|[a-zA-Z]⁵/i.test(raw));
+    const useSymbolicEquationSolver=solveIntent||(raw.includes("=")&&(mode==="advanced"||nonlinearEquation||equationVariables.length>1));
+    if(useSymbolicEquationSolver){
+      // Keep the established school-level solver available when the CDN is offline.
+      // Only advanced symbolic work should require Nerdamer.
+      if(!hasNerdamer){
+        if(raw.includes("=")&&!nonlinearEquation&&equationVariables.length<=1)return null;
+        throw new Error("The symbolic maths engine did not load. Check your internet connection and refresh.");
+      }
       let equation=raw.replace(/\b(solve for|solve the equation|solve|find roots? of|roots? of|find x|find y)\b/ig,"").replace(/[?]/g,"").trim();
       equation=equation.replace(/\bwhere\s+/i,"").trim();
       if(!equation)throw new Error("Enter an equation, e.g. solve x^3 - 6x^2 + 11x - 6 = 0.");
