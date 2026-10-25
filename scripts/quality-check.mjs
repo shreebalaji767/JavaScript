@@ -61,7 +61,7 @@ for (const character of cssWithoutComments) {
 assert.equal(braceBalance, 0, "CSS braces must be balanced");
 
 // Core interaction and math-solver regressions.
-for (const id of ["mainContent", "mathProblem", "solveMath", "copyMathSolution", "clearMathProblem", "mathHistory", "lessonFilters", "referenceFilters", "codeEditor", "runCode", "calculatorAngleMode", "calculatorMemoryStatus"]) {
+for (const id of ["mainContent", "mathProblem", "solveMath", "copyMathSolution", "clearMathProblem", "mathHistory", "calculatorPreview", "calculatorPreviewStatus", "copyCalculatorResult", "lessonFilters", "referenceFilters", "codeEditor", "runCode", "calculatorAngleMode", "calculatorMemoryStatus"]) {
   assert.ok(ids.includes(id), "Required UI control is missing: #" + id);
 }
 assert.ok(js.includes("function solveAdvancedMath("), "Advanced math solver must exist");
@@ -72,6 +72,8 @@ assert.ok(js.includes('calculatorAngleMode==="DEG"'), "Angle mode must affect tr
 assert.ok(js.includes("function handleCalculatorAction("), "Calculator memory and editing actions must work");
 assert.ok(js.includes("function solveMathProblem("), "Main math solver must exist");
 assert.ok(js.includes("function renderMathSolution("), "Worked solution renderer must exist");
+assert.ok(js.includes("function updateCalculatorPreview()"), "Scientific calculator must provide a live numeric preview");
+assert.ok(js.includes("function copyCalculatorResult()"), "Calculator result must be copyable");
 assert.ok(js.includes("function renderMathHistory()"), "Math history renderer must exist");
 assert.ok(js.includes('$("#mathProblem").addEventListener("keydown"'), "Math input keyboard shortcut must exist");
 assert.ok(js.includes("const equationVariables="), "Equation solver must distinguish school-level from symbolic equations");
