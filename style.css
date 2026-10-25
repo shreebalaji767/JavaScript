@@ -586,3 +586,47 @@ body.light .responsive-session-stamp{color:#6d4cc4}
   .responsive-art-orbit{animation:none}
   .responsive-preview-frame,.responsive-device-button{transition:none}
 }
+
+
+/* Final fit-and-finish: math solver and narrow-screen controls */
+#view-math-solver,
+#view-math-solver *{box-sizing:border-box}
+#view-math-solver{min-width:0}
+#view-math-solver .page-heading h1{max-width:100%;overflow-wrap:anywhere}
+#view-math-solver .page-heading p{max-width:70ch}
+#view-math-solver .solver-layout{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+#view-math-solver .solver-card,
+#view-math-solver .solver-result{min-width:0;max-width:100%}
+#view-math-solver .solver-examples{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+#view-math-solver .solver-examples>span{flex:0 0 auto;margin-right:3px}
+#view-math-solver .solver-examples button{max-width:100%;min-height:34px;line-height:1.35;white-space:normal;overflow-wrap:anywhere;cursor:pointer}
+#view-math-solver .solver-controls{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px}
+#view-math-solver .solver-controls label{grid-column:1/-1}
+#view-math-solver .solver-controls select{width:100%;min-width:0}
+#view-math-solver .solver-controls .primary-button{max-width:100%;white-space:normal}
+#view-math-solver .solver-card textarea{min-width:0;max-width:100%;font:inherit;font-size:16px;overflow-wrap:anywhere}
+#view-math-solver .solver-status{white-space:normal;text-align:right;overflow-wrap:anywhere}
+#view-math-solver .solver-output{min-width:0;overflow-wrap:anywhere}
+#view-math-solver .solver-steps{padding-left:22px;overflow-wrap:anywhere}
+#view-math-solver .math-roadmap-note{min-width:0;overflow-wrap:anywhere}
+#view-math-solver button:focus-visible,
+#view-math-solver select:focus-visible,
+#view-math-solver textarea:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
+@media(max-width:900px){
+  #view-math-solver .solver-layout{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:520px){
+  #view-math-solver .solver-card,
+  #view-math-solver .solver-result{padding:clamp(12px,4vw,17px)}
+  #view-math-solver .solver-examples{gap:7px}
+  #view-math-solver .solver-examples>span{width:100%;margin-bottom:2px}
+  #view-math-solver .solver-examples button{flex:1 1 auto}
+  #view-math-solver .solver-controls{grid-template-columns:minmax(0,1fr)}
+  #view-math-solver .solver-controls label{grid-column:auto}
+  #view-math-solver .solver-controls .primary-button{width:100%}
+  #view-math-solver .panel-top{align-items:flex-start;gap:8px;flex-wrap:wrap}
+  #view-math-solver .solver-status{text-align:left}
+}
+@media(max-width:340px){
+  #view-math-solver .solver-examples button{flex-basis:100%;text-align:left}
+}
